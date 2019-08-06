@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioPlayerTest", "AudioPlayerTest\AudioPlayerTest.csproj", "{C66B04A7-1C7A-451D-9BEC-8FE52847869B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicAnalyser", "AudioPlayerTest\MusicAnalyser.csproj", "{C66B04A7-1C7A-451D-9BEC-8FE52847869B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
