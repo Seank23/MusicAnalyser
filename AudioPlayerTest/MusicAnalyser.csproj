@@ -74,6 +74,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyser.cs" />
+    <Compile Include="AppController.cs" />
     <Compile Include="AudioSource.cs" />
     <Compile Include="CustomWaveViewer.cs">
       <SubType>UserControl</SubType>

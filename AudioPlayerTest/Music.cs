@@ -87,7 +87,6 @@ namespace MusicAnalyser
                 {
                     double errorCents = ((freq - fundFreq) / fundFreq * 100) / CentPercent;
                     NoteError.Add((int)errorCents);
-                    //NoteError.Add(Convert.ToInt16((freq - fundFreq) / CentPercent));
                     return NoteMap[fundFreq] + octave.ToString();
                 }
             }
