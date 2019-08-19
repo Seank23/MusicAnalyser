@@ -58,5 +58,34 @@ namespace MusicAnalyser
             }
             return new WaveFileReader(outFile);
         }
+
+        public static void WriteFile(string fileName, string[] content)
+        {
+            //string filePath = Path.Combine(Path.GetTempPath(), fileName);
+            using (StreamWriter file = new StreamWriter(fileName))
+            {
+                foreach (string line in content)
+                {
+                    file.WriteLine(line);
+                }
+            }
+        }
+
+        public static string[] ReadFile(string fileName)
+        {
+            string[] lines;
+            List<string> list = new List<string>();
+            //var fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            using (StreamReader file = new StreamReader(fileName))
+            {
+                string line;
+                while ((line = file.ReadLine()) != null)
+                {
+                    list.Add(line);
+                }
+            }
+            lines = list.ToArray();
+            return lines;
+        }
     }
 }

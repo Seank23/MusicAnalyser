@@ -68,7 +68,7 @@ namespace MusicAnalyser
         private void BufferNote(int noteIndex)
         {
             music.NoteBuffer.Add(noteIndex);
-            if (music.NoteBuffer.Count > AppController.NOTE_BUFFER_SIZE)
+            if (music.NoteBuffer.Count > Prefs.NOTE_BUFFER_SIZE)
             {
                 int noteToRemove = music.NoteBuffer[0];
                 music.NoteOccurences[noteToRemove]--;
@@ -147,8 +147,8 @@ namespace MusicAnalyser
             }
             else if (!confident) // There is no discernable key
             {
-                //ui.InvokeUI(() => lblKey.Text = "Predicted Key: N/A");
                 ui.InvokeUI(() => ui.SetKeyText("Predicted Key: N/A"));
+                ui.InvokeUI(() => ui.SetModeText(""));
                 for (int i = 0; i < keyProbability.Length; i++) // DEBUG
                 {
                     Console.WriteLine(Music.GetNoteName(i) + ": " + keyProbability[i]);
@@ -162,11 +162,26 @@ namespace MusicAnalyser
             else
                 ui.InvokeUI(() => ui.SetKeyText("Predicted Key: " + keyRoot + " Major"));
 
+            string mode = Music.GetMode(notePercent, keyRoot, minorRoot);
+            if(mode != "")
+                ui.InvokeUI(() => ui.SetModeText("(" + mode + ")"));
+            else
+                ui.InvokeUI(() => ui.SetModeText(""));
+
             for (int i = 0; i < keyProbability.Length; i++) // DEBUG
             {
                 Console.WriteLine(Music.GetNoteName(i) + ": " + keyProbability[i]);
             }
             Console.WriteLine("");
+        }
+
+        public void DisposeAnalyser()
+        {
+            notes.Clear();
+            avgError.Clear();
+            notePercent = new double[12];
+            music.DisposeMusic();
+            GC.Collect();
         }
     }
 }

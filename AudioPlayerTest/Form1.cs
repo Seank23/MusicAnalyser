@@ -8,9 +8,6 @@ namespace MusicAnalyser
 {
     public partial class Form1 : Form
     {
-        private static int UI_DELAY_FACTOR = 100000;
-        private static int FOLLOW_SECS = 5;
-
         private AppController app;
         private Music music;
         public DirectSoundOut output { get; set; }
@@ -22,6 +19,7 @@ namespace MusicAnalyser
             music = new Music();
             SetupFFTPlot();
             barVolume.Value = 10;
+            SetModeText("");
         }
 
         public void InvokeUI(Action a)
@@ -40,7 +38,9 @@ namespace MusicAnalyser
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
             btnPlay.Enabled = true;
+            playToolStripMenuItem.Enabled = true;
             btnOpen.Enabled = false;
+            openToolStripMenuItem.Enabled = false;
         }
 
         public bool SelectFile(out OpenFileDialog dialog)
@@ -97,20 +97,26 @@ namespace MusicAnalyser
 
             while (output.PlaybackState != PlaybackState.Stopped)
             {
+                if(source.AudioStream.Position >= source.AudioStream.Length)
+                {
+                    InvokeUI(() => app.TriggerPlayPause());
+                    break;
+                }
+
                 if (output.PlaybackState == PlaybackState.Playing)
                 {
                     if(!app.IsStarted() && chbFollow.Checked)
                     {
                         cwvViewer.LeftSample = 0;
-                        cwvViewer.RightSample = cwvViewer.LeftSample + (FOLLOW_SECS * source.AudioStream.WaveFormat.SampleRate);
+                        cwvViewer.RightSample = cwvViewer.LeftSample + (Prefs.FOLLOW_SECS * source.AudioStream.WaveFormat.SampleRate);
                         cwvViewer.Zoom();
                     }
 
                     app.SetStarted(true);
                     index++;
-                    index = index % UI_DELAY_FACTOR;
+                    index = index % Prefs.UI_DELAY_FACTOR;
 
-                    if (index == UI_DELAY_FACTOR - 1)
+                    if (index == Prefs.UI_DELAY_FACTOR - 1)
                     {
                         InvokeUI(() => txtTime.Text = source.AudioStream.CurrentTime.ToString());
                         currentSample = source.AudioStream.Position / 8;
@@ -128,7 +134,7 @@ namespace MusicAnalyser
                         else if(currentSample >= cwvViewer.RightSample && chbFollow.Checked)
                         {
                             cwvViewer.LeftSample = cwvViewer.RightSample;
-                            cwvViewer.RightSample = cwvViewer.LeftSample + (FOLLOW_SECS * source.AudioStream.WaveFormat.SampleRate);
+                            cwvViewer.RightSample = cwvViewer.LeftSample + (Prefs.FOLLOW_SECS * source.AudioStream.WaveFormat.SampleRate);
                             cwvViewer.Zoom();
                         }
                     }
@@ -156,7 +162,7 @@ namespace MusicAnalyser
                     zoom = 4000;
                     break;
             }
-            spFFT.plt.Axis(0, zoom, avgGain - 10, maxGain + 10);
+            spFFT.plt.Axis(0, zoom, avgGain - 10, maxGain + 10);  
         }
 
         public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
@@ -230,7 +236,7 @@ namespace MusicAnalyser
 
         private void barVolume_Scroll(object sender, EventArgs e)
         {
-            app.VolumeChange(barVolume.Value);;
+            app.VolumeChange(barVolume.Value);
         }
 
         private void barTempo_Scroll(object sender, EventArgs e)
@@ -246,14 +252,18 @@ namespace MusicAnalyser
         public void DrawPauseUI()
         {
             btnPlay.Text = "Play";
+            playToolStripMenuItem.Text = "Play";
             timerFFT.Enabled = false;
             btnClose.Enabled = true;
+            closeToolStripMenuItem.Enabled = true;
         }
 
         public void DrawPlayUI()
         {
             btnClose.Enabled = false;
+            closeToolStripMenuItem.Enabled = false;
             btnPlay.Text = "Pause";
+            playToolStripMenuItem.Text = "Pause";
             timerFFT.Enabled = true;
         }
 
@@ -271,6 +281,7 @@ namespace MusicAnalyser
         public void PrintNote(string note, double freq, double gain) { lstNotes.Items.Add(note + " (" + String.Format("{0:0.00}", freq) + " Hz) @ " + String.Format("{0:0.00}", gain) + " dB"); }
         public void PlotNote(string name, double freq, double gain, Color color) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 11); }
         public void SetKeyText(string text) { lblKey.Text = text; }
+        public void SetModeText(string text) { lblMode.Text = text; }
         public void SetErrorText(string text) { lblError.Text = text; }
         public void SetTimerInterval(int interval) { timerFFT.Interval = interval; }
         public void SetExecTimeText(string text) { lblExeTime.Text = text; }
@@ -279,5 +290,19 @@ namespace MusicAnalyser
         public bool IsTempoEnabled() { return chbTempo.Enabled; }
         public bool IsTempoChecked() { return chbTempo.Checked; }
         public bool IsOrderChecked() { return chbOrder.Checked; }
+
+        private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PreferencesForm prefs = new PreferencesForm(this);
+            prefs.ShowDialog();
+        }
+
+        public void UpdateUI()
+        {
+            //if (Prefs.SPECTRUM_AA == 1)
+            //    spFFT.plt.AntiAlias(true);
+            //else if (Prefs.SPECTRUM_AA == 0)
+            //    spFFT.plt.AntiAlias(false);
+        }
     }
 }

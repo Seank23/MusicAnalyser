@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,20 +12,6 @@ namespace MusicAnalyser
 {
     class AppController
     {
-        private static int BUFFERSIZE = (int)Math.Pow(2, 13);
-        private static double PEAK_FFT_POWER = 20 * Math.Log10(12020);
-        private static int SMOOTH_FACTOR = 3;
-        private static int PEAK_BUFFER = 90;
-        private static int MAX_FREQ = 4000;
-        private static int MIN_FREQ = 30;
-        private static float MAX_GAIN_CHANGE = 8.0f;
-        private static float MAX_FREQ_CHANGE = 2.8f;
-        private static float SIMILAR_GAIN_THRESHOLD = 5.0f;
-        public static int NOTE_BUFFER_SIZE = 10000;
-        private static int ERROR_DURATION = 5;
-        private static int AVG_EXECUTIONS = 10;
-        private static int MIN_UPDATE_TIME = 12;
-
         private Form1 ui;
         private AudioSource source;
         private Analyser analyser;
@@ -43,6 +30,24 @@ namespace MusicAnalyser
         {
             ui = form;
             analyser = new Analyser(ui, this);
+            LoadPrefs();
+            ui.UpdateUI();
+        }
+
+        public static void LoadPrefs()
+        {
+            if (File.Exists("Prefs.ini"))
+            {
+                string[] loadedPrefs = FileHandler.ReadFile("prefs.ini");
+                Dictionary<string, string> prefsDict = new Dictionary<string, string>();
+                foreach(string line in loadedPrefs)
+                {
+                    string[] lineSplit = line.Split('=');
+                    if(lineSplit.Length == 2)
+                        prefsDict.Add(lineSplit[0], lineSplit[1]);
+                }
+                Prefs.LoadPrefs(prefsDict);
+            }
         }
 
         /*
@@ -116,7 +121,10 @@ namespace MusicAnalyser
             ui.output.Stop();
             Thread.Sleep(100);
             DisposeAudio();
+            fftDraws = 0;
+            executionTime.Clear();
             ui.ClearUI();
+            analyser.DisposeAnalyser();
             GC.Collect();
         }
 
@@ -125,15 +133,15 @@ namespace MusicAnalyser
          */
         private void PerformFFT()
         {
-            byte[] bytesBuffer = new byte[BUFFERSIZE];
+            byte[] bytesBuffer = new byte[Prefs.BUFFERSIZE];
             double posScaleFactor = (double)source.Audio.WaveFormat.SampleRate / (double)source.AudioFFT.WaveFormat.SampleRate;
             source.AudioFFT.Position = (long)(source.AudioStream.Position / posScaleFactor / 2); // Syncs position of FFT WaveStream to current playback position
-            source.AudioFFT.Read(bytesBuffer, 0, BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
-            short[] audioBuffer = new short[BUFFERSIZE];
+            source.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
+            short[] audioBuffer = new short[Prefs.BUFFERSIZE];
             Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
 
             int fftPoints = 2;
-            while (fftPoints * 2 <= BUFFERSIZE) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
+            while (fftPoints * 2 <= Prefs.BUFFERSIZE) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
                 fftPoints *= 2;
 
             // FFT Process
@@ -149,7 +157,7 @@ namespace MusicAnalyser
             {
                 double fftLeft = Math.Abs(fftFull[i].X + fftFull[i].Y);
                 double fftRight = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
-                dataFft[i] = 20 * Math.Log10(fftLeft + fftRight) - PEAK_FFT_POWER; // Estimates gain of FFT bin
+                dataFft[i] = 20 * Math.Log10(fftLeft + fftRight) - Prefs.PEAK_FFT_POWER; // Estimates gain of FFT bin
             }
             fftScale = (double)fftPoints / source.AudioFFT.WaveFormat.SampleRate;
 
@@ -173,7 +181,7 @@ namespace MusicAnalyser
             Array.Copy(dataFft, signal, dataFft.Length);
             dataFftPrev.Add(signal);
 
-            if (dataFftPrev.Count > SMOOTH_FACTOR)
+            if (dataFftPrev.Count > Prefs.SMOOTH_FACTOR)
                 dataFftPrev.RemoveAt(0);
 
             for (int i = 0; i < signal.Length; i++)
@@ -189,9 +197,9 @@ namespace MusicAnalyser
         }
 
         /*
-         * Returns a calculated derivative of the signal passed in - UNUSED
+         * Returns the slope at each point of the signal passed in (By Slope Algorithm)
          */
-        private double[] GetDerivative(double[] source)
+        private double[] GetSlope(double[] source)
         {
             double[] derivative = new double[source.Length];
             derivative[0] = 0;
@@ -205,15 +213,15 @@ namespace MusicAnalyser
         }
 
         /*
-         * First step of analysis, identifies the most prominent frequency bins in the spectrum by using the derivative of the signal - UNUSED
+         * First step of analysis, identifies the most prominent frequency bins in the spectrum by using the slope of the signal (By Slope Algorithm)
          */
-        private void GetPeaksDerivative()
+        private void GetPeaksBySlope()
         {
-            double[] derivative = GetDerivative(dataFft);
+            double[] derivative = GetSlope(dataFft);
             fftPeaks = new Dictionary<double, double>();
             double gainThreshold = avgGain + 25;
 
-            for (int i = (int)(fftScale * MIN_FREQ); i < Math.Min(dataFft.Length, (int)(fftScale * MAX_FREQ)); i++)
+            for (int i = (int)(fftScale * Prefs.MIN_FREQ); i < Math.Min(dataFft.Length, (int)(fftScale * Prefs.MAX_FREQ)); i++)
             {
                 if (dataFft[i] < gainThreshold)
                     continue;
@@ -226,7 +234,7 @@ namespace MusicAnalyser
                         fftPeaks.Add(freq, dataFft[i]);
                 }
             }
-            RemoveNoise();
+            RemoveKickNoise();
 
             if (ui.IsOrderChecked())
                 fftPeaks = fftPeaks.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - high to low
@@ -235,16 +243,16 @@ namespace MusicAnalyser
     }
 
         /*
-         * First step of analysis, identifies the most prominent frequency bins in the spectrum - these represent possible notes
+         * First step of analysis, identifies the most prominent frequency bins in the spectrum - these represent possible notes (By Magnitude Algorithm)
          */
-        private void GetPeaks()
+        private void GetPeaksByMagnitude()
         {
             fftPeaks = new Dictionary<double, double>();
             double freq;
             double gainThreshold = avgGain + 25;
 
             // Iterates through frequency data, storing the frequency and gain of the largest frequency bins 
-            for (int i = (int)(fftScale * MIN_FREQ); i < Math.Min(dataFft.Length, (int)(fftScale * MAX_FREQ)); i++) 
+            for (int i = (int)(fftScale * Prefs.MIN_FREQ); i < Math.Min(dataFft.Length, (int)(fftScale * Prefs.MAX_FREQ)); i++) 
             {
                 if (dataFft[i] > gainThreshold)
                 {
@@ -253,7 +261,7 @@ namespace MusicAnalyser
                     fftPeaks.Add(freq, dataFft[i]);
                     fftPeaks = fftPeaks.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
 
-                    if (fftPeaks.Count > PEAK_BUFFER) // When fftPeaks overflows, remove smallest frequency bin
+                    if (fftPeaks.Count > Prefs.PEAK_BUFFER) // When fftPeaks overflows, remove smallest frequency bin
                     {
                         double keyToRemove = GetDictKey(fftPeaks, fftPeaks.Count - 1);
                         fftPeaks.Remove(keyToRemove);
@@ -277,7 +285,7 @@ namespace MusicAnalyser
                     peakIndex++;
                     continue;
                 }
-                else if ((myFreq - largestGain.Key) <= largestGain.Key / 100 * MAX_FREQ_CHANGE) // Finds clusters of points that represent the same peak
+                else if ((myFreq - largestGain.Key) <= largestGain.Key / 100 * Prefs.MAX_FREQ_CHANGE) // Finds clusters of points that represent the same peak
                 {
                     cluster.Add(new KeyValuePair<double, double>(myFreq, fftPeaks[myFreq]));
 
@@ -310,7 +318,7 @@ namespace MusicAnalyser
             {
                 double freqA = GetDictKey(fftPeaks, i);
                 double freqB = GetDictKey(fftPeaks, i + 1);
-                if (Math.Abs(fftPeaks[freqA] - fftPeaks[freqB]) >= MAX_GAIN_CHANGE)
+                if (Math.Abs(fftPeaks[freqA] - fftPeaks[freqB]) >= Prefs.MAX_GAIN_CHANGE)
                 {
                     if (fftPeaks[freqA] > fftPeaks[freqB]) // Discard lowest value
                         discardFreqs.Add(freqB);
@@ -322,7 +330,7 @@ namespace MusicAnalyser
             foreach (double frequency in discardFreqs)
                 fftPeaks.Remove(frequency);
 
-            RemoveNoise();
+            RemoveKickNoise();
 
             if (ui.IsOrderChecked())
                 fftPeaks = fftPeaks.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - high to low
@@ -333,7 +341,7 @@ namespace MusicAnalyser
         /*
          * Performs further refinement of peaks, removing noise mostly attributed to the kick drum
          */
-        private void RemoveNoise()
+        private void RemoveKickNoise()
         {
             List<double> discardFreqs = new List<double>();
             double prevFreq = 0;
@@ -348,9 +356,9 @@ namespace MusicAnalyser
                     prevFreq = freq;
                     continue;
                 }
-                if ((freq - prevFreq) <= freq / 100 * (2.5 * MAX_FREQ_CHANGE)) // Checking for consecutive, closely packed peaks - noise
+                if ((freq - prevFreq) <= freq / 100 * (2.5 * Prefs.MAX_FREQ_CHANGE)) // Checking for consecutive, closely packed peaks - noise
                 {
-                    if (Math.Abs(fftPeaks[freq] - fftPeaks[prevFreq]) <= SIMILAR_GAIN_THRESHOLD)
+                    if (Math.Abs(fftPeaks[freq] - fftPeaks[prevFreq]) <= Prefs.SIMILAR_GAIN_THRESHOLD)
                     {
                         if (!discardFreqs.Contains(prevFreq))
                             discardFreqs.Add(prevFreq);
@@ -416,13 +424,18 @@ namespace MusicAnalyser
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
                 PerformFFT();
-                GetPeaks();
+
+                if(Prefs.NOTE_ALGORITHM == 0) // By Magnitude
+                    GetPeaksByMagnitude();
+                else if(Prefs.NOTE_ALGORITHM == 1) // By Slope
+                    GetPeaksBySlope();
+
                 analyser.GetNotes(fftPeaks);
                 new Task(analyser.FindKey).Start();
                 ui.RenderSpectrum();
                 watch.Stop();
 
-                if (analyser.GetAvgError().Count == ERROR_DURATION) // Calculate average note error
+                if (analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
                 {
                     int error = (int)analyser.GetAvgError().Average();
                     if (error >= 0)
@@ -431,14 +444,21 @@ namespace MusicAnalyser
                         ui.SetErrorText("- " + Math.Abs(error) + " Cents");
                     analyser.ResetError();
                 }
-
-                executionTime.Add((int)watch.ElapsedMilliseconds);
-                if (executionTime.Count == AVG_EXECUTIONS) // Calculate average execution time
+                if (Prefs.UPDATE_MODE == 0) // Dynamic update mode
                 {
-                    int executionTime = AverageExecutionTime();
-                    if (executionTime >= MIN_UPDATE_TIME)
-                        ui.SetTimerInterval(executionTime);
-                    ui.SetExecTimeText("Execution Time: " + executionTime + " ms");
+                    executionTime.Add((int)watch.ElapsedMilliseconds);
+                    if (executionTime.Count == Prefs.AVG_EXECUTIONS) // Calculate average execution time
+                    {
+                        int executionTime = AverageExecutionTime();
+                        if (executionTime >= Prefs.MIN_UPDATE_TIME)
+                            ui.SetTimerInterval(executionTime);
+                        ui.SetExecTimeText("Execution Time: " + executionTime + " ms");
+                    }
+                }
+                else if(Prefs.UPDATE_MODE == 1) // Manual update mode
+                {
+                    ui.SetTimerInterval(Prefs.MIN_UPDATE_TIME);
+                    ui.SetExecTimeText("Execution Time: " + watch.ElapsedMilliseconds + " ms");
                 }
                 ui.EnableTimer(true);
             }
@@ -493,9 +513,12 @@ namespace MusicAnalyser
                 ui.output.Dispose();
                 ui.output = null;
             }
-            if (source.Audio != null)
+            if (source != null)
             {
-                source.DisposeAudio();
+                if (source.Audio != null)
+                {
+                    source.DisposeAudio();
+                }
             }
         }
 

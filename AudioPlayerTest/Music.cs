@@ -209,15 +209,67 @@ namespace MusicAnalyser
             return false;
         }
 
+        public static string GetMode(double[] percent, string majorRoot, string minorRoot)
+        {
+            int majorIndex = GetNoteIndex(majorRoot + "0");
+            int minorIndex = GetNoteIndex(minorRoot + "0");
+            percent[majorIndex] += Prefs.MODAL_ROOT_DIFF;
+            percent[minorIndex] += Prefs.MODAL_ROOT_DIFF;
+            double largestPercent = percent[0];
+            int largestIndex = 0;
+            
+            for(int i = 1; i < percent.Length; i++)
+            {
+                if (percent[i] > largestPercent)
+                {
+                    largestPercent = percent[i];
+                    largestIndex = i;
+                }
+            }
+
+            string modalRoot = GetNoteName(largestIndex);
+            string[] majorScale = new string[7];
+            Array.Copy(Scales, majorIndex * 7, majorScale, 0, majorScale.Length);
+            int modalInterval = 0;
+
+            for(int i = 1; i < majorScale.Length; i++)
+            {
+                if (majorScale[i] == modalRoot)
+                    modalInterval = i;
+            }
+
+            switch(modalInterval)
+            {
+                case 1:
+                    return modalRoot + " Dorian";
+                case 2:
+                    return modalRoot + " Phrygian";
+                case 3:
+                    return modalRoot + " Lydian";
+                case 4:
+                    return modalRoot + " Mixolydian";
+                case 6:
+                    return modalRoot + " Locrian";
+            }
+            return "";
+        }
+
         public void ResetNoteCount()
         {
             NoteOccurences = new int[12];
-            NoteBuffer = new List<int>();
+            NoteBuffer.Clear();
+            NoteError.Clear();
         }
 
         public void GetPercentChange(int value)
         {
             percentChange = CentPercent * value;
+        }
+
+        public void DisposeMusic()
+        {
+            ResetNoteCount();
+            GC.Collect();
         }
     }
 }
