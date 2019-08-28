@@ -21,7 +21,7 @@ namespace MusicAnalyser
         private Dictionary<double, double> fftPeaks;
         private List<int> executionTime = new List<int>();
         private double fftScale;
-        private int fftDraws = 0;
+        private int analysisUpdates = 0;
         private double avgGain;
         private double maxGain;
         private bool started = false;
@@ -121,7 +121,7 @@ namespace MusicAnalyser
             ui.output.Stop();
             Thread.Sleep(100);
             DisposeAudio();
-            fftDraws = 0;
+            analysisUpdates = 0;
             executionTime.Clear();
             ui.ClearUI();
             analyser.DisposeAnalyser();
@@ -166,8 +166,8 @@ namespace MusicAnalyser
             maxGain = dataFft.Max();
             ui.DisplayFFT(dataFft, fftScale, avgGain, maxGain);
 
-            fftDraws++;
-            ui.UpdateFFTDrawsUI(fftDraws);
+            analysisUpdates++;
+            ui.UpdateFFTDrawsUI(analysisUpdates);
 
             Application.DoEvents();
         }
@@ -236,10 +236,7 @@ namespace MusicAnalyser
             }
             RemoveKickNoise();
 
-            if (ui.IsOrderChecked())
-                fftPeaks = fftPeaks.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - high to low
-            else
-                fftPeaks = fftPeaks.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
+            fftPeaks = fftPeaks.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
     }
 
         /*
@@ -332,10 +329,7 @@ namespace MusicAnalyser
 
             RemoveKickNoise();
 
-            if (ui.IsOrderChecked())
-                fftPeaks = fftPeaks.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - high to low
-            else
-                fftPeaks = fftPeaks.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
+            fftPeaks = fftPeaks.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
         }
 
         /*
@@ -416,7 +410,7 @@ namespace MusicAnalyser
         /*
          * Master method for performing analysis
          */
-        public void RunAnalysis()
+        public async void RunAnalysis()
         {
             if (ui.output.PlaybackState == PlaybackState.Playing)
             {
@@ -430,10 +424,10 @@ namespace MusicAnalyser
                 else if(Prefs.NOTE_ALGORITHM == 1) // By Slope
                     GetPeaksBySlope();
 
-                analyser.GetNotes(fftPeaks);
-                new Task(analyser.FindKey).Start();
+                int timeStamp = analysisUpdates;
+                analyser.GetNotes(fftPeaks, timeStamp);
+                Task asyncAnalysis = RunAnalysisAsync();
                 ui.RenderSpectrum();
-                watch.Stop();
 
                 if (analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
                 {
@@ -444,6 +438,10 @@ namespace MusicAnalyser
                         ui.SetErrorText("- " + Math.Abs(error) + " Cents");
                     analyser.ResetError();
                 }
+
+                await asyncAnalysis;
+                watch.Stop();
+
                 if (Prefs.UPDATE_MODE == 0) // Dynamic update mode
                 {
                     executionTime.Add((int)watch.ElapsedMilliseconds);
@@ -462,6 +460,47 @@ namespace MusicAnalyser
                 }
                 ui.EnableTimer(true);
             }
+        }
+
+        public Task RunAnalysisAsync()
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                analyser.FindKey();
+                if (analysisUpdates % Prefs.CHORD_DETECTION_INTERVAL == 0)
+                {
+                    analyser.FindChordsNotes();
+                    analyser.FindChords();
+                    DisplayChordNotes();
+                }
+            });
+        }
+
+        public void DisplayChordNotes()
+        {
+            ui.InvokeUI(() => ui.ClearNotesList());
+            List<Note>[] chordNotes = analyser.GetChordNotes();
+            if (chordNotes == null)
+                return;
+            List<string> chords = analyser.GetChords();
+
+            for(int i = 0; i < chords.Count; i++)
+            {
+                string chord = chords[i];
+                if (chord != "N/A")
+                    ui.InvokeUI(() => ui.PrintChord(chord));
+            }
+
+            for (int i = 0; i < chordNotes.Length; i++)
+            {
+                for(int j = 0; j < chordNotes[i].Count; j++)
+                {
+                    Console.Write(chordNotes[i][j].Name + chordNotes[i][j].Octave + " ");
+                }
+                Console.Write(" - " + chords[i]);
+                Console.WriteLine("");
+            }
+            Console.WriteLine("");
         }
 
         /*

@@ -13,7 +13,9 @@ namespace MusicAnalyser
         private Music music;
         private AppController app;
 
-        private Dictionary<double, double> notes;
+        private List<Note> notes;
+        private List<Note>[] chordNotes;
+        private List<string> chords = new List<string>();
         private double[] notePercent = new double[12];
         private List<int> avgError = new List<int>();
 
@@ -22,19 +24,20 @@ namespace MusicAnalyser
             ui = form;
             app = appControl;
             music = new Music();
+            notes = new List<Note>();
         }
 
         public List<int> GetAvgError() { return avgError; }
         public Music GetMusic() { return music; }
+        public List<Note>[] GetChordNotes() { return chordNotes; }
+        public List<string> GetChords() { return chords; }
         public void ResetError() { avgError.Clear(); }
 
         /*
          * Identifies valid notes from the peaks in the frequency spectrum and plots them
          */
-        public void GetNotes(Dictionary<double, double> fftPeaks)
+        public void GetNotes(Dictionary<double, double> fftPeaks, int timeStamp)
         {
-            notes = new Dictionary<double, double>();
-            ui.ClearNotesList();
             music.NoteError = new List<int>();
 
             foreach (double freq in fftPeaks.Keys)
@@ -44,22 +47,33 @@ namespace MusicAnalyser
                 if (noteName == "N/A") // Ignore peaks that are not valid notes
                     continue;
 
-                double gain = fftPeaks[freq];
-                notes.Add(freq, gain);
-                ui.PrintNote(noteName, freq, gain);
-                int noteIndex = Music.GetNoteIndex(noteName); 
-                int occurences = music.NoteOccurences[noteIndex];
+                Note myNote = CreateNote(noteName, freq, fftPeaks[freq], timeStamp);
+                notes.Add(myNote);
+                //ui.PrintNote(noteName, freq, myNote.Magnitude);
+                int occurences = music.NoteOccurences[myNote.NoteIndex];
                 double percent = ((double)occurences / (double)music.NoteBuffer.Count) * 100;
                 Color noteColor = app.GetNoteColor(0, (int)(10000 / 7), (int)(percent * 100));
-                notePercent[noteIndex] = percent;
+                notePercent[myNote.NoteIndex] = percent;
                 music.CountNote(noteName);
-                BufferNote(noteIndex);
+                BufferNote(myNote.NoteIndex);
                 ui.UpdateNoteOccurencesUI(noteName, occurences, percent, noteColor);
-                ui.PlotNote(noteName, freq, gain, noteColor);
+                ui.PlotNote(noteName, freq, myNote.Magnitude, noteColor);
             } 
 
             if (music.NoteError.Count > 0)
                 avgError.Add((int)music.NoteError.Average());
+        }
+
+        private Note CreateNote(string name, double freq, double gain, int timeStamp)
+        {
+            Note myNote = new Note();
+            myNote.Name = name.Substring(0, name.Length - 1);
+            myNote.Octave = Convert.ToInt32(name.Substring(name.Length - 1, 1));
+            myNote.NoteIndex = Music.GetNoteIndex(name);
+            myNote.Frequency = freq;
+            myNote.Magnitude = gain;
+            myNote.TimeStamp = timeStamp;
+            return myNote;
         }
 
         /*
@@ -149,11 +163,11 @@ namespace MusicAnalyser
             {
                 ui.InvokeUI(() => ui.SetKeyText("Predicted Key: N/A"));
                 ui.InvokeUI(() => ui.SetModeText(""));
-                for (int i = 0; i < keyProbability.Length; i++) // DEBUG
-                {
-                    Console.WriteLine(Music.GetNoteName(i) + ": " + keyProbability[i]);
-                }
-                Console.WriteLine("");
+                //for (int i = 0; i < keyProbability.Length; i++) // DEBUG
+                //{
+                //    Console.WriteLine(Music.GetNoteName(i) + ": " + keyProbability[i]);
+                //}
+                //Console.WriteLine("");
                 return;
             }
             string keyRoot = Music.GetNoteName(largestIndex);
@@ -168,11 +182,92 @@ namespace MusicAnalyser
             else
                 ui.InvokeUI(() => ui.SetModeText(""));
 
-            for (int i = 0; i < keyProbability.Length; i++) // DEBUG
+            //for (int i = 0; i < keyProbability.Length; i++) // DEBUG
+            //{
+            //    Console.WriteLine(Music.GetNoteName(i) + ": " + keyProbability[i]);
+            //}
+            //Console.WriteLine("");
+        }
+
+        public void FindChordsNotes()
+        {
+            ui.InvokeUI(() => ui.ClearNotesList());
+
+            int[] tempNoteOccurences = new int[12];
+            List<Note>[] notesByName = new List<Note>[12];
+            for (int i = 0; i < 12; i++)
+                notesByName[i] = new List<Note>();
+
+            for(int i = 0; i < notes.Count; i++)
             {
-                Console.WriteLine(Music.GetNoteName(i) + ": " + keyProbability[i]);
+                int index = notes[i].NoteIndex;
+                tempNoteOccurences[index]++;
+                notesByName[index].Add(notes[i]);
             }
-            Console.WriteLine("");
+            notes.Clear();
+
+            int numChordNotes = 0;
+            List<int> chordNoteIndexes = new List<int>();
+            for(int i = 0; i < tempNoteOccurences.Length; i++)
+            {
+                if(tempNoteOccurences[i] >= Prefs.CHORD_DETECTION_INTERVAL + Prefs.CHORD_NOTE_OCCURENCE_OFFSET)
+                {
+                    numChordNotes++;
+                    chordNoteIndexes.Add(i);
+                }
+            }
+
+            chordNotes = new List<Note>[numChordNotes];
+            for(int i = 0; i < numChordNotes; i++)
+            {
+                chordNotes[i] = new List<Note>();
+                List<int> octaves = new List<int>();
+                for(int j = 0; j < notesByName[chordNoteIndexes[i]].Count; j++)
+                {
+                    if (!octaves.Contains(notesByName[chordNoteIndexes[i]][j].Octave))
+                    {
+                        chordNotes[i].Add(notesByName[chordNoteIndexes[i]][j]);
+                        octaves.Add(notesByName[chordNoteIndexes[i]][j].Octave);
+                    }
+                }
+                chordNotes[i] = chordNotes[i].OrderBy(x => x.Frequency).ToList(); // Order: Frequency - low to high
+            }
+        }
+
+        public void FindChords()
+        {
+            chords.Clear();
+            List<Note> chord = new List<Note>();
+            for (int i = 0; i < chordNotes.Length; i++)
+                chord.Add(chordNotes[i][0]);
+
+            for (int i = 0; i < chordNotes.Length; i++)
+            {
+                string interval = "";
+                for (int j = 1; j < chordNotes.Length; j++)
+                {
+                    int noteDifference = chord[j].NoteIndex - chord[0].NoteIndex;
+                    if (noteDifference < 0)
+                        noteDifference = 12 + noteDifference;
+                    interval += noteDifference;
+                }
+                string chordQuality = Music.GetChordQuality(interval);
+                if(chordQuality != "N/A")
+                    chords.Add(chord[0].Name + chordQuality);
+                else
+                    chords.Add(chordQuality);
+                chord = NextChord(chord);
+            }
+        }
+
+        private List<Note> NextChord(List<Note> chord)
+        {
+            Note firstNote = chord[0];
+            for(int i = 0; i < chord.Count - 1; i++)
+                chord[i] = chord[i + 1];
+
+            chord[chord.Count - 1] = firstNote;
+            return chord;
         }
 
         public void DisposeAnalyser()

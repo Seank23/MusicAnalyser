@@ -8,7 +8,8 @@ namespace MusicAnalyser
         public static Dictionary<string, string> DefaultsDict = new Dictionary<string, string>
         {
             { "UI_THEME", "0" }, { "FOLLOW_SECS", "5" }, { "UPDATE_MODE", "0" }, { "MIN_UPDATE_TIME", "12" }, { "NOTE_ALGORITHM", "0" }, { "MIN_FREQ", "30" },{ "MAX_FREQ", "2000" },
-            { "SMOOTH_FACTOR", "3" }, { "SPECTRUM_AA", "1"}, { "PEAK_BUFFER", "90" }, { "MAX_GAIN_CHANGE", "8" }, { "MAX_FREQ_CHANGE", "2.8" }, { "SIMILAR_GAIN_THRESHOLD", "5" }
+            { "SMOOTH_FACTOR", "3" }, { "SPECTRUM_AA", "1"}, { "PEAK_BUFFER", "90" }, { "MAX_GAIN_CHANGE", "8" }, { "MAX_FREQ_CHANGE", "2.8" }, { "SIMILAR_GAIN_THRESHOLD", "5" },
+            { "CHORD_DETECTION_INTERVAL", "10"}, {"CHORD_NOTE_OCCURENCE_OFFSET", "5"}
         };
 
         public static int UI_DELAY_FACTOR = 100000;
@@ -31,6 +32,8 @@ namespace MusicAnalyser
         public static int SPECTRUM_AA = 1;
         public static int UI_THEME = 0;
         public static float MODAL_ROOT_DIFF = 1.0f;
+        public static int CHORD_DETECTION_INTERVAL = 10;
+        public static int CHORD_NOTE_OCCURENCE_OFFSET = 5;
 
         public static void LoadPrefs(Dictionary<string, string> prefsLoaded)
         {
@@ -76,6 +79,12 @@ namespace MusicAnalyser
                         break;
                     case "SIMILAR_GAIN_THRESHOLD":
                         SIMILAR_GAIN_THRESHOLD = Convert.ToSingle(prefsLoaded[key]);
+                        break;
+                    case "CHORD_DETECTION_INTERVAL":
+                        CHORD_DETECTION_INTERVAL = Convert.ToInt32(prefsLoaded[key]);
+                        break;
+                    case "CHORD_NOTE_OCCURENCE_OFFSET":
+                        CHORD_NOTE_OCCURENCE_OFFSET = Convert.ToInt32(prefsLoaded[key]);
                         break;
                     default:
                         Console.WriteLine("Error: Preference '" + key + "' could not be loaded");

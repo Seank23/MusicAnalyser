@@ -254,6 +254,103 @@ namespace MusicAnalyser
             return "";
         }
 
+        public static string GetChordQuality(string interval)
+        {
+            int notesOmitted = 0;
+            string star = "";
+            while (notesOmitted <= 1)
+            {
+                switch (interval)
+                {
+                    case "47":
+                        return "" + star;
+                    case "37":
+                        return "m" + star;
+                    case "4710":
+                        return "7" + star;
+                    case "3710":
+                        return "m7" + star;
+                    case "4711":
+                        return "maj7" + star;
+                    case "3711":
+                        return "mM7" + star;
+                    case "4610":
+                        return "7b5" + star;
+                    case "4810":
+                        return "7#5" + star;
+                    case "3610":
+                        return "7b5" + star;
+                    case "14710":
+                        return "7b9" + star;
+                    case "46":
+                        return "b5" + star;
+                    case "7":
+                        return "5" + star;
+                    case "479":
+                        return "6" + star;
+                    case "379":
+                        return "m6" + star;
+                    case "2479":
+                        return "6/9" + star;
+                    case "24710":
+                        return "9" + star;
+                    case "24610":
+                        return "9b5" + star;
+                    case "24810":
+                        return "9#5" + star;
+                    case "23710":
+                        return "m9" + star;
+                    case "24711":
+                        return "maj9" + star;
+                    case "247":
+                        return "add9" + star;
+                    case "34710":
+                        return "7#9" + star;
+                    case "245710":
+                        return "11" + star;
+                    case "257910":
+                        return "13" + star;
+                    case "247911":
+                        return "maj13" + star;
+                    case "27":
+                        return "sus2" + star;
+                    case "57":
+                        return "sus4" + star;
+                    case "5710":
+                        return "7sus4" + star;
+                    case "25710":
+                        return "9sus4" + star;
+                    case "36":
+                        return "dim" + star;
+                    case "369":
+                        return "dim7" + star;
+                    case "48":
+                        return "aug" + star;
+                    default:
+                        break;
+                }
+                if (!interval.Contains('7'))
+                {
+                    string temp = "";
+                    for (int i = 0; i < interval.Length - 1; i++)
+                    {
+                        temp += interval[i];
+                        if (Convert.ToInt32(interval[i].ToString()) < 7 && Convert.ToInt32(interval[i + 1].ToString()) > 7)
+                            temp += 7;
+                    }
+                    if(interval.Length > 0)
+                        temp += interval[interval.Length - 1];
+                    
+                    interval = temp;
+                    notesOmitted++;
+                    star = "*";
+                }
+                else
+                    break;
+            }
+            return "N/A";
+        }
+
         public void ResetNoteCount()
         {
             NoteOccurences = new int[12];

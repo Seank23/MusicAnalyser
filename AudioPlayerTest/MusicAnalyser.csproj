@@ -89,6 +89,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Music.cs" />
+    <Compile Include="Note.cs" />
     <Compile Include="OverlayPanel.cs">
       <SubType>Component</SubType>
     </Compile>

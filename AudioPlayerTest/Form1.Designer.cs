@@ -35,14 +35,13 @@
             this.spFFT = new ScottPlot.ScottPlotUC();
             this.timerFFT = new System.Windows.Forms.Timer(this.components);
             this.lblFFTDraws = new System.Windows.Forms.Label();
-            this.lstNotes = new System.Windows.Forms.ListBox();
+            this.lstChords = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.barVolume = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.chbOrder = new System.Windows.Forms.CheckBox();
             this.chbFollow = new System.Windows.Forms.CheckBox();
             this.txtTime = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -157,25 +156,25 @@
             this.lblFFTDraws.TabIndex = 4;
             this.lblFFTDraws.Text = "FFT Updates: 0";
             // 
-            // lstNotes
+            // lstChords
             // 
-            this.lstNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstNotes.FormattingEnabled = true;
-            this.lstNotes.ItemHeight = 16;
-            this.lstNotes.Location = new System.Drawing.Point(1379, 75);
-            this.lstNotes.Name = "lstNotes";
-            this.lstNotes.Size = new System.Drawing.Size(206, 340);
-            this.lstNotes.TabIndex = 5;
+            this.lstChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstChords.FormattingEnabled = true;
+            this.lstChords.ItemHeight = 16;
+            this.lstChords.Location = new System.Drawing.Point(1514, 596);
+            this.lstChords.Name = "lstChords";
+            this.lstChords.Size = new System.Drawing.Size(120, 68);
+            this.lstChords.TabIndex = 5;
             // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1379, 45);
+            this.label1.Location = new System.Drawing.Point(1514, 566);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 17);
+            this.label1.Size = new System.Drawing.Size(101, 17);
             this.label1.TabIndex = 6;
-            this.label1.Text = "Notes Detected:";
+            this.label1.Text = "Chords Found:";
             // 
             // barVolume
             // 
@@ -222,17 +221,6 @@
             this.label5.Size = new System.Drawing.Size(124, 17);
             this.label5.TabIndex = 11;
             this.label5.Text = "Playback Volume: ";
-            // 
-            // chbOrder
-            // 
-            this.chbOrder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chbOrder.AutoSize = true;
-            this.chbOrder.Location = new System.Drawing.Point(1495, 45);
-            this.chbOrder.Name = "chbOrder";
-            this.chbOrder.Size = new System.Drawing.Size(124, 21);
-            this.chbOrder.TabIndex = 12;
-            this.chbOrder.Text = "Order By Freq.";
-            this.chbOrder.UseVisualStyleBackColor = true;
             // 
             // chbFollow
             // 
@@ -734,7 +722,6 @@
             this.Controls.Add(this.txtTime);
             this.Controls.Add(this.chbTempo);
             this.Controls.Add(this.chbFollow);
-            this.Controls.Add(this.chbOrder);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label7);
@@ -758,7 +745,7 @@
             this.Controls.Add(this.barVolume);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.lstNotes);
+            this.Controls.Add(this.lstChords);
             this.Controls.Add(this.lblExeTime);
             this.Controls.Add(this.lblFFTDraws);
             this.Controls.Add(this.spFFT);
@@ -791,14 +778,13 @@
         private ScottPlot.ScottPlotUC spFFT;
         private System.Windows.Forms.Timer timerFFT;
         private System.Windows.Forms.Label lblFFTDraws;
-        private System.Windows.Forms.ListBox lstNotes;
+        private System.Windows.Forms.ListBox lstChords;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar barVolume;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox chbOrder;
         private System.Windows.Forms.CheckBox chbFollow;
         private System.Windows.Forms.TextBox txtTime;
         private System.Windows.Forms.Label label6;

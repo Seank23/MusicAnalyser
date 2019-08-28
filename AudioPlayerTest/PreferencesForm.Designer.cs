@@ -33,6 +33,8 @@
             this.btnDefaults = new System.Windows.Forms.Button();
             this.tabControlPrefs = new System.Windows.Forms.TabControl();
             this.tabUI = new System.Windows.Forms.TabPage();
+            this.chbAntiAlias = new System.Windows.Forms.CheckBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.comboTheme = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPlayback = new System.Windows.Forms.TabPage();
@@ -67,8 +69,12 @@
             this.label20 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.chbAntiAlias = new System.Windows.Forms.CheckBox();
-            this.label21 = new System.Windows.Forms.Label();
+            this.tabKey = new System.Windows.Forms.TabPage();
+            this.tabChords = new System.Windows.Forms.TabPage();
+            this.numChordInterval = new System.Windows.Forms.NumericUpDown();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.numOccurThd = new System.Windows.Forms.NumericUpDown();
             this.tabControlPrefs.SuspendLayout();
             this.tabUI.SuspendLayout();
             this.tabPlayback.SuspendLayout();
@@ -79,6 +85,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMinFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPeakBuffer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpdateTime)).BeginInit();
+            this.tabChords.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numChordInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numOccurThd)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSave
@@ -116,6 +125,8 @@
             this.tabControlPrefs.Controls.Add(this.tabUI);
             this.tabControlPrefs.Controls.Add(this.tabPlayback);
             this.tabControlPrefs.Controls.Add(this.tabNotes);
+            this.tabControlPrefs.Controls.Add(this.tabKey);
+            this.tabControlPrefs.Controls.Add(this.tabChords);
             this.tabControlPrefs.Location = new System.Drawing.Point(12, 12);
             this.tabControlPrefs.Name = "tabControlPrefs";
             this.tabControlPrefs.SelectedIndex = 0;
@@ -135,6 +146,24 @@
             this.tabUI.TabIndex = 0;
             this.tabUI.Text = "User Interface";
             this.tabUI.UseVisualStyleBackColor = true;
+            // 
+            // chbAntiAlias
+            // 
+            this.chbAntiAlias.AutoSize = true;
+            this.chbAntiAlias.Location = new System.Drawing.Point(174, 65);
+            this.chbAntiAlias.Name = "chbAntiAlias";
+            this.chbAntiAlias.Size = new System.Drawing.Size(18, 17);
+            this.chbAntiAlias.TabIndex = 9;
+            this.chbAntiAlias.UseVisualStyleBackColor = true;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(20, 64);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(148, 17);
+            this.label21.TabIndex = 8;
+            this.label21.Text = "Spectrum Antialiasing:";
             // 
             // comboTheme
             // 
@@ -482,23 +511,59 @@
             this.label4.TabIndex = 1;
             this.label4.Text = "Update Mode:";
             // 
-            // chbAntiAlias
+            // tabKey
             // 
-            this.chbAntiAlias.AutoSize = true;
-            this.chbAntiAlias.Location = new System.Drawing.Point(174, 65);
-            this.chbAntiAlias.Name = "chbAntiAlias";
-            this.chbAntiAlias.Size = new System.Drawing.Size(18, 17);
-            this.chbAntiAlias.TabIndex = 9;
-            this.chbAntiAlias.UseVisualStyleBackColor = true;
+            this.tabKey.Location = new System.Drawing.Point(4, 25);
+            this.tabKey.Name = "tabKey";
+            this.tabKey.Size = new System.Drawing.Size(768, 352);
+            this.tabKey.TabIndex = 3;
+            this.tabKey.Text = "Key Detection";
+            this.tabKey.UseVisualStyleBackColor = true;
             // 
-            // label21
+            // tabChords
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(20, 64);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(148, 17);
-            this.label21.TabIndex = 8;
-            this.label21.Text = "Spectrum Antialiasing:";
+            this.tabChords.Controls.Add(this.numOccurThd);
+            this.tabChords.Controls.Add(this.numChordInterval);
+            this.tabChords.Controls.Add(this.label23);
+            this.tabChords.Controls.Add(this.label22);
+            this.tabChords.Location = new System.Drawing.Point(4, 25);
+            this.tabChords.Name = "tabChords";
+            this.tabChords.Size = new System.Drawing.Size(768, 352);
+            this.tabChords.TabIndex = 4;
+            this.tabChords.Text = "Chord Detection";
+            this.tabChords.UseVisualStyleBackColor = true;
+            // 
+            // numChordInterval
+            // 
+            this.numChordInterval.Location = new System.Drawing.Point(147, 23);
+            this.numChordInterval.Name = "numChordInterval";
+            this.numChordInterval.Size = new System.Drawing.Size(61, 22);
+            this.numChordInterval.TabIndex = 7;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(19, 25);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(122, 17);
+            this.label22.TabIndex = 6;
+            this.label22.Text = "Analysis Duration:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(19, 59);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(183, 17);
+            this.label23.TabIndex = 6;
+            this.label23.Text = "Note Occurence Threshold:";
+            // 
+            // numOccurThd
+            // 
+            this.numOccurThd.Location = new System.Drawing.Point(208, 59);
+            this.numOccurThd.Name = "numOccurThd";
+            this.numOccurThd.Size = new System.Drawing.Size(61, 22);
+            this.numOccurThd.TabIndex = 7;
             // 
             // PreferencesForm
             // 
@@ -524,6 +589,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMinFreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPeakBuffer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpdateTime)).EndInit();
+            this.tabChords.ResumeLayout(false);
+            this.tabChords.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numChordInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numOccurThd)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -571,5 +640,11 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.CheckBox chbAntiAlias;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TabPage tabKey;
+        private System.Windows.Forms.TabPage tabChords;
+        private System.Windows.Forms.NumericUpDown numChordInterval;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.NumericUpDown numOccurThd;
+        private System.Windows.Forms.Label label23;
     }
 }

@@ -66,7 +66,7 @@ namespace MusicAnalyser
 
         public void ClearUI()
         {
-            lstNotes.Items.Clear();
+            lstChords.Items.Clear();
             spFFT.plt.Clear();
             spFFT.Render();
             cwvViewer.WaveStream = null;
@@ -277,19 +277,20 @@ namespace MusicAnalyser
 
         public void EnableTimer(bool enable) { timerFFT.Enabled = enable; }
         public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "FFT Updates: " + draws; }
-        public void ClearNotesList() { lstNotes.Items.Clear(); }
-        public void PrintNote(string note, double freq, double gain) { lstNotes.Items.Add(note + " (" + String.Format("{0:0.00}", freq) + " Hz) @ " + String.Format("{0:0.00}", gain) + " dB"); }
+        public void ClearNotesList() { lstChords.Items.Clear(); }
+        public void PrintChord(string text) { lstChords.Items.Add(text); }
         public void PlotNote(string name, double freq, double gain, Color color) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 11); }
         public void SetKeyText(string text) { lblKey.Text = text; }
         public void SetModeText(string text) { lblMode.Text = text; }
         public void SetErrorText(string text) { lblError.Text = text; }
         public void SetTimerInterval(int interval) { timerFFT.Interval = interval; }
         public void SetExecTimeText(string text) { lblExeTime.Text = text; }
+        //public void SetRootNoteText(string note) { lblRootNote.Text = "Root Note: " + note; }
         public void RenderSpectrum() { spFFT.Render(); }
 
         public bool IsTempoEnabled() { return chbTempo.Enabled; }
         public bool IsTempoChecked() { return chbTempo.Checked; }
-        public bool IsOrderChecked() { return chbOrder.Checked; }
+        //public bool IsOrderChecked() { return chbOrder.Checked; }
 
         private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {

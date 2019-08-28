@@ -40,11 +40,13 @@ namespace MusicAnalyser
             txtMaxGainChange.Text = Prefs.MAX_GAIN_CHANGE.ToString();
             txtMaxFreqChange.Text = Prefs.MAX_FREQ_CHANGE.ToString();
             txtSimilarGainThd.Text = Prefs.SIMILAR_GAIN_THRESHOLD.ToString();
+            numChordInterval.Value = Prefs.CHORD_DETECTION_INTERVAL;
+            numOccurThd.Value = Prefs.CHORD_NOTE_OCCURENCE_OFFSET;
         }
 
         private void SavePrefs()
         {
-            string[] prefsToSave = new string[13];
+            string[] prefsToSave = new string[15];
             prefsToSave[0] = "UI_THEME=" + DictIndexOf(uiThemeDict, comboTheme.Text);
             prefsToSave[1] = "FOLLOW_SECS=" + numFollowSecs.Value;
             prefsToSave[2] = "UPDATE_MODE=" + DictIndexOf(updateModeDict, comboMode.Text);
@@ -58,6 +60,8 @@ namespace MusicAnalyser
             prefsToSave[10] = "MAX_GAIN_CHANGE=" + txtMaxGainChange.Text;
             prefsToSave[11] = "MAX_FREQ_CHANGE=" + txtMaxFreqChange.Text;
             prefsToSave[12] = "SIMILAR_GAIN_THRESHOLD=" + txtSimilarGainThd.Text;
+            prefsToSave[13] = "CHORD_DETECTION_INTERVAL=" + numChordInterval.Value;
+            prefsToSave[14] = "CHORD_NOTE_OCCURENCE_OFFSET=" + numOccurThd.Value;
             FileHandler.WriteFile("prefs.ini", prefsToSave); 
         }
 
