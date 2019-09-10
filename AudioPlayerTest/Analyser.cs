@@ -13,25 +13,35 @@ namespace MusicAnalyser
         private Music music;
         private AppController app;
 
-        private List<Note> notes;
-        private List<Note>[] chordNotes;
-        private List<string> chords = new List<string>();
-        private double[] notePercent = new double[12];
+        private static List<Note> aggregateNotes = new List<Note>();
+        private static List<Note> notes;
+        private static List<Note>[] chordNotes;
+        private static List<string> chords = new List<string>();
+        private static double[] notePercent = new double[12];
         private List<int> avgError = new List<int>();
+        private static Color[] noteColors = new Color[12];
 
         public Analyser(Form1 form, AppController appControl)
         {
             ui = form;
             app = appControl;
-            music = new Music();
-            notes = new List<Note>();
+            music = new Music(); 
         }
 
         public List<int> GetAvgError() { return avgError; }
         public Music GetMusic() { return music; }
+        public List<Note> GetNotes() { return notes; }
         public List<Note>[] GetChordNotes() { return chordNotes; }
-        public List<string> GetChords() { return chords; }
         public void ResetError() { avgError.Clear(); }
+        public double[] GetNotePercents() { return notePercent; }
+        public Color[] GetNoteColors() { return noteColors; }
+
+        public void GetChords(out List<string> chordsList)
+        {
+            string[] chordsArray = new string[chords.Count];
+            Array.Copy(chords.ToArray(), chordsArray, chords.Count);
+            chordsList = chordsArray.ToList();
+        }
 
         /*
          * Identifies valid notes from the peaks in the frequency spectrum and plots them
@@ -39,6 +49,7 @@ namespace MusicAnalyser
         public void GetNotes(Dictionary<double, double> fftPeaks, int timeStamp)
         {
             music.NoteError = new List<int>();
+            notes = new List<Note>();
 
             foreach (double freq in fftPeaks.Keys)
             {
@@ -48,20 +59,27 @@ namespace MusicAnalyser
                     continue;
 
                 Note myNote = CreateNote(noteName, freq, fftPeaks[freq], timeStamp);
+                aggregateNotes.Add(myNote);
                 notes.Add(myNote);
-                //ui.PrintNote(noteName, freq, myNote.Magnitude);
-                int occurences = music.NoteOccurences[myNote.NoteIndex];
-                double percent = ((double)occurences / (double)music.NoteBuffer.Count) * 100;
-                Color noteColor = app.GetNoteColor(0, (int)(10000 / 7), (int)(percent * 100));
-                notePercent[myNote.NoteIndex] = percent;
                 music.CountNote(noteName);
                 BufferNote(myNote.NoteIndex);
-                ui.UpdateNoteOccurencesUI(noteName, occurences, percent, noteColor);
-                ui.PlotNote(noteName, freq, myNote.Magnitude, noteColor);
-            } 
+            }
+            GetNotePercentages();
 
             if (music.NoteError.Count > 0)
                 avgError.Add((int)music.NoteError.Average());
+        }
+
+        private void GetNotePercentages()
+        {
+            for(int i = 0; i < music.NoteOccurences.Length; i++)
+            {
+                int occurences = music.NoteOccurences[i];
+                double percent = ((double)occurences / (double)music.NoteBuffer.Count) * 100;
+                notePercent[i] = percent;
+                Color noteColor = app.GetNoteColor(0, (int)(10000 / 7), (int)(percent * 100));
+                noteColors[i] = noteColor; 
+            }
         }
 
         private Note CreateNote(string name, double freq, double gain, int timeStamp)
@@ -189,28 +207,40 @@ namespace MusicAnalyser
             //Console.WriteLine("");
         }
 
-        public void FindChordsNotes()
+        public int FindChordsNotes()
         {
+            if (aggregateNotes.Count == 0)
+                return 0;
+
             ui.InvokeUI(() => ui.ClearNotesList());
 
-            int[] tempNoteOccurences = new int[12];
+            int[,] tempNoteOccurences = new int[12, 2];
             List<Note>[] notesByName = new List<Note>[12];
             for (int i = 0; i < 12; i++)
                 notesByName[i] = new List<Note>();
 
-            for(int i = 0; i < notes.Count; i++)
+            int initialTimeStamp = aggregateNotes[0].TimeStamp;
+            int timeStampOffset = 0;
+
+            for(int i = 0; i < aggregateNotes.Count; i++)
             {
-                int index = notes[i].NoteIndex;
-                tempNoteOccurences[index]++;
-                notesByName[index].Add(notes[i]);
+                int index = aggregateNotes[i].NoteIndex;
+                notesByName[index].Add(aggregateNotes[i]);
+
+                if (tempNoteOccurences[index, 1] != initialTimeStamp + timeStampOffset)
+                {
+                    tempNoteOccurences[index, 0]++;
+                    tempNoteOccurences[index, 1] = aggregateNotes[i].TimeStamp;
+                }
+                timeStampOffset = aggregateNotes[i].TimeStamp - initialTimeStamp;
             }
-            notes.Clear();
+            aggregateNotes.Clear();
 
             int numChordNotes = 0;
             List<int> chordNoteIndexes = new List<int>();
-            for(int i = 0; i < tempNoteOccurences.Length; i++)
+            for(int i = 0; i < tempNoteOccurences.Length / 2; i++)
             {
-                if(tempNoteOccurences[i] >= Prefs.CHORD_DETECTION_INTERVAL + Prefs.CHORD_NOTE_OCCURENCE_OFFSET)
+                if(tempNoteOccurences[i, 0] >= Prefs.CHORD_NOTE_OCCURENCE_OFFSET)
                 {
                     numChordNotes++;
                     chordNoteIndexes.Add(i);
@@ -232,6 +262,44 @@ namespace MusicAnalyser
                 }
                 chordNotes[i] = chordNotes[i].OrderBy(x => x.Frequency).ToList(); // Order: Frequency - low to high
             }
+
+            int removed = 0;
+            for(int i = 0; i < chordNotes.Length; i++)
+            {
+                if(chordNotes[i].Count == 1 && chordNotes[i][0].Octave > 3)
+                {
+                    chordNotes[i].Clear();
+                    removed++;
+                    continue;
+                }
+
+                int lowestOctave = chordNotes[i][0].Octave;
+                for(int j = 1; j < chordNotes[i].Count; j++)
+                {
+                    if (chordNotes[i][j].Octave < lowestOctave)
+                        lowestOctave = chordNotes[i][j].Octave;
+                }
+
+                if (lowestOctave > 3)
+                {
+                    chordNotes[i].Clear();
+                    removed++;
+                }
+            }
+
+            List<Note>[] chordTemp = new List<Note>[chordNotes.Length - removed];
+            int tempIndex = 0;
+            for(int i = 0; i < chordNotes.Length; i++)
+            {
+                if (chordNotes[i].Count != 0)
+                {
+                    chordTemp[tempIndex] = chordNotes[i];
+                    tempIndex++;
+                }
+            }
+            chordNotes = chordTemp;
+
+            return 1;
         }
 
         public void FindChords()
@@ -272,7 +340,7 @@ namespace MusicAnalyser
 
         public void DisposeAnalyser()
         {
-            notes.Clear();
+            aggregateNotes.Clear();
             avgError.Clear();
             notePercent = new double[12];
             music.DisposeMusic();

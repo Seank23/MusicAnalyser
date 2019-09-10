@@ -425,8 +425,9 @@ namespace MusicAnalyser
                     GetPeaksBySlope();
 
                 int timeStamp = analysisUpdates;
-                analyser.GetNotes(fftPeaks, timeStamp);
+                analyser.GetNotes(fftPeaks, analysisUpdates);
                 Task asyncAnalysis = RunAnalysisAsync();
+                DisplayAnalysisUI();
                 ui.RenderSpectrum();
 
                 if (analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
@@ -469,22 +470,77 @@ namespace MusicAnalyser
                 analyser.FindKey();
                 if (analysisUpdates % Prefs.CHORD_DETECTION_INTERVAL == 0)
                 {
-                    analyser.FindChordsNotes();
-                    analyser.FindChords();
-                    DisplayChordNotes();
+                    int completed = analyser.FindChordsNotes();
+                    if (completed == 1)
+                    {
+                        analyser.FindChords();
+                        DisplayChords();
+                    }
                 }
             });
         }
 
-        public void DisplayChordNotes()
+        public void DisplayAnalysisUI()
+        {
+            List<Note> notes = analyser.GetNotes();
+            List<Note>[] chordNotes = analyser.GetChordNotes();
+            Color[] noteColors = analyser.GetNoteColors();
+            double[] notePercents = analyser.GetNotePercents();
+            analyser.GetChords(out List<string> chords);
+
+            if (notes != null)
+            {
+                for (int i = 0; i < notes.Count; i++)
+                {
+                    if (notes[i] != null)
+                        ui.PlotNote(notes[i].Name + notes[i].Octave, notes[i].Frequency, notes[i].Magnitude, noteColors[notes[i].NoteIndex], false);
+
+                    if (chordNotes != null)
+                    {
+                        for (int j = 0; j < chordNotes.Length; j++)
+                        {
+                            for (int k = 0; k < chordNotes[j].Count; k++)
+                            {
+                                if (notes[i].Name == chordNotes[j][k].Name && notes[i].Octave == chordNotes[j][k].Octave)
+                                    ui.PlotNote("*", notes[i].Frequency, notes[i].Magnitude + 5, noteColors[notes[i].NoteIndex], true);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (chords != null)
+            {
+                int chordIndex = 0;
+                for (int i = 0; i < chords.Count; i++)
+                {
+                    if (chords[i] != "N/A" && chords[i] != null)
+                    {
+                        ui.PlotNote(chords[i], chordIndex * 70, maxGain + 10, Color.Black, false);
+                        chordIndex++;
+                    }
+                }
+            }
+
+            if (notePercents != null && noteColors != null)
+            {
+                for (int i = 0; i < notePercents.Length; i++)
+                {
+                    if (noteColors[i] != null && notePercents != null)
+                        ui.UpdateNoteOccurencesUI(Music.Scales[i * 7], (int)(notePercents[i] / 100 * Prefs.NOTE_BUFFER_SIZE), notePercents[i], noteColors[i]);
+                }
+            }
+        }
+
+        public void DisplayChords()
         {
             ui.InvokeUI(() => ui.ClearNotesList());
             List<Note>[] chordNotes = analyser.GetChordNotes();
             if (chordNotes == null)
                 return;
-            List<string> chords = analyser.GetChords();
+            analyser.GetChords(out List<string> chords);
 
-            for(int i = 0; i < chords.Count; i++)
+            for (int i = 0; i < chords.Count; i++)
             {
                 string chord = chords[i];
                 if (chord != "N/A")
@@ -493,7 +549,7 @@ namespace MusicAnalyser
 
             for (int i = 0; i < chordNotes.Length; i++)
             {
-                for(int j = 0; j < chordNotes[i].Count; j++)
+                for (int j = 0; j < chordNotes[i].Count; j++)
                 {
                     Console.Write(chordNotes[i][j].Name + chordNotes[i][j].Octave + " ");
                 }

@@ -162,13 +162,12 @@ namespace MusicAnalyser
                     zoom = 4000;
                     break;
             }
-            spFFT.plt.Axis(0, zoom, avgGain - 10, maxGain + 10);  
+            spFFT.plt.Axis(0, zoom, avgGain - 5, maxGain + 10);  
         }
 
         public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
         {
-            string note = noteName.Substring(0, noteName.Length - 1);
-            switch (note)
+            switch (noteName)
             {
                 case "C":
                     lblC.Text = "C: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
@@ -279,18 +278,16 @@ namespace MusicAnalyser
         public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "FFT Updates: " + draws; }
         public void ClearNotesList() { lstChords.Items.Clear(); }
         public void PrintChord(string text) { lstChords.Items.Add(text); }
-        public void PlotNote(string name, double freq, double gain, Color color) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 11); }
+        public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 11, bold: isBold); }
         public void SetKeyText(string text) { lblKey.Text = text; }
         public void SetModeText(string text) { lblMode.Text = text; }
         public void SetErrorText(string text) { lblError.Text = text; }
         public void SetTimerInterval(int interval) { timerFFT.Interval = interval; }
         public void SetExecTimeText(string text) { lblExeTime.Text = text; }
-        //public void SetRootNoteText(string note) { lblRootNote.Text = "Root Note: " + note; }
         public void RenderSpectrum() { spFFT.Render(); }
 
         public bool IsTempoEnabled() { return chbTempo.Enabled; }
         public bool IsTempoChecked() { return chbTempo.Checked; }
-        //public bool IsOrderChecked() { return chbOrder.Checked; }
 
         private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
