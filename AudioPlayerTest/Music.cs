@@ -254,101 +254,228 @@ namespace MusicAnalyser
             return "";
         }
 
-        public static string GetChordQuality(string interval)
+        public static string GetChordQuality(List<int> intervals)
         {
-            int notesOmitted = 0;
-            string star = "";
-            while (notesOmitted <= 1)
+            int fifthOmitted = 0;
+            while (fifthOmitted <= 1)
             {
-                switch (interval)
+                if (intervals.Contains(4) && intervals.Contains(7)) // Major chords
                 {
-                    case "47":
-                        return "" + star;
-                    case "37":
-                        return "m" + star;
-                    case "4710":
-                        return "7" + star;
-                    case "3710":
-                        return "m7" + star;
-                    case "4711":
-                        return "maj7" + star;
-                    case "3711":
-                        return "mM7" + star;
-                    case "4610":
-                        return "7b5" + star;
-                    case "4810":
-                        return "7#5" + star;
-                    case "3610":
-                        return "7b5" + star;
-                    case "14710":
-                        return "7b9" + star;
-                    case "46":
-                        return "b5" + star;
-                    case "7":
-                        return "5" + star;
-                    case "479":
-                        return "6" + star;
-                    case "379":
-                        return "m6" + star;
-                    case "2479":
-                        return "6/9" + star;
-                    case "24710":
-                        return "9" + star;
-                    case "24610":
-                        return "9b5" + star;
-                    case "24810":
-                        return "9#5" + star;
-                    case "23710":
-                        return "m9" + star;
-                    case "24711":
-                        return "maj9" + star;
-                    case "247":
-                        return "add9" + star;
-                    case "34710":
-                        return "7#9" + star;
-                    case "245710":
-                        return "11" + star;
-                    case "257910":
-                        return "13" + star;
-                    case "247911":
-                        return "maj13" + star;
-                    case "27":
-                        return "sus2" + star;
-                    case "57":
-                        return "sus4" + star;
-                    case "5710":
-                        return "7sus4" + star;
-                    case "25710":
-                        return "9sus4" + star;
-                    case "36":
-                        return "dim" + star;
-                    case "369":
-                        return "dim7" + star;
-                    case "48":
-                        return "aug" + star;
-                    default:
-                        break;
-                }
-                if (!interval.Contains('7'))
-                {
-                    string temp = "";
-                    for (int i = 0; i < interval.Length - 1; i++)
+                    intervals.Remove(4);
+                    intervals.Remove(7);
+
+                    if (intervals.Contains(2)) // Contains 2/9
                     {
-                        temp += interval[i];
-                        if (Convert.ToInt32(interval[i].ToString()) < 7 && Convert.ToInt32(interval[i + 1].ToString()) > 7)
-                            temp += 7;
+                        intervals.Remove(2);
+                        if (intervals.Contains(9)) // Contains 6
+                        {
+                            intervals.Remove(9);
+                            return "6/9" + AddRemainingNotes(intervals);
+                        }
+                        if (intervals.Contains(10)) // Contains m7
+                        {
+                            intervals.Remove(10);
+                            if (intervals.Contains(5))
+                            {
+                                intervals.Remove(5);
+                                return "11" + AddRemainingNotes(intervals);
+                            }
+                            return "9" + AddRemainingNotes(intervals);
+                        }
+                        if (intervals.Contains(11)) // Contains maj7
+                        {
+                            intervals.Remove(11);
+                            if (intervals.Contains(9)) // Contains maj6
+                            {
+                                intervals.Remove(9);
+                                return "maj13" + AddRemainingNotes(intervals);
+                            }
+                            return "maj9" + AddRemainingNotes(intervals);
+                        }
+                        return "add9" + AddRemainingNotes(intervals);
                     }
-                    if(interval.Length > 0)
-                        temp += interval[interval.Length - 1];
-                    
-                    interval = temp;
-                    notesOmitted++;
-                    star = "*";
+
+                    if (intervals.Contains(9)) // Contains maj6
+                    {
+                        intervals.Remove(9);
+                        return "6" + AddRemainingNotes(intervals);
+                    }
+
+                    if (intervals.Contains(10)) // Contains m7
+                    {
+                        intervals.Remove(10);
+                        if (intervals.Contains(1)) // Contains b2/9
+                        {
+                            intervals.Remove(1);
+                            return "7b9" + AddRemainingNotes(intervals);
+                        }
+
+                        if (intervals.Contains(3)) // Contains #2/9
+                        {
+                            intervals.Remove(3);
+                            return "7#9" + AddRemainingNotes(intervals);
+                        }
+                        return "7" + AddRemainingNotes(intervals);
+                    }
+
+                    if (intervals.Contains(11)) // Contains maj7
+                    {
+                        intervals.Remove(11);
+                        return "maj7" + AddRemainingNotes(intervals);
+                    }
+                    return "" + AddRemainingNotes(intervals);
                 }
-                else
-                    break;
+
+                if (intervals.Contains(3) && intervals.Contains(7)) // Minor chords
+                {
+                    intervals.Remove(3);
+                    intervals.Remove(7);
+
+                    if (intervals.Contains(9)) // Contains 6
+                    {
+                        intervals.Remove(9);
+                        return "m6" + AddRemainingNotes(intervals);
+                    }
+
+                    if (intervals.Contains(10)) // Contains m7
+                    {
+                        intervals.Remove(10);
+                        if (intervals.Contains(2)) // Contains 2/9
+                        {
+                            intervals.Remove(2);
+                            return "m9" + AddRemainingNotes(intervals);
+                        }
+                        return "m7" + AddRemainingNotes(intervals);
+                    }
+
+                    if (intervals.Contains(11)) // Contains maj7
+                    {
+                        intervals.Remove(11);
+                        return "mM7" + AddRemainingNotes(intervals);
+                    }
+                    return "m" + AddRemainingNotes(intervals);
+                }
+
+                if (intervals.Contains(2) && intervals.Contains(7)) // Suspended 2 chords
+                {
+                    intervals.Remove(2);
+                    intervals.Remove(7);
+
+                    if (intervals.Contains(10)) // Contains m7
+                    {
+                        intervals.Remove(10);
+                        if (intervals.Contains(2)) // Contains 2/9
+                        {
+                            intervals.Remove(2);
+                            if (intervals.Contains(5))
+                            {
+                                intervals.Remove(5);
+                                return "9sus2" + AddRemainingNotes(intervals);
+                            }
+                            return "7sus2" + AddRemainingNotes(intervals);
+                        }
+                    }
+                    return "sus2" + AddRemainingNotes(intervals);
+                }
+
+                if (intervals.Contains(5) && intervals.Contains(7)) // Suspended 4 chords
+                {
+                    intervals.Remove(5);
+                    intervals.Remove(7);
+
+                    if (intervals.Contains(10)) // Contains m7
+                    {
+                        intervals.Remove(10);
+                        if (intervals.Contains(2)) // Contains 2/9
+                        {
+                            intervals.Remove(2);
+                            if (intervals.Contains(5))
+                            {
+                                intervals.Remove(5);
+                                return "9sus4" + AddRemainingNotes(intervals);
+                            }
+                            return "7sus4" + AddRemainingNotes(intervals);
+                        }
+                    }
+                    return "sus4" + AddRemainingNotes(intervals);
+                }
+
+                if (intervals.Contains(3) && intervals.Contains(6)) // Diminished chords
+                {
+                    intervals.Remove(3);
+                    intervals.Remove(6);
+
+                    if (intervals.Contains(9)) // Contains 6
+                    {
+                        intervals.Remove(9);
+                        return "dim7" + AddRemainingNotes(intervals);
+                    }
+                    if (intervals.Contains(10)) // Contains m7
+                    {
+                        intervals.Remove(10);
+                        return "m7b5" + AddRemainingNotes(intervals);
+                    }
+                    return "dim" + AddRemainingNotes(intervals);
+                }
+
+                if (intervals.Contains(4) && intervals.Contains(8)) // Augmented chords
+                {
+                    intervals.Remove(4);
+                    intervals.Remove(8);
+                    return "aug" + AddRemainingNotes(intervals);
+                }
+
+                intervals.Add(7);
+                fifthOmitted += 1;
             }
             return "N/A";
+        }
+
+        private static string AddRemainingNotes(List<int> intervals)
+        {
+            if (intervals.Count == 0)
+                return "";
+
+            string remainder = " (";
+            for(int i = 0; i < intervals.Count; i++)
+            {
+                switch(intervals[i])
+                {
+                    case 1:
+                        remainder += "b9";
+                        break;
+                    case 2:
+                        remainder += "9";
+                        break;
+                    case 3:
+                        remainder += "#9";
+                        break;
+                    case 4:
+                        remainder += "b11";
+                        break;
+                    case 5:
+                        remainder += "11";
+                        break;
+                    case 6:
+                        remainder += "#11";
+                        break;
+                    case 8:
+                        remainder += "#5";
+                        break;
+                    case 9:
+                        remainder += "6";
+                        break;
+                    case 10:
+                        remainder += "m7";
+                        break;
+                    case 11:
+                        remainder += "maj7";
+                        break;
+                }
+                if(i < intervals.Count - 1)
+                    remainder += ", ";
+            }
+            return remainder + ")";
         }
 
         public void ResetNoteCount()

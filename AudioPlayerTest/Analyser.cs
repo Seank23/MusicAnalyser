@@ -311,21 +311,40 @@ namespace MusicAnalyser
 
             for (int i = 0; i < chordNotes.Length; i++)
             {
-                string interval = "";
+                List<int> intervals = new List<int>();
                 for (int j = 1; j < chordNotes.Length; j++)
                 {
                     int noteDifference = chord[j].NoteIndex - chord[0].NoteIndex;
                     if (noteDifference < 0)
                         noteDifference = 12 + noteDifference;
-                    interval += noteDifference;
+                    intervals.Add(noteDifference);
                 }
-                string chordQuality = Music.GetChordQuality(interval);
+                string chordQuality = Music.GetChordQuality(intervals);
                 if(chordQuality != "N/A")
                     chords.Add(chord[0].Name + chordQuality);
-                else
-                    chords.Add(chordQuality);
+
                 chord = NextChord(chord);
             }
+            chords = OrderChords();
+        }
+
+        private List<string> OrderChords()
+        {
+            List<string> orderedChords = new List<string>();
+            List<string> complex = new List<string>();
+
+            for(int i = 0; i < chords.Count; i++)
+            {
+                if (chords[i].Contains('('))
+                    complex.Add(chords[i]);
+                else
+                    orderedChords.Add(chords[i]);
+            }
+            for(int i = 0; i < complex.Count; i++)
+            {
+                orderedChords.Add(complex[i]);
+            }
+            return orderedChords;
         }
 
         private List<Note> NextChord(List<Note> chord)

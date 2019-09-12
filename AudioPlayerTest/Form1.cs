@@ -11,6 +11,7 @@ namespace MusicAnalyser
         private AppController app;
         private Music music;
         public DirectSoundOut output { get; set; }
+        public int fftZoom = 1000;
 
         public Form1()
         {
@@ -146,23 +147,22 @@ namespace MusicAnalyser
         {
             spFFT.plt.Clear();
             spFFT.plt.PlotSignal(dataFft, fftScale, markerSize: 0);
-            int zoom = 0;
             switch(barZoom.Value)
             {
                 case 0:
-                    zoom = 500;
+                    fftZoom = 500;
                     break;
                 case 1:
-                    zoom = 1000;
+                    fftZoom = 1000;
                     break;
                 case 2:
-                    zoom = 2000;
+                    fftZoom = 2000;
                     break;
                 case 3:
-                    zoom = 4000;
+                    fftZoom = 4000;
                     break;
             }
-            spFFT.plt.Axis(0, zoom, avgGain - 5, maxGain + 10);  
+            spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);  
         }
 
         public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
@@ -275,7 +275,7 @@ namespace MusicAnalyser
         }
 
         public void EnableTimer(bool enable) { timerFFT.Enabled = enable; }
-        public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "FFT Updates: " + draws; }
+        public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "Spectrum Updates: " + draws; }
         public void ClearNotesList() { lstChords.Items.Clear(); }
         public void PrintChord(string text) { lstChords.Items.Add(text); }
         public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 11, bold: isBold); }
@@ -288,6 +288,7 @@ namespace MusicAnalyser
 
         public bool IsTempoEnabled() { return chbTempo.Enabled; }
         public bool IsTempoChecked() { return chbTempo.Checked; }
+        public bool IsComplexChordsChecked() { return chbComplexChords.Checked; }
 
         private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {

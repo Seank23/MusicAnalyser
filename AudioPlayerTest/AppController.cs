@@ -511,13 +511,22 @@ namespace MusicAnalyser
 
             if (chords != null)
             {
-                int chordIndex = 0;
+                float X = 0;
                 for (int i = 0; i < chords.Count; i++)
                 {
                     if (chords[i] != "N/A" && chords[i] != null)
                     {
-                        ui.PlotNote(chords[i], chordIndex * 70, maxGain + 10, Color.Black, false);
-                        chordIndex++;
+                        if(!ui.IsComplexChordsChecked())
+                        {
+                            if (chords[i].Contains('('))
+                                continue;
+                        }
+                        if (chords[i].Contains('('))
+                            ui.PlotNote(chords[i], X, maxGain + 10, Color.Black, false);
+                        else
+                            ui.PlotNote(chords[i], X, maxGain + 10, Color.Blue, false);
+
+                        X += (chords[i].Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }
                 }
             }
@@ -543,8 +552,12 @@ namespace MusicAnalyser
             for (int i = 0; i < chords.Count; i++)
             {
                 string chord = chords[i];
-                if (chord != "N/A")
-                    ui.InvokeUI(() => ui.PrintChord(chord));
+                if (!ui.IsComplexChordsChecked())
+                {
+                    if (chord.Contains('('))
+                        continue;
+                }
+                ui.InvokeUI(() => ui.PrintChord(chord));
             }
 
             for (int i = 0; i < chordNotes.Length; i++)
@@ -553,7 +566,11 @@ namespace MusicAnalyser
                 {
                     Console.Write(chordNotes[i][j].Name + chordNotes[i][j].Octave + " ");
                 }
-                Console.Write(" - " + chords[i]);
+                for(int j = 0; j < chords.Count; j++)
+                {
+                    if(chords[j].Contains(chordNotes[i][0].Name))
+                        Console.Write(" - " + chords[j]);
+                }
                 Console.WriteLine("");
             }
             Console.WriteLine("");

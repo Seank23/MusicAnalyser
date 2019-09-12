@@ -90,6 +90,7 @@
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblMode = new System.Windows.Forms.Label();
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.chbComplexChords = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -150,11 +151,11 @@
             this.lblFFTDraws.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblFFTDraws.AutoSize = true;
-            this.lblFFTDraws.Location = new System.Drawing.Point(63, 443);
+            this.lblFFTDraws.Location = new System.Drawing.Point(28, 443);
             this.lblFFTDraws.Name = "lblFFTDraws";
-            this.lblFFTDraws.Size = new System.Drawing.Size(106, 17);
+            this.lblFFTDraws.Size = new System.Drawing.Size(141, 17);
             this.lblFFTDraws.TabIndex = 4;
-            this.lblFFTDraws.Text = "FFT Updates: 0";
+            this.lblFFTDraws.Text = "Spectrum Updates: 0";
             // 
             // lstChords
             // 
@@ -163,7 +164,7 @@
             this.lstChords.ItemHeight = 16;
             this.lstChords.Location = new System.Drawing.Point(1514, 596);
             this.lstChords.Name = "lstChords";
-            this.lstChords.Size = new System.Drawing.Size(120, 68);
+            this.lstChords.Size = new System.Drawing.Size(120, 100);
             this.lstChords.TabIndex = 5;
             // 
             // label1
@@ -697,6 +698,19 @@
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
             // 
+            // chbComplexChords
+            // 
+            this.chbComplexChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chbComplexChords.AutoSize = true;
+            this.chbComplexChords.Checked = true;
+            this.chbComplexChords.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbComplexChords.Location = new System.Drawing.Point(1514, 715);
+            this.chbComplexChords.Name = "chbComplexChords";
+            this.chbComplexChords.Size = new System.Drawing.Size(132, 21);
+            this.chbComplexChords.TabIndex = 13;
+            this.chbComplexChords.Text = "Complex Chords";
+            this.chbComplexChords.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -721,6 +735,7 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtTime);
             this.Controls.Add(this.chbTempo);
+            this.Controls.Add(this.chbComplexChords);
             this.Controls.Add(this.chbFollow);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.label14);
@@ -832,6 +847,7 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem perferencesToolStripMenuItem;
         private System.Windows.Forms.Label lblMode;
+        private System.Windows.Forms.CheckBox chbComplexChords;
     }
 }
 
