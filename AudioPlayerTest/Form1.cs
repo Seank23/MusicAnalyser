@@ -275,7 +275,7 @@ namespace MusicAnalyser
         }
 
         public void EnableTimer(bool enable) { timerFFT.Enabled = enable; }
-        public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "Spectrum Updates: " + draws; }
+        public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "FFT Updates: " + draws; }
         public void ClearNotesList() { lstChords.Items.Clear(); }
         public void PrintChord(string text) { lstChords.Items.Add(text); }
         public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 11, bold: isBold); }
@@ -288,7 +288,7 @@ namespace MusicAnalyser
 
         public bool IsTempoEnabled() { return chbTempo.Enabled; }
         public bool IsTempoChecked() { return chbTempo.Checked; }
-        public bool IsComplexChordsChecked() { return chbComplexChords.Checked; }
+        public bool IsShowAllChordsChecked() { return chbAllChords.Checked; }
 
         private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {

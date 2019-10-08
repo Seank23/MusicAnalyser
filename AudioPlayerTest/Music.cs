@@ -72,20 +72,15 @@ namespace MusicAnalyser
             }
             foreach(double fundFreq in NoteMap.Keys)
             {
-                double fundLow, fundHigh;
-                if (percentChange != 0)
-                {
-                    fundLow = fundFreq + (fundFreq / 100 * percentChange) - (fundFreq / 100 * Tolerance);
-                    fundHigh = fundFreq + (fundFreq / 100 * percentChange) + (fundFreq / 100 * Tolerance);
-                }
-                else
-                {
-                    fundLow = fundFreq - (fundFreq / 100 * Tolerance);
-                    fundHigh = fundFreq + (fundFreq / 100 * Tolerance);
-                }
+                double fundChange, fundLow, fundHigh;
+
+                fundChange = fundFreq + ((fundFreq / 100) * percentChange);
+                fundLow = fundChange - (fundFreq / 100 * Tolerance);
+                fundHigh = fundChange + (fundFreq / 100 * Tolerance);
+
                 if (freq >= fundLow && freq <= fundHigh)
                 {
-                    double errorCents = ((freq - fundFreq) / fundFreq * 100) / CentPercent;
+                    double errorCents = ((freq - fundChange) / fundChange * 100) / CentPercent;
                     NoteError.Add((int)errorCents);
                     return NoteMap[fundFreq] + octave.ToString();
                 }
