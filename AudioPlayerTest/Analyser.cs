@@ -22,6 +22,8 @@ namespace MusicAnalyser
         private static Color[] noteColors = new Color[12];
         private string currentKey;
         private string currentMode;
+        private Chord prevChord;
+        private string majorKeyRoot;
 
         public Analyser(Form1 form, AppController appControl)
         {
@@ -140,7 +142,7 @@ namespace MusicAnalyser
                 percents[largestIndex] = 0;
             }
 
-            int[] keyProbability = Music.FindScale(dominantNotes);
+            int[] keyProbability = Music.FindScaleProbability(dominantNotes);
 
             largestIndex = 0;
             bool confident = false;
@@ -184,11 +186,7 @@ namespace MusicAnalyser
             else if (!confident) // There is no discernable key
             {
                 currentKey = "N/A";
-                //for (int i = 0; i < keyProbability.Length; i++) // DEBUG
-                //{
-                //    Console.WriteLine(Music.GetNoteName(i) + ": " + keyProbability[i]);
-                //}
-                //Console.WriteLine("");
+                majorKeyRoot = "N/A";
                 return;
             }
             string keyRoot = Music.GetNoteName(largestIndex);
@@ -197,13 +195,8 @@ namespace MusicAnalyser
             else
                 currentKey = keyRoot + " Major";
 
+            majorKeyRoot = keyRoot;
             currentMode = Music.GetMode(notePercent, keyRoot, minorRoot);
-
-            //for (int i = 0; i < keyProbability.Length; i++) // DEBUG
-            //{
-            //    Console.WriteLine(Music.GetNoteName(i) + ": " + keyProbability[i]);
-            //}
-            //Console.WriteLine("");
         }
 
         public int FindChordsNotes()
@@ -265,7 +258,7 @@ namespace MusicAnalyser
             int removed = 0;
             for(int i = 0; i < chordNotes.Length; i++)
             {
-                if(chordNotes[i].Count == 1 && chordNotes[i][0].Octave > 3)
+                if(chordNotes[i].Count == 1 && chordNotes[i][0].Octave > 4)
                 {
                     chordNotes[i].Clear();
                     removed++;
@@ -279,7 +272,7 @@ namespace MusicAnalyser
                         lowestOctave = chordNotes[i][j].Octave;
                 }
 
-                if (lowestOctave > 3)
+                if (lowestOctave > 4)
                 {
                     chordNotes[i].Clear();
                     removed++;
@@ -314,7 +307,7 @@ namespace MusicAnalyser
                     avgMagnitude += chordNotes[i][j].Magnitude;
                 avgMagnitude /= chordNotes[i].Count;
 
-                Note newChordNote = chordNotes[i][0];
+                Note newChordNote = (Note)chordNotes[i][0].Clone();
                 newChordNote.Magnitude = avgMagnitude;
                 newChordNote.Octave = chordNotes[i].Count;
                 myChordNotes.Add(newChordNote);
@@ -338,6 +331,8 @@ namespace MusicAnalyser
             }
             AdjustChordProbabilities();
             chords = chords.OrderByDescending(x => x.Probability).ToList();
+            if(chords.Count > 0)
+                prevChord = chords[0];
         }
 
         private Chord CreateChord(string root, string quality, List<Note> notes)
@@ -398,9 +393,33 @@ namespace MusicAnalyser
                 chordExtensions[i] -= avgExtensions;
             chordExtensions = Normalise(chordExtensions);
 
+            double[] chordPredictedBefore = new double[chords.Count];
+            if (prevChord != null)
+            { 
+                for(int i = 0; i < chords.Count; i++)
+                {
+                    if (chords[i].Root == prevChord.Root)
+                        chordPredictedBefore[i] += 1;
+                }
+            }
+
+            double[] rootInKey = new double[chords.Count];
+            if (majorKeyRoot != "N/A")
+            {
+                string[] scale = new string[7];
+                Array.Copy(Music.Scales, Music.GetNoteIndex(majorKeyRoot + "0") * 7, scale, 0, scale.Length);
+                for (int i = 0; i < chords.Count; i++)
+                {
+                    if (scale.Contains(chords[i].Root))
+                        rootInKey[i] += 1;
+                    else
+                        rootInKey[i] -= 1;
+                }
+            }
+
             double[] overallProb = new double[chords.Count];
             for(int i = 0; i < chords.Count; i++)
-                overallProb[i] = rootMagnitudes[i] + rootOccurences[i] - rootFreq[i] - chordExtensions[i];
+                overallProb[i] = rootMagnitudes[i] + rootOccurences[i] - 2 * rootFreq[i] - chordExtensions[i] + 1.5 * chordPredictedBefore[i] + rootInKey[i];
             overallProb = Normalise(overallProb);
             double probSum = overallProb[0] + 1;
             for (int i = 1; i < chords.Count; i++)

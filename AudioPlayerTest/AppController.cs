@@ -296,7 +296,7 @@ namespace MusicAnalyser
                     }
                 }
 
-                if (cluster.Count > 1) // Keeps only the largest peak in the cluster
+                if (cluster.Count > 1) // Keeps only the largest value in the cluster
                 {
                     cluster.Remove(largestGain);
                     for (int j = 0; j < cluster.Count; j++)
@@ -424,7 +424,6 @@ namespace MusicAnalyser
                 else if(Prefs.NOTE_ALGORITHM == 1) // By Slope
                     GetPeaksBySlope();
 
-                int timeStamp = analysisUpdates;
                 analyser.GetNotes(fftPeaks, analysisUpdates);
                 Task asyncAnalysis = RunAnalysisAsync();
                 DisplayAnalysisUI();
@@ -569,11 +568,6 @@ namespace MusicAnalyser
             for (int i = 0; i < chords.Count; i++)
             {
                 Chord chord = chords[i];
-                //if (!ui.IsComplexChordsChecked())
-                //{
-                //    if (chord.Name.Contains('('))
-                //        continue;
-                //}
                 ui.InvokeUI(() => ui.PrintChord(chord.Name + " (" + chord.Probability.ToString("0.00") + "%)"));
             }
 
@@ -608,7 +602,7 @@ namespace MusicAnalyser
          */
         public void VolumeChange(int value)
         {
-            if (source.AudioStream != null)
+            if (source != null)
                 source.AudioStream.Volume = value / 20f;
         }
 
@@ -617,7 +611,7 @@ namespace MusicAnalyser
          */
         public void TempoChange(int value)
         {
-            if (source.SpeedControl != null)
+            if (source != null)
             {
                 source.SpeedControl.PlaybackRate = 0.5f + value / 20f;
             }

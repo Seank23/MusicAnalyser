@@ -702,8 +702,6 @@
             // 
             this.chbAllChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chbAllChords.AutoSize = true;
-            this.chbAllChords.Checked = true;
-            this.chbAllChords.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbAllChords.Location = new System.Drawing.Point(1514, 715);
             this.chbAllChords.Name = "chbAllChords";
             this.chbAllChords.Size = new System.Drawing.Size(83, 21);

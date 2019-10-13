@@ -170,7 +170,7 @@ namespace MusicAnalyser
             return Scales[index * 7];
         }
 
-        public static int[] FindScale(string[] notes)
+        public static int[] FindScaleProbability(string[] notes)
         {
             int[] scaleProbs = new int[12];
 
@@ -418,6 +418,11 @@ namespace MusicAnalyser
                     intervals.Remove(4);
                     intervals.Remove(8);
                     return "aug" + AddRemainingNotes(intervals);
+                }
+
+                if(intervals.Contains(7) && intervals.Count == 1 && fifthOmitted == 0) // 5 chord/power chord
+                {
+                    return "5";
                 }
 
                 intervals.Add(7);

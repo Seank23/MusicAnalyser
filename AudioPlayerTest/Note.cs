@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MusicAnalyser
 {
-    public class Note
+    public class Note : ICloneable
     {
         public string Name { get; set; }
         public int Octave { get; set; }
@@ -14,5 +14,10 @@ namespace MusicAnalyser
         public double Frequency { get; set; }
         public double Magnitude { get; set; }
         public int TimeStamp { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

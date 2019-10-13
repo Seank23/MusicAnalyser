@@ -61,7 +61,6 @@ namespace MusicAnalyser
 
         public static void WriteFile(string fileName, string[] content)
         {
-            //string filePath = Path.Combine(Path.GetTempPath(), fileName);
             using (StreamWriter file = new StreamWriter(fileName))
             {
                 foreach (string line in content)
@@ -75,7 +74,6 @@ namespace MusicAnalyser
         {
             string[] lines;
             List<string> list = new List<string>();
-            //var fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             using (StreamReader file = new StreamReader(fileName))
             {
                 string line;
