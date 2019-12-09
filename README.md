@@ -1,6 +1,6 @@
 # MusicAnalyser
 
-TODO
+TODO (9/12/2019)
 
   * Version 1:
     * Improve playback functionality (Play from any position, improve animation)
