@@ -34,6 +34,10 @@ namespace MusicAnalyser
             ui.UpdateUI();
         }
 
+        public bool IsStarted() { return started; }
+        public void SetStarted(bool state) { started = state; }
+        public AudioSource GetSource() { return source; }
+
         public static void LoadPrefs()
         {
             if (File.Exists("Prefs.ini"))
@@ -153,11 +157,11 @@ namespace MusicAnalyser
 
             if (dataFft == null)
                 dataFft = new double[fftPoints / 2];
-            for (int i = 0; i < fftPoints / 2; i++) // Converts FFT output to mono and stores in dataFft
+            for (int i = 0; i < fftPoints / 2; i++) // Since FFT output is mirrored above Nyquist limit (fftPoints / 2), these bins are summed with those in base band
             {
-                double fftLeft = Math.Abs(fftFull[i].X + fftFull[i].Y);
-                double fftRight = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
-                dataFft[i] = 20 * Math.Log10(fftLeft + fftRight) - Prefs.PEAK_FFT_POWER; // Estimates gain of FFT bin
+                double fft = Math.Abs(fftFull[i].X + fftFull[i].Y);
+                double fftMirror = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
+                dataFft[i] = 20 * Math.Log10(fft + fftMirror) - Prefs.PEAK_FFT_POWER; // Estimates gain of FFT bin
             }
             fftScale = (double)fftPoints / source.AudioFFT.WaveFormat.SampleRate;
 
@@ -450,13 +454,13 @@ namespace MusicAnalyser
                         int executionTime = AverageExecutionTime();
                         if (executionTime >= Prefs.MIN_UPDATE_TIME)
                             ui.SetTimerInterval(executionTime);
-                        ui.SetExecTimeText("Execution Time: " + executionTime + " ms");
+                        ui.SetExecTimeText(executionTime);
                     }
                 }
                 else if(Prefs.UPDATE_MODE == 1) // Manual update mode
                 {
                     ui.SetTimerInterval(Prefs.MIN_UPDATE_TIME);
-                    ui.SetExecTimeText("Execution Time: " + watch.ElapsedMilliseconds + " ms");
+                    ui.SetExecTimeText((int)watch.ElapsedMilliseconds);
                 }
                 ui.EnableTimer(true);
             }
@@ -612,9 +616,7 @@ namespace MusicAnalyser
         public void TempoChange(int value)
         {
             if (source != null)
-            {
                 source.SpeedControl.PlaybackRate = 0.5f + value / 20f;
-            }
         }
 
         /*
@@ -644,9 +646,5 @@ namespace MusicAnalyser
                 }
             }
         }
-
-        public bool IsStarted() { return started; }
-        public void SetStarted(bool state) { started = state; }
-        public AudioSource GetSource() { return source; }
     }
 }

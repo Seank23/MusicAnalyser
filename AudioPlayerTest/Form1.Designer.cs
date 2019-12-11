@@ -89,8 +89,8 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblMode = new System.Windows.Forms.Label();
-            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             this.chbAllChords = new System.Windows.Forms.CheckBox();
+            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -179,6 +179,7 @@
             // 
             // barVolume
             // 
+            this.barVolume.Enabled = false;
             this.barVolume.Location = new System.Drawing.Point(318, 43);
             this.barVolume.Maximum = 20;
             this.barVolume.Name = "barVolume";
@@ -410,6 +411,7 @@
             // 
             // barTempo
             // 
+            this.barTempo.Enabled = false;
             this.barTempo.Location = new System.Drawing.Point(653, 43);
             this.barTempo.Maximum = 20;
             this.barTempo.Name = "barTempo";
@@ -469,6 +471,7 @@
             // 
             // barPitch
             // 
+            this.barPitch.Enabled = false;
             this.barPitch.Location = new System.Drawing.Point(493, 443);
             this.barPitch.Maximum = 100;
             this.barPitch.Name = "barPitch";
@@ -681,6 +684,17 @@
             this.lblMode.TabIndex = 21;
             this.lblMode.Text = "Mode";
             // 
+            // chbAllChords
+            // 
+            this.chbAllChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chbAllChords.AutoSize = true;
+            this.chbAllChords.Location = new System.Drawing.Point(1514, 715);
+            this.chbAllChords.Name = "chbAllChords";
+            this.chbAllChords.Size = new System.Drawing.Size(83, 21);
+            this.chbAllChords.TabIndex = 13;
+            this.chbAllChords.Text = "Show All";
+            this.chbAllChords.UseVisualStyleBackColor = true;
+            // 
             // cwvViewer
             // 
             this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -697,17 +711,6 @@
             this.cwvViewer.StartPosition = ((long)(0));
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
-            // 
-            // chbAllChords
-            // 
-            this.chbAllChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chbAllChords.AutoSize = true;
-            this.chbAllChords.Location = new System.Drawing.Point(1514, 715);
-            this.chbAllChords.Name = "chbAllChords";
-            this.chbAllChords.Size = new System.Drawing.Size(83, 21);
-            this.chbAllChords.TabIndex = 13;
-            this.chbAllChords.Text = "Show All";
-            this.chbAllChords.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

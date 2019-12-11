@@ -42,6 +42,9 @@ namespace MusicAnalyser
             playToolStripMenuItem.Enabled = true;
             btnOpen.Enabled = false;
             openToolStripMenuItem.Enabled = false;
+            barVolume.Enabled = true;
+            barTempo.Enabled = true;
+            barPitch.Enabled = true;
         }
 
         public bool SelectFile(out OpenFileDialog dialog)
@@ -71,13 +74,19 @@ namespace MusicAnalyser
             spFFT.plt.Clear();
             spFFT.Render();
             cwvViewer.WaveStream = null;
+            txtTime.Text = "";
+            SetErrorText("+ 0 Cents");
+            UpdateFFTDrawsUI(0);
+            SetExecTimeText(0);
             btnClose.Enabled = false;
             btnOpen.Enabled = true;
             btnPlay.Enabled = false;
             btnPlay.Text = "Play";
             music = new Music();
             chbTempo.Enabled = true;
-            barTempo.Enabled = true;
+            barTempo.Enabled = false;
+            barVolume.Enabled = false;
+            barPitch.Enabled = false;
             barVolume.Value = 10;
             barTempo.Value = 10;
             barPitch.Value = 50;
@@ -283,7 +292,7 @@ namespace MusicAnalyser
         public void SetModeText(string text) { lblMode.Text = text; }
         public void SetErrorText(string text) { lblError.Text = text; }
         public void SetTimerInterval(int interval) { timerFFT.Interval = interval; }
-        public void SetExecTimeText(string text) { lblExeTime.Text = text; }
+        public void SetExecTimeText(int time) { lblExeTime.Text = "Execution Time: " + time + " ms"; }
         public void RenderSpectrum() { spFFT.Render(); }
 
         public bool IsTempoEnabled() { return chbTempo.Enabled; }
