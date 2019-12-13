@@ -12,7 +12,7 @@ namespace MusicAnalyser
             { "CHORD_DETECTION_INTERVAL", "10"}, {"CHORD_NOTE_OCCURENCE_OFFSET", "5"}
         };
 
-        public static int UI_DELAY_FACTOR = 100000;
+        public static int UI_DELAY_FACTOR = 1000000;
         public static int FOLLOW_SECS = 5;
         public static int BUFFERSIZE = (int)Math.Pow(2, 13);
         public static double PEAK_FFT_POWER = 20 * Math.Log10(12020);

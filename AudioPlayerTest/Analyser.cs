@@ -19,7 +19,7 @@ namespace MusicAnalyser
         private static List<Chord> chords = new List<Chord>();
         private static double[] notePercent = new double[12];
         private List<int> avgError = new List<int>();
-        private static Color[] noteColors = new Color[12];
+        private static readonly Color[] noteColors = new Color[12];
         private string currentKey;
         private string currentMode;
         private Chord prevChord;

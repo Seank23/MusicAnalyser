@@ -74,6 +74,7 @@ namespace MusicAnalyser
             spFFT.plt.Clear();
             spFFT.Render();
             cwvViewer.WaveStream = null;
+            cwvViewer.Overlay.Controls.Clear();
             txtTime.Text = "";
             SetErrorText("+ 0 Cents");
             UpdateFFTDrawsUI(0);
@@ -133,7 +134,7 @@ namespace MusicAnalyser
 
                         if (currentSample > cwvViewer.LeftSample && currentSample < cwvViewer.RightSample)
                         {
-                            currentPos = (int)(currentSample - cwvViewer.LeftSample) / cwvViewer.SamplesPerPixel;
+                            currentPos = cwvViewer.GetWaveformPadding() + (int)(currentSample - cwvViewer.LeftSample) / cwvViewer.SamplesPerPixel;
 
                             if (currentPos != previousPos)
                             {

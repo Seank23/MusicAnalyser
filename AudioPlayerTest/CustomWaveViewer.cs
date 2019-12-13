@@ -16,14 +16,25 @@ namespace MusicAnalyser
         private Container components = null;
         private WaveStream waveStream;
         private int samplesPerPixel = 128;
+        private int prevSPP = 0;
+        private long prevLeftSample = 0;
         private long startPosition;
         private int bytesPerSample;
+        private int sampleRate;
+        private int displaySpacing = 2;
+        private int waveformPadding = 35;
+        private float[] waveformLow;
+        private float[] waveformHigh;
 
         public Color PenColor { get; set; }
         public float PenWidth { get; set; }
         public long LeftSample { get; set; }
         public long RightSample { get; set; }
         public OverlayPanel Overlay { get; }
+
+        public int GetBytesPerSample() { return bytesPerSample; }
+        public int GetSampleRate() { return sampleRate; }
+        public int GetWaveformPadding() { return waveformPadding; }
 
         private void InvokeUI(Action a)
         {
@@ -37,16 +48,16 @@ namespace MusicAnalyser
 
             int samples = (int)(waveStream.Length / bytesPerSample);
             startPosition = 0;
-            SamplesPerPixel = samples / this.Width;
+            SamplesPerPixel = samples / (this.Width - 2 * waveformPadding);
             LeftSample = StartPosition;
-            RightSample = waveStream.Length;
+            RightSample = waveStream.Length / bytesPerSample;
         }
 
         public void Zoom()
         {
             startPosition = LeftSample * bytesPerSample;
-            SamplesPerPixel = (int)(RightSample - LeftSample) / this.Width;
-            InvokeUI(() => Overlay.MovePosIndicator(0));
+            SamplesPerPixel = (int)(RightSample - LeftSample) / (this.Width - 2 * waveformPadding);
+            InvokeUI(() => Overlay.MovePosIndicator(waveformPadding));
         }
 
         private Point mousePos, startPos;
@@ -56,7 +67,7 @@ namespace MusicAnalyser
         {
             if(e.Button == MouseButtons.Left)
             {
-                startPos = e.Location;
+                startPos = new Point(e.Location.X - waveformPadding, e.Location.Y);
                 mousePos = new Point(-1, -1);
                 mouseDrag = true;
                 Overlay.DrawVerticalLine(e.X);
@@ -86,8 +97,8 @@ namespace MusicAnalyser
                 if (mousePos.X != -1)
                     Overlay.DrawVerticalLine(mousePos.X);
 
-                LeftSample = (int)(StartPosition / bytesPerSample + samplesPerPixel * Math.Min(startPos.X, mousePos.X));
-                RightSample = (int)(StartPosition / bytesPerSample + samplesPerPixel * Math.Max(startPos.X, mousePos.X));
+                LeftSample = (int)(StartPosition / bytesPerSample + SamplesPerPixel * Math.Min(startPos.X, mousePos.X - waveformPadding));
+                RightSample = (int)(StartPosition / bytesPerSample + SamplesPerPixel * Math.Max(startPos.X, mousePos.X - waveformPadding));
                 Zoom();
             }
             else if(e.Button == MouseButtons.Middle)
@@ -135,6 +146,7 @@ namespace MusicAnalyser
                 if (waveStream != null)
                 {
                     bytesPerSample = (waveStream.WaveFormat.BitsPerSample / 8) * waveStream.WaveFormat.Channels;
+                    sampleRate = WaveStream.WaveFormat.SampleRate;
                 }
                 this.Invalidate();
             }
@@ -197,35 +209,54 @@ namespace MusicAnalyser
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (waveStream != null)
+            if (waveStream == null)
+                return;
+
+            if (SamplesPerPixel != prevSPP || LeftSample != prevLeftSample)
             {
                 waveStream.Position = 0;
                 int bytesRead;
-                byte[] waveData = new byte[samplesPerPixel * bytesPerSample];
-                waveStream.Position = startPosition + (e.ClipRectangle.Left * bytesPerSample * samplesPerPixel);
+                //paddingSPP = (int)(RightSample - LeftSample) / (e.ClipRectangle.Right - e.ClipRectangle.X - waveformPadding * 2);
+                byte[] waveData = new byte[SamplesPerPixel * bytesPerSample * displaySpacing];
+                waveStream.Position = startPosition + (e.ClipRectangle.Left * bytesPerSample * SamplesPerPixel);
+                waveformLow = new float[(e.ClipRectangle.Right - e.ClipRectangle.X) / displaySpacing];
+                waveformHigh = new float[(e.ClipRectangle.Right - e.ClipRectangle.X) / displaySpacing];
 
+                for (float x = e.ClipRectangle.X + waveformPadding; x < e.ClipRectangle.Right - waveformPadding; x += displaySpacing)
+                {
+                    short low = 0;
+                    short high = 0;
+                    bytesRead = waveStream.Read(waveData, 0, SamplesPerPixel * bytesPerSample * displaySpacing);
+                    if (bytesRead == 0)
+                        break;
+                    for (int n = 0; n < bytesRead; n += 2)
+                    {
+                        short sample = BitConverter.ToInt16(waveData, n);
+                        if (sample < low) low = sample;
+                        if (sample > high) high = sample;
+                    }
+                    float lowPercent = (((float)low) - short.MinValue) / ushort.MaxValue;
+                    float highPercent = (((float)high) - short.MinValue) / ushort.MaxValue;
+                    waveformLow[(int)(x / displaySpacing)] = lowPercent;
+                    waveformHigh[(int)(x / displaySpacing)] = highPercent;
+                }
+                prevSPP = SamplesPerPixel;
+                prevLeftSample = LeftSample;
+
+                Overlay.DrawTimestamps();
+            }
+
+            if (waveformHigh != null && waveformLow != null)
+            {
                 using (Pen linePen = new Pen(PenColor, PenWidth))
                 {
-                    for (float x = e.ClipRectangle.X; x < e.ClipRectangle.Right; x += 1)
+                    for (float x = e.ClipRectangle.X + waveformPadding; x < e.ClipRectangle.Right - waveformPadding; x += displaySpacing)
                     {
-                        short low = 0;
-                        short high = 0;
-                        bytesRead = waveStream.Read(waveData, 0, samplesPerPixel * bytesPerSample);
-                        if (bytesRead == 0)
-                            break;
-                        for (int n = 0; n < bytesRead; n += 2)
-                        {
-                            short sample = BitConverter.ToInt16(waveData, n);
-                            if (sample < low) low = sample;
-                            if (sample > high) high = sample;
-                        }
-                        float lowPercent = ((((float)low) - short.MinValue) / ushort.MaxValue);
-                        float highPercent = ((((float)high) - short.MinValue) / ushort.MaxValue);
-                        e.Graphics.DrawLine(linePen, x, this.Height * lowPercent, x, this.Height * highPercent);
+                        e.Graphics.DrawLine(linePen, x, this.Height * waveformLow[(int)(x / displaySpacing)] * 0.9f, x, this.Height * waveformHigh[(int)(x / displaySpacing)] * 0.9f);
                     }
                 }
             }
-
+           
             base.OnPaint(e);
         }
 

@@ -10,13 +10,35 @@ namespace MusicAnalyser
         private CustomWaveViewer parent;
         private Rectangle posIndicator;
         private Rectangle timeline;
+        private Rectangle timeBar;
 
         public OverlayPanel(CustomWaveViewer p)
         {
             DoubleBuffered = true;
             parent = p;
             this.Parent = parent;
-            posIndicator = new Rectangle(0, 0, 1, Height * 4); 
+            posIndicator = new Rectangle(parent.GetWaveformPadding(), 0, 1, (parent.Height * 2) - 25); 
+        }
+
+        public void DrawTimestamps()
+        {
+            long startTime = parent.LeftSample;
+            long timespan = parent.RightSample - parent.LeftSample;
+            int numTimestamps = 11;
+            this.Controls.Clear();
+
+            for(int i = 0; i < numTimestamps; i++)
+            {
+                float timeStampPos = (float)i / (numTimestamps - 1);
+                double seconds = (startTime + timespan * timeStampPos) / parent.GetSampleRate();
+                TimeSpan t = TimeSpan.FromSeconds(seconds);
+                Label timeStamp = new Label();
+                this.Controls.Add(timeStamp);
+                timeStamp.TextAlign = ContentAlignment.MiddleCenter;
+                timeStamp.Top = this.Height - 20;
+                timeStamp.Left = parent.GetWaveformPadding() + (int)((this.Width - 2 * parent.GetWaveformPadding()) * timeStampPos) - timeStamp.Width / 2;
+                timeStamp.Text = t.ToString(@"mm\:ss\:fff");
+            }
         }
 
         public void DrawVerticalLine(int x)
@@ -27,7 +49,7 @@ namespace MusicAnalyser
         public void MovePosIndicator(int posX)
         {
             posIndicator.X = posX;
-            Refresh();
+            Invalidate(false);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -51,8 +73,10 @@ namespace MusicAnalyser
             {
                 Graphics g = e.Graphics;
                 g.FillRectangle(new SolidBrush(Color.Black), posIndicator);
-                timeline = new Rectangle(0, Height - 1, Width, 1);
+                timeline = new Rectangle(0, Height - 25, Width, 1);
                 g.FillRectangle(new SolidBrush(Color.Black), timeline);
+                timeBar = new Rectangle(0, Height - 24, Width, 24);
+                g.FillRectangle(new SolidBrush(Color.FromKnownColor(KnownColor.ControlLight)), timeBar);
             }
         }
     }

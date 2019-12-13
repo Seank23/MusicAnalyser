@@ -699,15 +699,16 @@
             // 
             this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.cwvViewer.BackColor = System.Drawing.SystemColors.Control;
             this.cwvViewer.BytesPerSample = 0;
             this.cwvViewer.LeftSample = ((long)(0));
-            this.cwvViewer.Location = new System.Drawing.Point(67, 114);
+            this.cwvViewer.Location = new System.Drawing.Point(32, 114);
             this.cwvViewer.Name = "cwvViewer";
             this.cwvViewer.PenColor = System.Drawing.Color.DodgerBlue;
             this.cwvViewer.PenWidth = 1F;
             this.cwvViewer.RightSample = ((long)(0));
             this.cwvViewer.SamplesPerPixel = 128;
-            this.cwvViewer.Size = new System.Drawing.Size(1259, 301);
+            this.cwvViewer.Size = new System.Drawing.Size(1294, 301);
             this.cwvViewer.StartPosition = ((long)(0));
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;

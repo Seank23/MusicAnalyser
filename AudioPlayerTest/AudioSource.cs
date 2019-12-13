@@ -9,7 +9,7 @@ using VarispeedDemo.SoundTouch;
 
 namespace MusicAnalyser
 {
-    class AudioSource
+    class AudioSource : IDisposable
     {
         private WaveStream audio;
         private WaveStream audioFFT;
@@ -46,7 +46,7 @@ namespace MusicAnalyser
             set { audioFFT = value; }
         }
 
-        public void DisposeAudio()
+        public void Dispose()
         {
             SpeedControl.Dispose();
             SpeedControl = null;

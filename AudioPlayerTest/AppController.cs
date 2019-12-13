@@ -642,7 +642,7 @@ namespace MusicAnalyser
             {
                 if (source.Audio != null)
                 {
-                    source.DisposeAudio();
+                    source.Dispose();
                 }
             }
         }
