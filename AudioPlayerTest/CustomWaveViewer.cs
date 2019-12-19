@@ -216,7 +216,6 @@ namespace MusicAnalyser
             {
                 waveStream.Position = 0;
                 int bytesRead;
-                //paddingSPP = (int)(RightSample - LeftSample) / (e.ClipRectangle.Right - e.ClipRectangle.X - waveformPadding * 2);
                 byte[] waveData = new byte[SamplesPerPixel * bytesPerSample * displaySpacing];
                 waveStream.Position = startPosition + (e.ClipRectangle.Left * bytesPerSample * SamplesPerPixel);
                 waveformLow = new float[(e.ClipRectangle.Right - e.ClipRectangle.X) / displaySpacing];
