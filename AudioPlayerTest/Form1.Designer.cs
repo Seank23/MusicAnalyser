@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnOpen = new System.Windows.Forms.Button();
+            this.btnOpenClose = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
             this.spFFT = new ScottPlot.ScottPlotUC();
             this.timerFFT = new System.Windows.Forms.Timer(this.components);
             this.lblFFTDraws = new System.Windows.Forms.Label();
@@ -43,7 +43,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.chbFollow = new System.Windows.Forms.CheckBox();
-            this.txtTime = new System.Windows.Forms.TextBox();
+            this.txtPlayTime = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.lblC = new System.Windows.Forms.Label();
             this.lblDb = new System.Windows.Forms.Label();
@@ -64,7 +64,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.chbTempo = new System.Windows.Forms.CheckBox();
             this.barPitch = new System.Windows.Forms.TrackBar();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -81,7 +80,6 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analyseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,6 +88,8 @@
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblMode = new System.Windows.Forms.Label();
             this.chbAllChords = new System.Windows.Forms.CheckBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txtSelectTime = new System.Windows.Forms.TextBox();
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
@@ -98,15 +98,15 @@
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnOpen
+            // btnOpenClose
             // 
-            this.btnOpen.Location = new System.Drawing.Point(13, 31);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(75, 27);
-            this.btnOpen.TabIndex = 0;
-            this.btnOpen.Text = "Open";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            this.btnOpenClose.Location = new System.Drawing.Point(13, 31);
+            this.btnOpenClose.Name = "btnOpenClose";
+            this.btnOpenClose.Size = new System.Drawing.Size(75, 27);
+            this.btnOpenClose.TabIndex = 0;
+            this.btnOpenClose.Text = "Open";
+            this.btnOpenClose.UseVisualStyleBackColor = true;
+            this.btnOpenClose.Click += new System.EventHandler(this.btnOpen_Click);
             // 
             // btnPlay
             // 
@@ -119,16 +119,16 @@
             this.btnPlay.UseVisualStyleBackColor = true;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
-            // btnClose
+            // btnStop
             // 
-            this.btnClose.Enabled = false;
-            this.btnClose.Location = new System.Drawing.Point(94, 31);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(75, 27);
-            this.btnClose.TabIndex = 0;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnStop.Enabled = false;
+            this.btnStop.Location = new System.Drawing.Point(94, 31);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(75, 27);
+            this.btnStop.TabIndex = 0;
+            this.btnStop.Text = "Stop";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // spFFT
             // 
@@ -138,7 +138,7 @@
             this.spFFT.Location = new System.Drawing.Point(13, 495);
             this.spFFT.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.spFFT.Name = "spFFT";
-            this.spFFT.Size = new System.Drawing.Size(1313, 369);
+            this.spFFT.Size = new System.Drawing.Size(1509, 369);
             this.spFFT.TabIndex = 3;
             // 
             // timerFFT
@@ -162,7 +162,7 @@
             this.lstChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lstChords.FormattingEnabled = true;
             this.lstChords.ItemHeight = 16;
-            this.lstChords.Location = new System.Drawing.Point(1514, 596);
+            this.lstChords.Location = new System.Drawing.Point(1710, 596);
             this.lstChords.Name = "lstChords";
             this.lstChords.Size = new System.Drawing.Size(120, 100);
             this.lstChords.TabIndex = 5;
@@ -171,7 +171,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1514, 566);
+            this.label1.Location = new System.Drawing.Point(1710, 566);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(101, 17);
             this.label1.TabIndex = 6;
@@ -226,30 +226,28 @@
             // 
             // chbFollow
             // 
-            this.chbFollow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chbFollow.AutoSize = true;
             this.chbFollow.Checked = true;
             this.chbFollow.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbFollow.Location = new System.Drawing.Point(1229, 44);
+            this.chbFollow.Location = new System.Drawing.Point(1288, 44);
             this.chbFollow.Name = "chbFollow";
             this.chbFollow.Size = new System.Drawing.Size(130, 21);
             this.chbFollow.TabIndex = 13;
             this.chbFollow.Text = "Follow Playback";
             this.chbFollow.UseVisualStyleBackColor = true;
             // 
-            // txtTime
+            // txtPlayTime
             // 
-            this.txtTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtTime.Location = new System.Drawing.Point(1109, 42);
-            this.txtTime.Name = "txtTime";
-            this.txtTime.Size = new System.Drawing.Size(90, 22);
-            this.txtTime.TabIndex = 16;
+            this.txtPlayTime.Location = new System.Drawing.Point(982, 42);
+            this.txtPlayTime.Name = "txtPlayTime";
+            this.txtPlayTime.Size = new System.Drawing.Size(90, 22);
+            this.txtPlayTime.TabIndex = 16;
+            this.txtPlayTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(999, 45);
+            this.label6.Location = new System.Drawing.Point(872, 45);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(104, 17);
             this.label6.TabIndex = 17;
@@ -260,7 +258,7 @@
             this.lblC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblC.AutoSize = true;
             this.lblC.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblC.Location = new System.Drawing.Point(1345, 566);
+            this.lblC.Location = new System.Drawing.Point(1541, 566);
             this.lblC.Name = "lblC";
             this.lblC.Size = new System.Drawing.Size(37, 17);
             this.lblC.TabIndex = 18;
@@ -271,7 +269,7 @@
             this.lblDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDb.AutoSize = true;
             this.lblDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDb.Location = new System.Drawing.Point(1345, 583);
+            this.lblDb.Location = new System.Drawing.Point(1541, 583);
             this.lblDb.Name = "lblDb";
             this.lblDb.Size = new System.Drawing.Size(47, 17);
             this.lblDb.TabIndex = 19;
@@ -282,7 +280,7 @@
             this.lblD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblD.AutoSize = true;
             this.lblD.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblD.Location = new System.Drawing.Point(1345, 600);
+            this.lblD.Location = new System.Drawing.Point(1541, 600);
             this.lblD.Name = "lblD";
             this.lblD.Size = new System.Drawing.Size(38, 17);
             this.lblD.TabIndex = 20;
@@ -293,7 +291,7 @@
             this.lblEb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblEb.AutoSize = true;
             this.lblEb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEb.Location = new System.Drawing.Point(1345, 617);
+            this.lblEb.Location = new System.Drawing.Point(1541, 617);
             this.lblEb.Name = "lblEb";
             this.lblEb.Size = new System.Drawing.Size(46, 17);
             this.lblEb.TabIndex = 20;
@@ -304,7 +302,7 @@
             this.lblE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblE.AutoSize = true;
             this.lblE.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblE.Location = new System.Drawing.Point(1345, 634);
+            this.lblE.Location = new System.Drawing.Point(1541, 634);
             this.lblE.Name = "lblE";
             this.lblE.Size = new System.Drawing.Size(37, 17);
             this.lblE.TabIndex = 20;
@@ -315,7 +313,7 @@
             this.lblF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblF.AutoSize = true;
             this.lblF.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblF.Location = new System.Drawing.Point(1345, 651);
+            this.lblF.Location = new System.Drawing.Point(1541, 651);
             this.lblF.Name = "lblF";
             this.lblF.Size = new System.Drawing.Size(36, 17);
             this.lblF.TabIndex = 20;
@@ -326,7 +324,7 @@
             this.lblGb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblGb.AutoSize = true;
             this.lblGb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblGb.Location = new System.Drawing.Point(1345, 668);
+            this.lblGb.Location = new System.Drawing.Point(1541, 668);
             this.lblGb.Name = "lblGb";
             this.lblGb.Size = new System.Drawing.Size(48, 17);
             this.lblGb.TabIndex = 20;
@@ -337,7 +335,7 @@
             this.lblG.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblG.AutoSize = true;
             this.lblG.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblG.Location = new System.Drawing.Point(1345, 685);
+            this.lblG.Location = new System.Drawing.Point(1541, 685);
             this.lblG.Name = "lblG";
             this.lblG.Size = new System.Drawing.Size(39, 17);
             this.lblG.TabIndex = 20;
@@ -348,7 +346,7 @@
             this.lblAb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblAb.AutoSize = true;
             this.lblAb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAb.Location = new System.Drawing.Point(1345, 702);
+            this.lblAb.Location = new System.Drawing.Point(1541, 702);
             this.lblAb.Name = "lblAb";
             this.lblAb.Size = new System.Drawing.Size(46, 17);
             this.lblAb.TabIndex = 20;
@@ -359,7 +357,7 @@
             this.lblA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblA.AutoSize = true;
             this.lblA.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblA.Location = new System.Drawing.Point(1345, 719);
+            this.lblA.Location = new System.Drawing.Point(1541, 719);
             this.lblA.Name = "lblA";
             this.lblA.Size = new System.Drawing.Size(37, 17);
             this.lblA.TabIndex = 20;
@@ -370,7 +368,7 @@
             this.lblBb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblBb.AutoSize = true;
             this.lblBb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBb.Location = new System.Drawing.Point(1345, 736);
+            this.lblBb.Location = new System.Drawing.Point(1541, 736);
             this.lblBb.Name = "lblBb";
             this.lblBb.Size = new System.Drawing.Size(46, 17);
             this.lblBb.TabIndex = 20;
@@ -381,7 +379,7 @@
             this.lblB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblB.AutoSize = true;
             this.lblB.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblB.Location = new System.Drawing.Point(1345, 753);
+            this.lblB.Location = new System.Drawing.Point(1541, 753);
             this.lblB.Name = "lblB";
             this.lblB.Size = new System.Drawing.Size(37, 17);
             this.lblB.TabIndex = 20;
@@ -392,7 +390,7 @@
             this.lblKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblKey.AutoSize = true;
             this.lblKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblKey.Location = new System.Drawing.Point(1348, 789);
+            this.lblKey.Location = new System.Drawing.Point(1544, 789);
             this.lblKey.Name = "lblKey";
             this.lblKey.Size = new System.Drawing.Size(119, 17);
             this.lblKey.TabIndex = 21;
@@ -455,19 +453,6 @@
             this.label10.Size = new System.Drawing.Size(44, 17);
             this.label10.TabIndex = 10;
             this.label10.Text = "150%";
-            // 
-            // chbTempo
-            // 
-            this.chbTempo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chbTempo.AutoSize = true;
-            this.chbTempo.Checked = true;
-            this.chbTempo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbTempo.Location = new System.Drawing.Point(871, 45);
-            this.chbTempo.Name = "chbTempo";
-            this.chbTempo.Size = new System.Drawing.Size(122, 21);
-            this.chbTempo.TabIndex = 13;
-            this.chbTempo.Text = "Enable Tempo";
-            this.chbTempo.UseVisualStyleBackColor = true;
             // 
             // barPitch
             // 
@@ -572,7 +557,6 @@
             // 
             // lblError
             // 
-            this.lblError.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblError.AutoSize = true;
             this.lblError.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblError.Location = new System.Drawing.Point(748, 443);
@@ -583,7 +567,6 @@
             // 
             // label20
             // 
-            this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(698, 443);
             this.label20.Name = "label20";
@@ -601,15 +584,14 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1712, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1908, 28);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem,
-            this.closeToolStripMenuItem});
+            this.openToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "File";
@@ -620,14 +602,6 @@
             this.openToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.btnOpen_Click);
-            // 
-            // closeToolStripMenuItem
-            // 
-            this.closeToolStripMenuItem.Enabled = false;
-            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
-            this.closeToolStripMenuItem.Text = "Close";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // playbackToolStripMenuItem
             // 
@@ -678,7 +652,7 @@
             this.lblMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMode.AutoSize = true;
             this.lblMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMode.Location = new System.Drawing.Point(1452, 815);
+            this.lblMode.Location = new System.Drawing.Point(1648, 815);
             this.lblMode.Name = "lblMode";
             this.lblMode.Size = new System.Drawing.Size(47, 17);
             this.lblMode.TabIndex = 21;
@@ -688,12 +662,29 @@
             // 
             this.chbAllChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chbAllChords.AutoSize = true;
-            this.chbAllChords.Location = new System.Drawing.Point(1514, 715);
+            this.chbAllChords.Location = new System.Drawing.Point(1710, 715);
             this.chbAllChords.Name = "chbAllChords";
             this.chbAllChords.Size = new System.Drawing.Size(83, 21);
             this.chbAllChords.TabIndex = 13;
             this.chbAllChords.Text = "Show All";
             this.chbAllChords.UseVisualStyleBackColor = true;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(1078, 45);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(86, 17);
+            this.label21.TabIndex = 24;
+            this.label21.Text = "Select Time:";
+            // 
+            // txtSelectTime
+            // 
+            this.txtSelectTime.Location = new System.Drawing.Point(1170, 42);
+            this.txtSelectTime.Name = "txtSelectTime";
+            this.txtSelectTime.Size = new System.Drawing.Size(90, 22);
+            this.txtSelectTime.TabIndex = 23;
+            this.txtSelectTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // cwvViewer
             // 
@@ -708,7 +699,8 @@
             this.cwvViewer.PenWidth = 1F;
             this.cwvViewer.RightSample = ((long)(0));
             this.cwvViewer.SamplesPerPixel = 128;
-            this.cwvViewer.Size = new System.Drawing.Size(1294, 301);
+            this.cwvViewer.SelectSample = ((long)(0));
+            this.cwvViewer.Size = new System.Drawing.Size(1490, 301);
             this.cwvViewer.StartPosition = ((long)(0));
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
@@ -718,7 +710,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1712, 915);
+            this.ClientSize = new System.Drawing.Size(1908, 915);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.txtSelectTime);
             this.Controls.Add(this.lblMode);
             this.Controls.Add(this.lblKey);
             this.Controls.Add(this.lblB);
@@ -735,8 +729,7 @@
             this.Controls.Add(this.lblError);
             this.Controls.Add(this.lblC);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.txtTime);
-            this.Controls.Add(this.chbTempo);
+            this.Controls.Add(this.txtPlayTime);
             this.Controls.Add(this.chbAllChords);
             this.Controls.Add(this.chbFollow);
             this.Controls.Add(this.label19);
@@ -768,8 +761,8 @@
             this.Controls.Add(this.spFFT);
             this.Controls.Add(this.cwvViewer);
             this.Controls.Add(this.btnPlay);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnOpen);
+            this.Controls.Add(this.btnStop);
+            this.Controls.Add(this.btnOpenClose);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
@@ -788,10 +781,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.Button btnOpenClose;
         private System.Windows.Forms.Button btnPlay;
-        private System.Windows.Forms.Button btnClose;
-        private CustomWaveViewer cwvViewer;
+        private System.Windows.Forms.Button btnStop;
         private ScottPlot.ScottPlotUC spFFT;
         private System.Windows.Forms.Timer timerFFT;
         private System.Windows.Forms.Label lblFFTDraws;
@@ -803,7 +795,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox chbFollow;
-        private System.Windows.Forms.TextBox txtTime;
+        private System.Windows.Forms.TextBox txtPlayTime;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lblC;
         private System.Windows.Forms.Label lblDb;
@@ -824,7 +816,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.CheckBox chbTempo;
         private System.Windows.Forms.TrackBar barPitch;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
@@ -841,7 +832,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playbackToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem analyseToolStripMenuItem;
@@ -850,6 +840,9 @@
         private System.Windows.Forms.ToolStripMenuItem perferencesToolStripMenuItem;
         private System.Windows.Forms.Label lblMode;
         private System.Windows.Forms.CheckBox chbAllChords;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox txtSelectTime;
+        internal CustomWaveViewer cwvViewer;
     }
 }
 

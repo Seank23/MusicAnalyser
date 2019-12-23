@@ -11,6 +11,7 @@ namespace MusicAnalyser
     {
         private CustomWaveViewer parent;
         private Rectangle posIndicator;
+        private Rectangle selectMarker;
         private Rectangle timeline;
         private Rectangle timeBar;
         private List<Rectangle> ticks;
@@ -21,7 +22,8 @@ namespace MusicAnalyser
             parent = p;
             this.Parent = parent;
             ticks = new List<Rectangle>();
-            posIndicator = new Rectangle(parent.GetWaveformPadding(), 0, 1, (parent.Height * 2) - 25); 
+            posIndicator = new Rectangle(parent.GetWaveformPadding(), 0, 1, (parent.Height * 2) - 25);
+            selectMarker = new Rectangle(parent.GetWaveformPadding(), 0, 2, (parent.Height * 2) - 25);
         }
 
         public void DrawTimestamps()
@@ -110,15 +112,27 @@ namespace MusicAnalyser
             }
         }
 
-        public void DrawVerticalLine(int x)
+        public void DrawVerticalLine(int x, Color color)
         {
-            ControlPaint.DrawReversibleLine(PointToScreen(new Point(x, 0)), PointToScreen(new Point(x, Height)), Color.Black);
+            ControlPaint.DrawReversibleLine(PointToScreen(new Point(x, 0)), PointToScreen(new Point(x, Height)), color);
         }
 
         public void MovePosIndicator(int posX)
         {
             posIndicator.X = posX;
             Invalidate(false);
+        }
+
+        public void MoveSelectMarker(int posX)
+        {
+            selectMarker.X = posX;
+            Invalidate(false);
+        }
+
+        public void ResetOverlay()
+        {
+            posIndicator.X = parent.GetWaveformPadding();
+            selectMarker.X = parent.GetWaveformPadding();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -142,6 +156,7 @@ namespace MusicAnalyser
             {
                 Graphics g = e.Graphics;
                 g.FillRectangle(new SolidBrush(Color.Black), posIndicator);
+                g.FillRectangle(new SolidBrush(Color.Blue), selectMarker);
                 timeline = new Rectangle(0, Height - 25, Width, 1);
                 g.FillRectangle(new SolidBrush(Color.Black), timeline);
                 timeBar = new Rectangle(0, Height - 24, Width, 24);

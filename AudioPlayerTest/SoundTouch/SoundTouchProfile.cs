@@ -1,6 +1,6 @@
 namespace VarispeedDemo.SoundTouch
 {
-    internal class SoundTouchProfile
+    public class SoundTouchProfile
     {
         public bool UseTempo { get; set; }
         public bool UseAntiAliasing { get; set; }

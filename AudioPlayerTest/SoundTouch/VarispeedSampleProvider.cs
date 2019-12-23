@@ -4,7 +4,7 @@ using NAudio.Wave;
 
 namespace VarispeedDemo.SoundTouch
 {
-    class VarispeedSampleProvider : ISampleProvider, IDisposable
+    public class VarispeedSampleProvider : ISampleProvider, IDisposable
     {
         private readonly ISampleProvider sourceProvider;
         private readonly SoundTouch soundTouch;

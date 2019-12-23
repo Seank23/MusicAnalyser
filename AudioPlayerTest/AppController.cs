@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace MusicAnalyser
 {
-    class AppController
+    public class AppController
     {
         private Form1 ui;
         private AudioSource source;
@@ -25,6 +25,9 @@ namespace MusicAnalyser
         private double avgGain;
         private double maxGain;
         private bool started = false;
+        private long startSample = 0;
+
+        public bool Opened { get; set; }
 
         public AppController(Form1 form)
         {
@@ -74,6 +77,7 @@ namespace MusicAnalyser
                 else return;
 
                 ui.SetupPlaybackUI(source.AudioGraph);
+                Opened = true;
             }
         }
 
@@ -88,27 +92,22 @@ namespace MusicAnalyser
                 return;
             }
 
-            if (ui.IsTempoEnabled())
-            {
-                if (ui.IsTempoChecked())
-                    ui.output.Init(source.SpeedControl); // Using SpeedControl SampleProvider to allow tempo changes
-                else
-                    ui.output.Init(source.AudioStream);
-            }
+            ui.output.Init(source.SpeedControl); // Using SpeedControl SampleProvider to allow tempo changes
+
             if (ui.output.PlaybackState == PlaybackState.Playing) // Pause audio
             {
                 ui.output.Pause();
+                startSample = source.AudioStream.Position;
                 ui.DrawPauseUI();
             }
             else if (ui.output.PlaybackState == PlaybackState.Paused || ui.output.PlaybackState == PlaybackState.Stopped) // Play audio
             {
+                source.AudioStream.Seek(startSample, SeekOrigin.Begin);
                 ui.output.Play();
                 ui.DrawPlayUI();
 
                 if (!started)
                 {
-                    ui.SetTempoState();
-
                     var ts = new ThreadStart(ui.UpdatePlayPosition); // New thread to handle playback position indicator
                     var backgroundThread = new Thread(ts);
                     backgroundThread.Start();
@@ -116,16 +115,26 @@ namespace MusicAnalyser
             }
         }
 
+        public void TriggerStop()
+        {
+            ui.output.Stop();
+            ui.EnableTimer(false);
+            startSample = ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels;
+            ui.SetPlayBtnText("Play from " + TimeSpan.FromSeconds((double)ui.cwvViewer.SelectSample / ui.cwvViewer.GetSampleRate()).ToString(@"m\:ss\:fff"));
+        }
+
         /*
          * Master method for clearing session
          */
         public void TriggerClose()
         {
+            Opened = false;
             ui.EnableTimer(false);
             ui.output.Stop();
             Thread.Sleep(100);
             DisposeAudio();
             analysisUpdates = 0;
+            startSample = 0;
             executionTime.Clear();
             ui.ClearUI();
             analyser.DisposeAnalyser();
@@ -139,7 +148,7 @@ namespace MusicAnalyser
         {
             byte[] bytesBuffer = new byte[Prefs.BUFFERSIZE];
             double posScaleFactor = (double)source.Audio.WaveFormat.SampleRate / (double)source.AudioFFT.WaveFormat.SampleRate;
-            source.AudioFFT.Position = (long)(source.AudioStream.Position / posScaleFactor / 2); // Syncs position of FFT WaveStream to current playback position
+            source.AudioFFT.Position = (long)(source.AudioStream.Position / posScaleFactor / source.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
             source.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
             short[] audioBuffer = new short[Prefs.BUFFERSIZE];
             Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts

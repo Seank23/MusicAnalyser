@@ -30,8 +30,17 @@ namespace MusicAnalyser
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-            app.TriggerOpenFile();
-            output = new DirectSoundOut();
+            if (!app.Opened)
+            {
+                app.TriggerOpenFile();
+                output = new DirectSoundOut();
+                btnOpenClose.Text = "Close";
+            }
+            else
+            {
+                app.TriggerClose();
+                btnOpenClose.Text = "Open";
+            }
         }
 
         public void SetupPlaybackUI(WaveStream audioGraph)
@@ -39,8 +48,8 @@ namespace MusicAnalyser
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
             btnPlay.Enabled = true;
+            btnStop.Enabled = true;
             playToolStripMenuItem.Enabled = true;
-            btnOpen.Enabled = false;
             openToolStripMenuItem.Enabled = false;
             barVolume.Enabled = true;
             barTempo.Enabled = true;
@@ -63,28 +72,25 @@ namespace MusicAnalyser
             app.TriggerPlayPause();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            app.TriggerClose();
-        }
-
         public void ClearUI()
         {
             lstChords.Items.Clear();
             spFFT.plt.Clear();
             spFFT.Render();
             cwvViewer.WaveStream = null;
+            cwvViewer.SelectSample = 0;
             cwvViewer.Overlay.Controls.Clear();
-            txtTime.Text = "";
+            cwvViewer.Overlay.ResetOverlay();
+            txtPlayTime.Text = "";
+            txtSelectTime.Text = "";
             SetErrorText("+ 0 Cents");
             UpdateFFTDrawsUI(0);
             SetExecTimeText(0);
-            btnClose.Enabled = false;
-            btnOpen.Enabled = true;
+            btnStop.Enabled = false;
+            btnOpenClose.Enabled = true;
             btnPlay.Enabled = false;
             btnPlay.Text = "Play";
             music = new Music();
-            chbTempo.Enabled = true;
             barTempo.Enabled = false;
             barVolume.Enabled = false;
             barPitch.Enabled = false;
@@ -106,11 +112,12 @@ namespace MusicAnalyser
             int index = 0;
             AudioSource source = app.GetSource();
 
-            while (output.PlaybackState != PlaybackState.Stopped)
+            while (app.Opened)
             {
-                if(source.AudioStream.Position >= source.AudioStream.Length)
+                if (source.AudioStream.Position >= source.AudioStream.Length)
                 {
-                    InvokeUI(() => app.TriggerPlayPause());
+                    InvokeUI(() => app.TriggerStop());
+                    app.SetStarted(false);
                     break;
                 }
 
@@ -129,7 +136,7 @@ namespace MusicAnalyser
 
                     if (index == Prefs.UI_DELAY_FACTOR - 1)
                     {
-                        InvokeUI(() => txtTime.Text = source.AudioStream.CurrentTime.ToString());
+                        InvokeUI(() => txtPlayTime.Text = source.AudioStream.CurrentTime.ToString(@"mm\:ss\:fff"));
                         currentSample = source.AudioStream.Position / 8;
 
                         if (currentSample > cwvViewer.LeftSample && currentSample < cwvViewer.RightSample)
@@ -263,25 +270,13 @@ namespace MusicAnalyser
             btnPlay.Text = "Play";
             playToolStripMenuItem.Text = "Play";
             timerFFT.Enabled = false;
-            btnClose.Enabled = true;
-            closeToolStripMenuItem.Enabled = true;
         }
 
         public void DrawPlayUI()
         {
-            btnClose.Enabled = false;
-            closeToolStripMenuItem.Enabled = false;
             btnPlay.Text = "Pause";
             playToolStripMenuItem.Text = "Pause";
             timerFFT.Enabled = true;
-        }
-
-        public void SetTempoState()
-        {
-            chbTempo.Enabled = false;
-
-            if (!chbTempo.Checked)
-                barTempo.Enabled = false;
         }
 
         public void EnableTimer(bool enable) { timerFFT.Enabled = enable; }
@@ -295,10 +290,11 @@ namespace MusicAnalyser
         public void SetTimerInterval(int interval) { timerFFT.Interval = interval; }
         public void SetExecTimeText(int time) { lblExeTime.Text = "Execution Time: " + time + " ms"; }
         public void RenderSpectrum() { spFFT.Render(); }
+        public void SetSelectTime(double seconds) { txtSelectTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
+        public void SetPlayBtnText(string text) { btnPlay.Text = text; }
 
-        public bool IsTempoEnabled() { return chbTempo.Enabled; }
-        public bool IsTempoChecked() { return chbTempo.Checked; }
         public bool IsShowAllChordsChecked() { return chbAllChords.Checked; }
+        public AppController GetApp() { return app; }
 
         private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -312,6 +308,11 @@ namespace MusicAnalyser
             //    spFFT.plt.AntiAlias(true);
             //else if (Prefs.SPECTRUM_AA == 0)
             //    spFFT.plt.AntiAlias(false);
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            app.TriggerStop();
         }
     }
 }

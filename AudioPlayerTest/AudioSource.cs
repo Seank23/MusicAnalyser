@@ -9,7 +9,7 @@ using VarispeedDemo.SoundTouch;
 
 namespace MusicAnalyser
 {
-    class AudioSource : IDisposable
+    public class AudioSource : IDisposable
     {
         private WaveStream audio;
         private WaveStream audioFFT;
