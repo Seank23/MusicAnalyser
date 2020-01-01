@@ -54,6 +54,8 @@ namespace MusicAnalyser
             barVolume.Enabled = true;
             barTempo.Enabled = true;
             barPitch.Enabled = true;
+            SetSelectTime(0);
+            SetLoopTime(0);
         }
 
         public bool SelectFile(out OpenFileDialog dialog)
@@ -79,10 +81,12 @@ namespace MusicAnalyser
             spFFT.Render();
             cwvViewer.WaveStream = null;
             cwvViewer.SelectSample = 0;
+            cwvViewer.LoopEndSample = 0;
             cwvViewer.Overlay.Controls.Clear();
             cwvViewer.Overlay.ResetOverlay();
             txtPlayTime.Text = "";
             txtSelectTime.Text = "";
+            txtLoopTime.Text = "";
             SetErrorText("+ 0 Cents");
             UpdateFFTDrawsUI(0);
             SetExecTimeText(0);
@@ -128,6 +132,14 @@ namespace MusicAnalyser
                         cwvViewer.LeftSample = 0;
                         cwvViewer.RightSample = cwvViewer.LeftSample + (Prefs.FOLLOW_SECS * source.AudioStream.WaveFormat.SampleRate);
                         cwvViewer.Zoom();
+                    }
+
+                    if (source.AudioStream.Position >= cwvViewer.SelectSample * cwvViewer.BytesPerSample * cwvViewer.WaveStream.WaveFormat.Channels)
+                    {
+                        if (cwvViewer.GetIsLooping() && source.AudioStream.Position >= cwvViewer.LoopEndSample * cwvViewer.BytesPerSample * cwvViewer.WaveStream.WaveFormat.Channels)
+                        {
+                            app.LoopPlayback();
+                        }
                     }
 
                     app.SetStarted(true);
@@ -291,6 +303,7 @@ namespace MusicAnalyser
         public void SetExecTimeText(int time) { lblExeTime.Text = "Execution Time: " + time + " ms"; }
         public void RenderSpectrum() { spFFT.Render(); }
         public void SetSelectTime(double seconds) { txtSelectTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
+        public void SetLoopTime(double seconds) { txtLoopTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetPlayBtnText(string text) { btnPlay.Text = text; }
 
         public bool IsShowAllChordsChecked() { return chbAllChords.Checked; }

@@ -91,6 +91,8 @@
             this.label21 = new System.Windows.Forms.Label();
             this.txtSelectTime = new System.Windows.Forms.TextBox();
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.label22 = new System.Windows.Forms.Label();
+            this.txtLoopTime = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -229,7 +231,7 @@
             this.chbFollow.AutoSize = true;
             this.chbFollow.Checked = true;
             this.chbFollow.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbFollow.Location = new System.Drawing.Point(1288, 44);
+            this.chbFollow.Location = new System.Drawing.Point(1491, 44);
             this.chbFollow.Name = "chbFollow";
             this.chbFollow.Size = new System.Drawing.Size(130, 21);
             this.chbFollow.TabIndex = 13;
@@ -694,6 +696,7 @@
             this.cwvViewer.BytesPerSample = 0;
             this.cwvViewer.LeftSample = ((long)(0));
             this.cwvViewer.Location = new System.Drawing.Point(32, 114);
+            this.cwvViewer.LoopEndSample = ((long)(0));
             this.cwvViewer.Name = "cwvViewer";
             this.cwvViewer.PenColor = System.Drawing.Color.DodgerBlue;
             this.cwvViewer.PenWidth = 1F;
@@ -705,12 +708,31 @@
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
             // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(1266, 45);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(102, 17);
+            this.label22.TabIndex = 26;
+            this.label22.Text = "Loop Duration:";
+            // 
+            // txtLoopTime
+            // 
+            this.txtLoopTime.Location = new System.Drawing.Point(1374, 42);
+            this.txtLoopTime.Name = "txtLoopTime";
+            this.txtLoopTime.Size = new System.Drawing.Size(90, 22);
+            this.txtLoopTime.TabIndex = 25;
+            this.txtLoopTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 915);
+            this.Controls.Add(this.label22);
+            this.Controls.Add(this.txtLoopTime);
             this.Controls.Add(this.label21);
             this.Controls.Add(this.txtSelectTime);
             this.Controls.Add(this.lblMode);
@@ -843,6 +865,8 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.TextBox txtSelectTime;
         internal CustomWaveViewer cwvViewer;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox txtLoopTime;
     }
 }
 

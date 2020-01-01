@@ -141,6 +141,11 @@ namespace MusicAnalyser
             GC.Collect();
         }
 
+        public void LoopPlayback()
+        {
+            source.AudioStream.Seek(ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels, SeekOrigin.Begin);
+        }
+
         /*
          * Master method for calculating realtime frequency domain data from audio playback
          */
