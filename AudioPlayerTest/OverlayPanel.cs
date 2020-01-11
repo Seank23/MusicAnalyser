@@ -176,8 +176,8 @@ namespace MusicAnalyser
             {
                 Graphics g = e.Graphics;
                 g.FillRectangle(new SolidBrush(Color.Black), posIndicator);
-                g.FillRectangle(new SolidBrush(Color.Blue), selectMarker);
-                g.FillRectangle(new SolidBrush(Color.Red), loopEndMarker);
+                g.FillRectangle(new SolidBrush(Color.DarkBlue), selectMarker);
+                g.FillRectangle(new SolidBrush(Color.Blue), loopEndMarker);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(128, 220, 220, 220)), loopSection);
                 timeline = new Rectangle(0, Height - 25, Width, 1);
                 g.FillRectangle(new SolidBrush(Color.Black), timeline);

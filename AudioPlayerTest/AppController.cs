@@ -538,15 +538,15 @@ namespace MusicAnalyser
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, maxGain + 10, Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X, maxGain + 7.5, Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, maxGain + 10, Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X, maxGain + 7.5, Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, maxGain + 10, Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, maxGain + 7.5, Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, maxGain + 10, Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, maxGain + 7.5, Color.Blue, false);
 
                         X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }

@@ -33,20 +33,19 @@ namespace MusicAnalyser
             if (!app.Opened)
             {
                 app.TriggerOpenFile();
-                output = new DirectSoundOut();
-                btnOpenClose.Text = "Close";
             }
             else
             {
                 app.TriggerClose();
-                btnOpenClose.Text = "Open";
             }
         }
 
         public void SetupPlaybackUI(WaveStream audioGraph)
         {
+            output = new DirectSoundOut();
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
+            btnOpenClose.Text = "Close";
             btnPlay.Enabled = true;
             btnStop.Enabled = true;
             playToolStripMenuItem.Enabled = true;
@@ -94,6 +93,7 @@ namespace MusicAnalyser
             btnOpenClose.Enabled = true;
             btnPlay.Enabled = false;
             btnPlay.Text = "Play";
+            btnOpenClose.Text = "Open";
             music = new Music();
             barTempo.Enabled = false;
             barVolume.Enabled = false;
@@ -127,7 +127,7 @@ namespace MusicAnalyser
 
                 if (output.PlaybackState == PlaybackState.Playing)
                 {
-                    if(!app.IsStarted() && chbFollow.Checked)
+                    if (!app.IsStarted() && chbFollow.Checked)
                     {
                         cwvViewer.LeftSample = 0;
                         cwvViewer.RightSample = cwvViewer.LeftSample + (Prefs.FOLLOW_SECS * source.AudioStream.WaveFormat.SampleRate);
@@ -161,9 +161,15 @@ namespace MusicAnalyser
                                 previousPos = currentPos;
                             }
                         }
-                        else if(currentSample >= cwvViewer.RightSample && chbFollow.Checked)
+                        else if (currentSample >= cwvViewer.RightSample && chbFollow.Checked)
                         {
                             cwvViewer.LeftSample = cwvViewer.RightSample;
+                            cwvViewer.RightSample = cwvViewer.LeftSample + (Prefs.FOLLOW_SECS * source.AudioStream.WaveFormat.SampleRate);
+                            cwvViewer.Zoom();
+                        }
+                        else if(currentSample <= cwvViewer.LeftSample && chbFollow.Checked)
+                        {
+                            cwvViewer.LeftSample = Math.Max(currentSample - (Prefs.FOLLOW_SECS / 10) * source.AudioStream.WaveFormat.SampleRate, 0);
                             cwvViewer.RightSample = cwvViewer.LeftSample + (Prefs.FOLLOW_SECS * source.AudioStream.WaveFormat.SampleRate);
                             cwvViewer.Zoom();
                         }
@@ -175,8 +181,8 @@ namespace MusicAnalyser
         public void DisplayFFT(double[] dataFft, double fftScale, double avgGain, double maxGain)
         {
             spFFT.plt.Clear();
-            spFFT.plt.PlotSignal(dataFft, fftScale, markerSize: 0);
-            switch(barZoom.Value)
+            spFFT.plt.PlotSignalConst(dataFft, fftScale, markerSize: 0);
+            switch (barZoom.Value)
             {
                 case 0:
                     fftZoom = 500;
@@ -191,7 +197,9 @@ namespace MusicAnalyser
                     fftZoom = 4000;
                     break;
             }
-            spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);  
+            spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
+            spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
+            spFFT.plt.Benchmark();
         }
 
         public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
@@ -247,7 +255,7 @@ namespace MusicAnalyser
                     lblB.ForeColor = noteColor;
                     return;
             }
-        } 
+        }
 
         private void timerFFT_Tick(object sender, EventArgs e)
         {
@@ -295,7 +303,7 @@ namespace MusicAnalyser
         public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "FFT Updates: " + draws; }
         public void ClearNotesList() { lstChords.Items.Clear(); }
         public void PrintChord(string text) { lstChords.Items.Add(text); }
-        public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 11, bold: isBold); }
+        public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 12, bold: isBold); }
         public void SetKeyText(string text) { lblKey.Text = text; }
         public void SetModeText(string text) { lblMode.Text = text; }
         public void SetErrorText(string text) { lblError.Text = text; }
@@ -326,6 +334,32 @@ namespace MusicAnalyser
         private void btnStop_Click(object sender, EventArgs e)
         {
             app.TriggerStop();
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch(e.KeyChar)
+            {
+                case (char)32:
+                    if(output != null)
+                        app.TriggerPlayPause();
+                    break;
+                case (char)8:
+                    if (output != null)
+                        app.TriggerStop();
+                    break;
+                case (char)27:
+                    if (output != null)
+                        app.TriggerClose();
+                    break;
+                case (char)111:
+                    app.TriggerOpenFile();
+                    break;
+                case (char)13:
+                    if (output != null)
+                        cwvViewer.FitToScreen();
+                    break;
+            }
         }
     }
 }

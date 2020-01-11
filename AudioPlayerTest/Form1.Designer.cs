@@ -32,7 +32,7 @@
             this.btnOpenClose = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
-            this.spFFT = new ScottPlot.ScottPlotUC();
+            this.spFFT = new ScottPlot.FormsPlot();
             this.timerFFT = new System.Windows.Forms.Timer(this.components);
             this.lblFFTDraws = new System.Windows.Forms.Label();
             this.lstChords = new System.Windows.Forms.ListBox();
@@ -137,7 +137,7 @@
             this.spFFT.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.spFFT.BackColor = System.Drawing.SystemColors.Control;
-            this.spFFT.Location = new System.Drawing.Point(13, 495);
+            this.spFFT.Location = new System.Drawing.Point(13, 503);
             this.spFFT.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.spFFT.Name = "spFFT";
             this.spFFT.Size = new System.Drawing.Size(1509, 369);
@@ -786,10 +786,12 @@
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnOpenClose);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Music Analyser";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).EndInit();
@@ -806,7 +808,7 @@
         private System.Windows.Forms.Button btnOpenClose;
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.Button btnStop;
-        private ScottPlot.ScottPlotUC spFFT;
+        private ScottPlot.FormsPlot spFFT;
         private System.Windows.Forms.Timer timerFFT;
         private System.Windows.Forms.Label lblFFTDraws;
         private System.Windows.Forms.ListBox lstChords;
