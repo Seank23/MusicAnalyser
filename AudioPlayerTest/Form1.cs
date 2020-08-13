@@ -70,7 +70,10 @@ namespace MusicAnalyser
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            app.TriggerPlayPause();
+            if (app.LiveMode)
+                app.TriggerLiveModeStartStop();
+            else
+                app.TriggerPlayPause();
         }
 
         public void ClearUI()
@@ -181,7 +184,7 @@ namespace MusicAnalyser
         public void DisplayFFT(double[] dataFft, double fftScale, double avgGain, double maxGain)
         {
             spFFT.plt.Clear();
-            spFFT.plt.PlotSignalConst(dataFft, fftScale, markerSize: 0);
+            spFFT.plt.PlotSignal(dataFft, fftScale, markerSize: 0);
             switch (barZoom.Value)
             {
                 case 0:
@@ -199,7 +202,14 @@ namespace MusicAnalyser
             }
             spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
-            spFFT.plt.Benchmark();
+        }
+
+        public void DisplayLiveWaveform(double[] dataPcm, double pcmScale)
+        {
+            spLiveWav.plt.Clear();
+            spLiveWav.plt.PlotSignal(dataPcm, pcmScale, markerSize: 0);
+            spLiveWav.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
+            spLiveWav.plt.AxisAuto();
         }
 
         public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
@@ -259,6 +269,8 @@ namespace MusicAnalyser
 
         private void timerFFT_Tick(object sender, EventArgs e)
         {
+            if (output == null)
+                output = new DirectSoundOut();
             app.RunAnalysis();
         }
 
@@ -268,6 +280,21 @@ namespace MusicAnalyser
             spFFT.plt.YLabel("Gain (dB)", fontSize: 12);
             spFFT.plt.XLabel("Frequency (Hz)", fontSize: 12);
             spFFT.Render();
+        }
+
+        public void SetupLiveModeUI()
+        {
+            cwvViewer.Enabled = false;
+            cwvViewer.Visible = false;
+            spLiveWav.Enabled = true;
+            spLiveWav.Visible = true;
+            btnOpenClose.Enabled = false;
+            btnStop.Enabled = false;
+            barVolume.Enabled = false;
+            barTempo.Enabled = false;
+            chbFollow.Enabled = false;
+            btnPlay.Enabled = true;
+            btnPlay.Text = "Start Listening";
         }
 
         private void barVolume_Scroll(object sender, EventArgs e)
@@ -310,6 +337,7 @@ namespace MusicAnalyser
         public void SetTimerInterval(int interval) { timerFFT.Interval = interval; }
         public void SetExecTimeText(int time) { lblExeTime.Text = "Execution Time: " + time + " ms"; }
         public void RenderSpectrum() { spFFT.Render(); }
+        public void RenderLiveWaveform() { spLiveWav.Render(); }
         public void SetSelectTime(double seconds) { txtSelectTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetLoopTime(double seconds) { txtLoopTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetPlayBtnText(string text) { btnPlay.Text = text; }
@@ -360,6 +388,11 @@ namespace MusicAnalyser
                         cwvViewer.FitToScreen();
                     break;
             }
+        }
+
+        private void btnLiveMode_Click(object sender, EventArgs e)
+        {
+            app.EnableLiveMode();
         }
     }
 }

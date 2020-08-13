@@ -93,6 +93,8 @@
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             this.label22 = new System.Windows.Forms.Label();
             this.txtLoopTime = new System.Windows.Forms.TextBox();
+            this.btnLiveMode = new System.Windows.Forms.Button();
+            this.spLiveWav = new ScottPlot.FormsPlot();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -137,7 +139,7 @@
             this.spFFT.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.spFFT.BackColor = System.Drawing.SystemColors.Control;
-            this.spFFT.Location = new System.Drawing.Point(13, 503);
+            this.spFFT.Location = new System.Drawing.Point(13, 533);
             this.spFFT.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.spFFT.Name = "spFFT";
             this.spFFT.Size = new System.Drawing.Size(1509, 369);
@@ -153,7 +155,7 @@
             this.lblFFTDraws.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblFFTDraws.AutoSize = true;
-            this.lblFFTDraws.Location = new System.Drawing.Point(47, 443);
+            this.lblFFTDraws.Location = new System.Drawing.Point(47, 473);
             this.lblFFTDraws.Name = "lblFFTDraws";
             this.lblFFTDraws.Size = new System.Drawing.Size(106, 17);
             this.lblFFTDraws.TabIndex = 4;
@@ -164,7 +166,7 @@
             this.lstChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lstChords.FormattingEnabled = true;
             this.lstChords.ItemHeight = 16;
-            this.lstChords.Location = new System.Drawing.Point(1710, 596);
+            this.lstChords.Location = new System.Drawing.Point(1710, 626);
             this.lstChords.Name = "lstChords";
             this.lstChords.Size = new System.Drawing.Size(120, 100);
             this.lstChords.TabIndex = 5;
@@ -173,7 +175,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1710, 566);
+            this.label1.Location = new System.Drawing.Point(1710, 596);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(101, 17);
             this.label1.TabIndex = 6;
@@ -182,7 +184,7 @@
             // barVolume
             // 
             this.barVolume.Enabled = false;
-            this.barVolume.Location = new System.Drawing.Point(318, 43);
+            this.barVolume.Location = new System.Drawing.Point(431, 34);
             this.barVolume.Maximum = 20;
             this.barVolume.Name = "barVolume";
             this.barVolume.Size = new System.Drawing.Size(199, 56);
@@ -193,7 +195,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(326, 77);
+            this.label2.Location = new System.Drawing.Point(439, 68);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(28, 17);
             this.label2.TabIndex = 8;
@@ -202,7 +204,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(403, 77);
+            this.label3.Location = new System.Drawing.Point(516, 68);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 17);
             this.label3.TabIndex = 9;
@@ -211,7 +213,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(483, 77);
+            this.label4.Location = new System.Drawing.Point(596, 68);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(44, 17);
             this.label4.TabIndex = 10;
@@ -220,7 +222,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(188, 45);
+            this.label5.Location = new System.Drawing.Point(301, 36);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(124, 17);
             this.label5.TabIndex = 11;
@@ -231,7 +233,7 @@
             this.chbFollow.AutoSize = true;
             this.chbFollow.Checked = true;
             this.chbFollow.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbFollow.Location = new System.Drawing.Point(1491, 44);
+            this.chbFollow.Location = new System.Drawing.Point(1604, 35);
             this.chbFollow.Name = "chbFollow";
             this.chbFollow.Size = new System.Drawing.Size(130, 21);
             this.chbFollow.TabIndex = 13;
@@ -240,7 +242,7 @@
             // 
             // txtPlayTime
             // 
-            this.txtPlayTime.Location = new System.Drawing.Point(982, 42);
+            this.txtPlayTime.Location = new System.Drawing.Point(1095, 33);
             this.txtPlayTime.Name = "txtPlayTime";
             this.txtPlayTime.Size = new System.Drawing.Size(90, 22);
             this.txtPlayTime.TabIndex = 16;
@@ -249,7 +251,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(872, 45);
+            this.label6.Location = new System.Drawing.Point(985, 36);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(104, 17);
             this.label6.TabIndex = 17;
@@ -260,7 +262,7 @@
             this.lblC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblC.AutoSize = true;
             this.lblC.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblC.Location = new System.Drawing.Point(1541, 566);
+            this.lblC.Location = new System.Drawing.Point(1541, 596);
             this.lblC.Name = "lblC";
             this.lblC.Size = new System.Drawing.Size(37, 17);
             this.lblC.TabIndex = 18;
@@ -271,7 +273,7 @@
             this.lblDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDb.AutoSize = true;
             this.lblDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDb.Location = new System.Drawing.Point(1541, 583);
+            this.lblDb.Location = new System.Drawing.Point(1541, 613);
             this.lblDb.Name = "lblDb";
             this.lblDb.Size = new System.Drawing.Size(47, 17);
             this.lblDb.TabIndex = 19;
@@ -282,7 +284,7 @@
             this.lblD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblD.AutoSize = true;
             this.lblD.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblD.Location = new System.Drawing.Point(1541, 600);
+            this.lblD.Location = new System.Drawing.Point(1541, 630);
             this.lblD.Name = "lblD";
             this.lblD.Size = new System.Drawing.Size(38, 17);
             this.lblD.TabIndex = 20;
@@ -293,7 +295,7 @@
             this.lblEb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblEb.AutoSize = true;
             this.lblEb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEb.Location = new System.Drawing.Point(1541, 617);
+            this.lblEb.Location = new System.Drawing.Point(1541, 647);
             this.lblEb.Name = "lblEb";
             this.lblEb.Size = new System.Drawing.Size(46, 17);
             this.lblEb.TabIndex = 20;
@@ -304,7 +306,7 @@
             this.lblE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblE.AutoSize = true;
             this.lblE.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblE.Location = new System.Drawing.Point(1541, 634);
+            this.lblE.Location = new System.Drawing.Point(1541, 664);
             this.lblE.Name = "lblE";
             this.lblE.Size = new System.Drawing.Size(37, 17);
             this.lblE.TabIndex = 20;
@@ -315,7 +317,7 @@
             this.lblF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblF.AutoSize = true;
             this.lblF.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblF.Location = new System.Drawing.Point(1541, 651);
+            this.lblF.Location = new System.Drawing.Point(1541, 681);
             this.lblF.Name = "lblF";
             this.lblF.Size = new System.Drawing.Size(36, 17);
             this.lblF.TabIndex = 20;
@@ -326,7 +328,7 @@
             this.lblGb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblGb.AutoSize = true;
             this.lblGb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblGb.Location = new System.Drawing.Point(1541, 668);
+            this.lblGb.Location = new System.Drawing.Point(1541, 698);
             this.lblGb.Name = "lblGb";
             this.lblGb.Size = new System.Drawing.Size(48, 17);
             this.lblGb.TabIndex = 20;
@@ -337,7 +339,7 @@
             this.lblG.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblG.AutoSize = true;
             this.lblG.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblG.Location = new System.Drawing.Point(1541, 685);
+            this.lblG.Location = new System.Drawing.Point(1541, 715);
             this.lblG.Name = "lblG";
             this.lblG.Size = new System.Drawing.Size(39, 17);
             this.lblG.TabIndex = 20;
@@ -348,7 +350,7 @@
             this.lblAb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblAb.AutoSize = true;
             this.lblAb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAb.Location = new System.Drawing.Point(1541, 702);
+            this.lblAb.Location = new System.Drawing.Point(1541, 732);
             this.lblAb.Name = "lblAb";
             this.lblAb.Size = new System.Drawing.Size(46, 17);
             this.lblAb.TabIndex = 20;
@@ -359,7 +361,7 @@
             this.lblA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblA.AutoSize = true;
             this.lblA.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblA.Location = new System.Drawing.Point(1541, 719);
+            this.lblA.Location = new System.Drawing.Point(1541, 749);
             this.lblA.Name = "lblA";
             this.lblA.Size = new System.Drawing.Size(37, 17);
             this.lblA.TabIndex = 20;
@@ -370,7 +372,7 @@
             this.lblBb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblBb.AutoSize = true;
             this.lblBb.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBb.Location = new System.Drawing.Point(1541, 736);
+            this.lblBb.Location = new System.Drawing.Point(1541, 766);
             this.lblBb.Name = "lblBb";
             this.lblBb.Size = new System.Drawing.Size(46, 17);
             this.lblBb.TabIndex = 20;
@@ -381,7 +383,7 @@
             this.lblB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblB.AutoSize = true;
             this.lblB.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblB.Location = new System.Drawing.Point(1541, 753);
+            this.lblB.Location = new System.Drawing.Point(1541, 783);
             this.lblB.Name = "lblB";
             this.lblB.Size = new System.Drawing.Size(37, 17);
             this.lblB.TabIndex = 20;
@@ -392,7 +394,7 @@
             this.lblKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblKey.AutoSize = true;
             this.lblKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblKey.Location = new System.Drawing.Point(1544, 789);
+            this.lblKey.Location = new System.Drawing.Point(1544, 819);
             this.lblKey.Name = "lblKey";
             this.lblKey.Size = new System.Drawing.Size(119, 17);
             this.lblKey.TabIndex = 21;
@@ -403,7 +405,7 @@
             this.lblExeTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblExeTime.AutoSize = true;
-            this.lblExeTime.Location = new System.Drawing.Point(47, 471);
+            this.lblExeTime.Location = new System.Drawing.Point(47, 501);
             this.lblExeTime.Name = "lblExeTime";
             this.lblExeTime.Size = new System.Drawing.Size(142, 17);
             this.lblExeTime.TabIndex = 4;
@@ -412,7 +414,7 @@
             // barTempo
             // 
             this.barTempo.Enabled = false;
-            this.barTempo.Location = new System.Drawing.Point(653, 43);
+            this.barTempo.Location = new System.Drawing.Point(766, 34);
             this.barTempo.Maximum = 20;
             this.barTempo.Name = "barTempo";
             this.barTempo.Size = new System.Drawing.Size(199, 56);
@@ -423,7 +425,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(523, 45);
+            this.label7.Location = new System.Drawing.Point(636, 36);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(121, 17);
             this.label7.TabIndex = 11;
@@ -432,7 +434,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(656, 78);
+            this.label8.Location = new System.Drawing.Point(769, 69);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(36, 17);
             this.label8.TabIndex = 8;
@@ -441,7 +443,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(733, 78);
+            this.label9.Location = new System.Drawing.Point(846, 69);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(44, 17);
             this.label9.TabIndex = 9;
@@ -450,7 +452,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(818, 77);
+            this.label10.Location = new System.Drawing.Point(931, 68);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(44, 17);
             this.label10.TabIndex = 10;
@@ -459,7 +461,7 @@
             // barPitch
             // 
             this.barPitch.Enabled = false;
-            this.barPitch.Location = new System.Drawing.Point(493, 443);
+            this.barPitch.Location = new System.Drawing.Point(493, 473);
             this.barPitch.Maximum = 100;
             this.barPitch.Name = "barPitch";
             this.barPitch.Size = new System.Drawing.Size(199, 56);
@@ -470,7 +472,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(490, 478);
+            this.label11.Location = new System.Drawing.Point(490, 508);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(29, 17);
             this.label11.TabIndex = 8;
@@ -479,7 +481,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(585, 478);
+            this.label12.Location = new System.Drawing.Point(585, 508);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(16, 17);
             this.label12.TabIndex = 9;
@@ -488,7 +490,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(660, 478);
+            this.label13.Location = new System.Drawing.Point(660, 508);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(32, 17);
             this.label13.TabIndex = 10;
@@ -497,7 +499,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(405, 443);
+            this.label14.Location = new System.Drawing.Point(405, 473);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(82, 17);
             this.label14.TabIndex = 11;
@@ -505,7 +507,7 @@
             // 
             // barZoom
             // 
-            this.barZoom.Location = new System.Drawing.Point(274, 443);
+            this.barZoom.Location = new System.Drawing.Point(274, 473);
             this.barZoom.Maximum = 3;
             this.barZoom.Name = "barZoom";
             this.barZoom.Size = new System.Drawing.Size(110, 56);
@@ -515,7 +517,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(359, 482);
+            this.label15.Location = new System.Drawing.Point(359, 512);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(23, 17);
             this.label15.TabIndex = 8;
@@ -524,7 +526,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(330, 482);
+            this.label16.Location = new System.Drawing.Point(330, 512);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(23, 17);
             this.label16.TabIndex = 8;
@@ -533,7 +535,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(271, 482);
+            this.label17.Location = new System.Drawing.Point(271, 512);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(32, 17);
             this.label17.TabIndex = 8;
@@ -542,7 +544,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(301, 482);
+            this.label18.Location = new System.Drawing.Point(301, 512);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(23, 17);
             this.label18.TabIndex = 8;
@@ -551,7 +553,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(209, 443);
+            this.label19.Location = new System.Drawing.Point(209, 473);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(48, 17);
             this.label19.TabIndex = 11;
@@ -561,7 +563,7 @@
             // 
             this.lblError.AutoSize = true;
             this.lblError.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblError.Location = new System.Drawing.Point(748, 443);
+            this.lblError.Location = new System.Drawing.Point(748, 473);
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(75, 17);
             this.lblError.TabIndex = 18;
@@ -570,7 +572,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(698, 443);
+            this.label20.Location = new System.Drawing.Point(698, 473);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(44, 17);
             this.label20.TabIndex = 6;
@@ -654,7 +656,7 @@
             this.lblMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMode.AutoSize = true;
             this.lblMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMode.Location = new System.Drawing.Point(1648, 815);
+            this.lblMode.Location = new System.Drawing.Point(1648, 845);
             this.lblMode.Name = "lblMode";
             this.lblMode.Size = new System.Drawing.Size(47, 17);
             this.lblMode.TabIndex = 21;
@@ -664,7 +666,7 @@
             // 
             this.chbAllChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chbAllChords.AutoSize = true;
-            this.chbAllChords.Location = new System.Drawing.Point(1710, 715);
+            this.chbAllChords.Location = new System.Drawing.Point(1710, 745);
             this.chbAllChords.Name = "chbAllChords";
             this.chbAllChords.Size = new System.Drawing.Size(83, 21);
             this.chbAllChords.TabIndex = 13;
@@ -674,7 +676,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(1078, 45);
+            this.label21.Location = new System.Drawing.Point(1191, 36);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(86, 17);
             this.label21.TabIndex = 24;
@@ -682,7 +684,7 @@
             // 
             // txtSelectTime
             // 
-            this.txtSelectTime.Location = new System.Drawing.Point(1170, 42);
+            this.txtSelectTime.Location = new System.Drawing.Point(1283, 33);
             this.txtSelectTime.Name = "txtSelectTime";
             this.txtSelectTime.Size = new System.Drawing.Size(90, 22);
             this.txtSelectTime.TabIndex = 23;
@@ -711,7 +713,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(1266, 45);
+            this.label22.Location = new System.Drawing.Point(1379, 36);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(102, 17);
             this.label22.TabIndex = 26;
@@ -719,18 +721,43 @@
             // 
             // txtLoopTime
             // 
-            this.txtLoopTime.Location = new System.Drawing.Point(1374, 42);
+            this.txtLoopTime.Location = new System.Drawing.Point(1487, 33);
             this.txtLoopTime.Name = "txtLoopTime";
             this.txtLoopTime.Size = new System.Drawing.Size(90, 22);
             this.txtLoopTime.TabIndex = 25;
             this.txtLoopTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnLiveMode
+            // 
+            this.btnLiveMode.Location = new System.Drawing.Point(176, 31);
+            this.btnLiveMode.Name = "btnLiveMode";
+            this.btnLiveMode.Size = new System.Drawing.Size(119, 60);
+            this.btnLiveMode.TabIndex = 27;
+            this.btnLiveMode.Text = "Live Mode";
+            this.btnLiveMode.UseVisualStyleBackColor = true;
+            this.btnLiveMode.Click += new System.EventHandler(this.btnLiveMode_Click);
+            // 
+            // spLiveWav
+            // 
+            this.spLiveWav.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.spLiveWav.BackColor = System.Drawing.SystemColors.Control;
+            this.spLiveWav.Enabled = false;
+            this.spLiveWav.Location = new System.Drawing.Point(13, 100);
+            this.spLiveWav.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.spLiveWav.Name = "spLiveWav";
+            this.spLiveWav.Size = new System.Drawing.Size(1509, 369);
+            this.spLiveWav.TabIndex = 28;
+            this.spLiveWav.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1908, 915);
+            this.ClientSize = new System.Drawing.Size(1908, 945);
+            this.Controls.Add(this.spLiveWav);
+            this.Controls.Add(this.btnLiveMode);
             this.Controls.Add(this.label22);
             this.Controls.Add(this.txtLoopTime);
             this.Controls.Add(this.label21);
@@ -869,6 +896,8 @@
         internal CustomWaveViewer cwvViewer;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox txtLoopTime;
+        private System.Windows.Forms.Button btnLiveMode;
+        private ScottPlot.FormsPlot spLiveWav;
     }
 }
 
