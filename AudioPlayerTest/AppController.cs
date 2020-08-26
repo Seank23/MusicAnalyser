@@ -16,7 +16,7 @@ namespace MusicAnalyser
         private Form1 ui;
         private AudioSource source;
         private Analyser analyser;
-        private LiveInputListener liveListener = new LiveInputListener();
+        private LiveInputRecorder liveRecorder = new LiveInputRecorder();
 
         private double[] dataFft;
         private List<double[]> dataFftPrev = new List<double[]>();
@@ -159,38 +159,16 @@ namespace MusicAnalyser
             short[] audioBuffer;
             int fftPoints;
 
-            if (LiveMode)
-            {
-                int bufferSize = liveListener.getBufferSize();
-                bytesBuffer = new byte[bufferSize];
-                liveListener.bufferedProvider.Read(bytesBuffer, 0, bufferSize);
+            bytesBuffer = new byte[Prefs.BUFFERSIZE];
+            double posScaleFactor = (double)source.Audio.WaveFormat.SampleRate / (double)source.AudioFFT.WaveFormat.SampleRate;
+            source.AudioFFT.Position = (long)(source.AudioStream.Position / posScaleFactor / source.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
+            source.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
+            audioBuffer = new short[Prefs.BUFFERSIZE];
+            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
 
-                if (bytesBuffer.Length == 0)
-                    return false;
-                //if (bytesBuffer[bufferSize - 2] == 0)
-                //    return false;
-
-                CreateLiveWaveform(bytesBuffer);
-                audioBuffer = new short[bufferSize];
-                Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
-
-                fftPoints = 2;
-                while (fftPoints * 2 <= bufferSize) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
-                    fftPoints *= 2;
-            }
-            else
-            {
-                bytesBuffer = new byte[Prefs.BUFFERSIZE];
-                double posScaleFactor = (double)source.Audio.WaveFormat.SampleRate / (double)source.AudioFFT.WaveFormat.SampleRate;
-                source.AudioFFT.Position = (long)(source.AudioStream.Position / posScaleFactor / source.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
-                source.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
-                audioBuffer = new short[Prefs.BUFFERSIZE];
-                Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
-
-                fftPoints = 2;
-                while (fftPoints * 2 <= Prefs.BUFFERSIZE) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
-                    fftPoints *= 2;
-            }
+            fftPoints = 2;
+            while (fftPoints * 2 <= Prefs.BUFFERSIZE) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
+                fftPoints *= 2;
 
             // FFT Process
             NAudio.Dsp.Complex[] fftFull = new NAudio.Dsp.Complex[fftPoints];
@@ -206,10 +184,7 @@ namespace MusicAnalyser
                 double fftMirror = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
                 dataFft[i] = 20 * Math.Log10(fft + fftMirror) - Prefs.PEAK_FFT_POWER; // Estimates gain of FFT bin
             }
-            if(LiveMode)
-                fftScale = (double)fftPoints / liveListener.getSampleRate();
-            else
-                fftScale = (double)fftPoints / source.AudioFFT.WaveFormat.SampleRate;
+            fftScale = (double)fftPoints / source.AudioFFT.WaveFormat.SampleRate;
 
             SmoothSignal();
             avgGain = dataFft.Average();
@@ -234,8 +209,8 @@ namespace MusicAnalyser
                 Int16 val = BitConverter.ToInt16(bytes, i * 2);
                 pcm[i] = (double)(val) / Math.Pow(2, 16) * 200.0;
             }
-            double pcmPointSpacingMs = liveListener.getSampleRate() / 1000;
-            ui.DisplayLiveWaveform(pcm, pcmPointSpacingMs);
+            //double pcmPointSpacingMs = liveListener.getSampleRate() / 1000;
+            //ui.DisplayLiveWaveform(pcm, pcmPointSpacingMs);
         }
 
         /*
@@ -478,7 +453,7 @@ namespace MusicAnalyser
          */
         public async void RunAnalysis()
         {
-            if (ui.output.PlaybackState == PlaybackState.Playing || liveListener.Listening)
+            if (ui.output.PlaybackState == PlaybackState.Playing)
             {
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -495,8 +470,8 @@ namespace MusicAnalyser
                     Task asyncAnalysis = RunAnalysisAsync();
                     DisplayAnalysisUI();
                     ui.RenderSpectrum();
-                    if (LiveMode)
-                        ui.RenderLiveWaveform();
+                    //if (LiveMode)
+                        //ui.RenderLiveWaveform();
 
                     if (analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
                     {
@@ -697,33 +672,37 @@ namespace MusicAnalyser
     
         public void EnableLiveMode()
         {
-            liveListener = new LiveInputListener(bufferSize: 512);
+            if(ui.output != null)
+               TriggerClose();
+            liveRecorder = new LiveInputRecorder();
             LiveMode = true;
             ui.SetupLiveModeUI();
         }
 
+        public void ExitLiveMode()
+        {
+            if(liveRecorder.Recording)
+                liveRecorder.StopRecording();
+            LiveMode = false;
+            ui.ClearUI();
+        }
+
         public void TriggerLiveModeStartStop()
         {
-            if (!liveListener.Listening)
+            if (!liveRecorder.Recording)
             {
-                if (liveListener.StartListening())
+                if (liveRecorder.StartRecording())
                 {
-                    try
-                    {
-                        ui.SetPlayBtnText("Stop Listening");
-                        ui.EnableTimer(true);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
+                    ui.SetPlayBtnText("Stop Recording");
                 }
             }
             else
-            {
-                liveListener.StopListening();
-                ui.SetPlayBtnText("Start Listening");
-                ui.EnableTimer(false);
+            { 
+                liveRecorder.StopRecording();
+                LiveMode = false;
+                FileHandler.OpenWav(Path.Combine(Path.GetTempPath(), "recording.wav"), out source);
+                ui.SetupPlaybackUI(source.AudioGraph);
+                Opened = true;
             }
         }
 

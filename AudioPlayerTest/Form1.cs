@@ -46,6 +46,9 @@ namespace MusicAnalyser
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
             btnOpenClose.Text = "Close";
+            btnPlay.Text = "Play";
+            btnLiveMode.Text = "Live Mode";
+            btnOpenClose.Enabled = true;
             btnPlay.Enabled = true;
             btnStop.Enabled = true;
             playToolStripMenuItem.Enabled = true;
@@ -97,6 +100,7 @@ namespace MusicAnalyser
             btnPlay.Enabled = false;
             btnPlay.Text = "Play";
             btnOpenClose.Text = "Open";
+            btnLiveMode.Text = "Live Mode";
             music = new Music();
             barTempo.Enabled = false;
             barVolume.Enabled = false;
@@ -204,13 +208,13 @@ namespace MusicAnalyser
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
         }
 
-        public void DisplayLiveWaveform(double[] dataPcm, double pcmScale)
-        {
-            spLiveWav.plt.Clear();
-            spLiveWav.plt.PlotSignal(dataPcm, pcmScale, markerSize: 0);
-            spLiveWav.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
-            spLiveWav.plt.AxisAuto();
-        }
+        //public void DisplayLiveWaveform(double[] dataPcm, double pcmScale)
+        //{
+        //    spLiveWav.plt.Clear();
+        //    spLiveWav.plt.PlotSignal(dataPcm, pcmScale, markerSize: 0);
+        //    spLiveWav.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
+        //    spLiveWav.plt.AxisAuto();
+        //}
 
         public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
         {
@@ -284,17 +288,14 @@ namespace MusicAnalyser
 
         public void SetupLiveModeUI()
         {
-            cwvViewer.Enabled = false;
-            cwvViewer.Visible = false;
-            spLiveWav.Enabled = true;
-            spLiveWav.Visible = true;
             btnOpenClose.Enabled = false;
             btnStop.Enabled = false;
             barVolume.Enabled = false;
             barTempo.Enabled = false;
             chbFollow.Enabled = false;
             btnPlay.Enabled = true;
-            btnPlay.Text = "Start Listening";
+            btnLiveMode.Text = "Exit Live Mode";
+            btnPlay.Text = "Start Recording";
         }
 
         private void barVolume_Scroll(object sender, EventArgs e)
@@ -337,7 +338,7 @@ namespace MusicAnalyser
         public void SetTimerInterval(int interval) { timerFFT.Interval = interval; }
         public void SetExecTimeText(int time) { lblExeTime.Text = "Execution Time: " + time + " ms"; }
         public void RenderSpectrum() { spFFT.Render(); }
-        public void RenderLiveWaveform() { spLiveWav.Render(); }
+        //public void RenderLiveWaveform() { spLiveWav.Render(); }
         public void SetSelectTime(double seconds) { txtSelectTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetLoopTime(double seconds) { txtLoopTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetPlayBtnText(string text) { btnPlay.Text = text; }
@@ -392,7 +393,10 @@ namespace MusicAnalyser
 
         private void btnLiveMode_Click(object sender, EventArgs e)
         {
-            app.EnableLiveMode();
+            if(app.LiveMode)
+                app.ExitLiveMode();
+            else
+                app.EnableLiveMode();
         }
     }
 }

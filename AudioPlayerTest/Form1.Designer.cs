@@ -94,7 +94,6 @@
             this.label22 = new System.Windows.Forms.Label();
             this.txtLoopTime = new System.Windows.Forms.TextBox();
             this.btnLiveMode = new System.Windows.Forms.Button();
-            this.spLiveWav = new ScottPlot.FormsPlot();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -597,13 +596,13 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.btnOpen_Click);
             // 
@@ -612,21 +611,21 @@
             this.playbackToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.playToolStripMenuItem});
             this.playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(79, 24);
+            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
             this.playbackToolStripMenuItem.Text = "Playback";
             // 
             // playToolStripMenuItem
             // 
             this.playToolStripMenuItem.Enabled = false;
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(111, 26);
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(119, 26);
             this.playToolStripMenuItem.Text = "Play";
             this.playToolStripMenuItem.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // analyseToolStripMenuItem
             // 
             this.analyseToolStripMenuItem.Name = "analyseToolStripMenuItem";
-            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(72, 24);
+            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
             this.analyseToolStripMenuItem.Text = "Analyse";
             // 
             // helpToolStripMenuItem
@@ -635,19 +634,19 @@
             this.aboutToolStripMenuItem,
             this.perferencesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // perferencesToolStripMenuItem
             // 
             this.perferencesToolStripMenuItem.Name = "perferencesToolStripMenuItem";
-            this.perferencesToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.perferencesToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.perferencesToolStripMenuItem.Text = "Perferences";
             this.perferencesToolStripMenuItem.Click += new System.EventHandler(this.perferencesToolStripMenuItem_Click);
             // 
@@ -737,26 +736,12 @@
             this.btnLiveMode.UseVisualStyleBackColor = true;
             this.btnLiveMode.Click += new System.EventHandler(this.btnLiveMode_Click);
             // 
-            // spLiveWav
-            // 
-            this.spLiveWav.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.spLiveWav.BackColor = System.Drawing.SystemColors.Control;
-            this.spLiveWav.Enabled = false;
-            this.spLiveWav.Location = new System.Drawing.Point(13, 100);
-            this.spLiveWav.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.spLiveWav.Name = "spLiveWav";
-            this.spLiveWav.Size = new System.Drawing.Size(1509, 369);
-            this.spLiveWav.TabIndex = 28;
-            this.spLiveWav.Visible = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
-            this.Controls.Add(this.spLiveWav);
             this.Controls.Add(this.btnLiveMode);
             this.Controls.Add(this.label22);
             this.Controls.Add(this.txtLoopTime);
@@ -897,7 +882,6 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox txtLoopTime;
         private System.Windows.Forms.Button btnLiveMode;
-        private ScottPlot.FormsPlot spLiveWav;
     }
 }
 

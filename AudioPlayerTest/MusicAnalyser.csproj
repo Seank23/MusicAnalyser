@@ -171,9 +171,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="LiveInputListener.cs" />
+    <Compile Include="LiveInputRecorder.cs" />
     <Compile Include="Music.cs" />
-    <Compile Include="MyCircularBuffer.cs" />
     <Compile Include="Note.cs" />
     <Compile Include="OverlayPanel.cs">
       <SubType>Component</SubType>
@@ -187,7 +186,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RollingBufferWaveProvider.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SoundTouch\SoundTouch.cs" />
     <Compile Include="SoundTouch\SoundTouchInterop32.cs" />
