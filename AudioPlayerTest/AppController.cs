@@ -16,7 +16,7 @@ namespace MusicAnalyser
         private Form1 ui;
         private AudioSource source;
         private Analyser analyser;
-        private LiveInputRecorder liveRecorder = new LiveInputRecorder();
+        private LiveInputRecorder liveRecorder;
 
         private double[] dataFft;
         private List<double[]> dataFftPrev = new List<double[]>();
@@ -36,6 +36,7 @@ namespace MusicAnalyser
         {
             ui = form;
             analyser = new Analyser(ui, this);
+            liveRecorder = new LiveInputRecorder(ui);
             LiveMode = false;
             LoadPrefs();
             ui.UpdateUI();
@@ -674,7 +675,7 @@ namespace MusicAnalyser
         {
             if(ui.output != null)
                TriggerClose();
-            liveRecorder = new LiveInputRecorder();
+            liveRecorder = new LiveInputRecorder(ui);
             LiveMode = true;
             ui.SetupLiveModeUI();
         }

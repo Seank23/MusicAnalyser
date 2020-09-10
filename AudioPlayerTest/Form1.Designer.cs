@@ -44,7 +44,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.chbFollow = new System.Windows.Forms.CheckBox();
             this.txtPlayTime = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblPlayTime = new System.Windows.Forms.Label();
             this.lblC = new System.Windows.Forms.Label();
             this.lblDb = new System.Windows.Forms.Label();
             this.lblD = new System.Windows.Forms.Label();
@@ -88,12 +88,13 @@
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblMode = new System.Windows.Forms.Label();
             this.chbAllChords = new System.Windows.Forms.CheckBox();
-            this.label21 = new System.Windows.Forms.Label();
+            this.lblSelectTime = new System.Windows.Forms.Label();
             this.txtSelectTime = new System.Windows.Forms.TextBox();
-            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
-            this.label22 = new System.Windows.Forms.Label();
+            this.lblLoopDuration = new System.Windows.Forms.Label();
             this.txtLoopTime = new System.Windows.Forms.TextBox();
             this.btnLiveMode = new System.Windows.Forms.Button();
+            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.prbLevelMeter = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -247,14 +248,14 @@
             this.txtPlayTime.TabIndex = 16;
             this.txtPlayTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label6
+            // lblPlayTime
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(985, 36);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(104, 17);
-            this.label6.TabIndex = 17;
-            this.label6.Text = "Playback Time:";
+            this.lblPlayTime.AutoSize = true;
+            this.lblPlayTime.Location = new System.Drawing.Point(971, 36);
+            this.lblPlayTime.Name = "lblPlayTime";
+            this.lblPlayTime.Size = new System.Drawing.Size(104, 17);
+            this.lblPlayTime.TabIndex = 17;
+            this.lblPlayTime.Text = "Playback Time:";
             // 
             // lblC
             // 
@@ -587,7 +588,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1908, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1908, 30);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -672,14 +673,14 @@
             this.chbAllChords.Text = "Show All";
             this.chbAllChords.UseVisualStyleBackColor = true;
             // 
-            // label21
+            // lblSelectTime
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(1191, 36);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(86, 17);
-            this.label21.TabIndex = 24;
-            this.label21.Text = "Select Time:";
+            this.lblSelectTime.AutoSize = true;
+            this.lblSelectTime.Location = new System.Drawing.Point(1191, 36);
+            this.lblSelectTime.Name = "lblSelectTime";
+            this.lblSelectTime.Size = new System.Drawing.Size(86, 17);
+            this.lblSelectTime.TabIndex = 24;
+            this.lblSelectTime.Text = "Select Time:";
             // 
             // txtSelectTime
             // 
@@ -689,34 +690,14 @@
             this.txtSelectTime.TabIndex = 23;
             this.txtSelectTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // cwvViewer
+            // lblLoopDuration
             // 
-            this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cwvViewer.BackColor = System.Drawing.SystemColors.Control;
-            this.cwvViewer.BytesPerSample = 0;
-            this.cwvViewer.LeftSample = ((long)(0));
-            this.cwvViewer.Location = new System.Drawing.Point(32, 114);
-            this.cwvViewer.LoopEndSample = ((long)(0));
-            this.cwvViewer.Name = "cwvViewer";
-            this.cwvViewer.PenColor = System.Drawing.Color.DodgerBlue;
-            this.cwvViewer.PenWidth = 1F;
-            this.cwvViewer.RightSample = ((long)(0));
-            this.cwvViewer.SamplesPerPixel = 128;
-            this.cwvViewer.SelectSample = ((long)(0));
-            this.cwvViewer.Size = new System.Drawing.Size(1490, 301);
-            this.cwvViewer.StartPosition = ((long)(0));
-            this.cwvViewer.TabIndex = 2;
-            this.cwvViewer.WaveStream = null;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(1379, 36);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(102, 17);
-            this.label22.TabIndex = 26;
-            this.label22.Text = "Loop Duration:";
+            this.lblLoopDuration.AutoSize = true;
+            this.lblLoopDuration.Location = new System.Drawing.Point(1379, 36);
+            this.lblLoopDuration.Name = "lblLoopDuration";
+            this.lblLoopDuration.Size = new System.Drawing.Size(102, 17);
+            this.lblLoopDuration.TabIndex = 26;
+            this.lblLoopDuration.Text = "Loop Duration:";
             // 
             // txtLoopTime
             // 
@@ -736,16 +717,45 @@
             this.btnLiveMode.UseVisualStyleBackColor = true;
             this.btnLiveMode.Click += new System.EventHandler(this.btnLiveMode_Click);
             // 
+            // cwvViewer
+            // 
+            this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cwvViewer.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.cwvViewer.BytesPerSample = 0;
+            this.cwvViewer.LeftSample = ((long)(0));
+            this.cwvViewer.Location = new System.Drawing.Point(32, 114);
+            this.cwvViewer.LoopEndSample = ((long)(0));
+            this.cwvViewer.Name = "cwvViewer";
+            this.cwvViewer.PenColor = System.Drawing.Color.DodgerBlue;
+            this.cwvViewer.PenWidth = 1F;
+            this.cwvViewer.RightSample = ((long)(0));
+            this.cwvViewer.SamplesPerPixel = 128;
+            this.cwvViewer.SelectSample = ((long)(0));
+            this.cwvViewer.Size = new System.Drawing.Size(1490, 301);
+            this.cwvViewer.StartPosition = ((long)(0));
+            this.cwvViewer.TabIndex = 2;
+            this.cwvViewer.WaveStream = null;
+            // 
+            // prbLevelMeter
+            // 
+            this.prbLevelMeter.Location = new System.Drawing.Point(1309, 32);
+            this.prbLevelMeter.Name = "prbLevelMeter";
+            this.prbLevelMeter.Size = new System.Drawing.Size(268, 23);
+            this.prbLevelMeter.TabIndex = 28;
+            this.prbLevelMeter.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
+            this.Controls.Add(this.prbLevelMeter);
             this.Controls.Add(this.btnLiveMode);
-            this.Controls.Add(this.label22);
+            this.Controls.Add(this.lblLoopDuration);
             this.Controls.Add(this.txtLoopTime);
-            this.Controls.Add(this.label21);
+            this.Controls.Add(this.lblSelectTime);
             this.Controls.Add(this.txtSelectTime);
             this.Controls.Add(this.lblMode);
             this.Controls.Add(this.lblKey);
@@ -762,7 +772,7 @@
             this.Controls.Add(this.lblDb);
             this.Controls.Add(this.lblError);
             this.Controls.Add(this.lblC);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.lblPlayTime);
             this.Controls.Add(this.txtPlayTime);
             this.Controls.Add(this.chbAllChords);
             this.Controls.Add(this.chbFollow);
@@ -832,7 +842,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox chbFollow;
         private System.Windows.Forms.TextBox txtPlayTime;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblPlayTime;
         private System.Windows.Forms.Label lblC;
         private System.Windows.Forms.Label lblDb;
         private System.Windows.Forms.Label lblD;
@@ -876,12 +886,13 @@
         private System.Windows.Forms.ToolStripMenuItem perferencesToolStripMenuItem;
         private System.Windows.Forms.Label lblMode;
         private System.Windows.Forms.CheckBox chbAllChords;
-        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label lblSelectTime;
         private System.Windows.Forms.TextBox txtSelectTime;
         internal CustomWaveViewer cwvViewer;
-        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label lblLoopDuration;
         private System.Windows.Forms.TextBox txtLoopTime;
         private System.Windows.Forms.Button btnLiveMode;
+        private System.Windows.Forms.ProgressBar prbLevelMeter;
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using NAudio.Wave;
 
@@ -45,6 +46,7 @@ namespace MusicAnalyser
             output = new DirectSoundOut();
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
+            cwvViewer.BackColor = SystemColors.Control;
             btnOpenClose.Text = "Close";
             btnPlay.Text = "Play";
             btnLiveMode.Text = "Live Mode";
@@ -56,6 +58,12 @@ namespace MusicAnalyser
             barVolume.Enabled = true;
             barTempo.Enabled = true;
             barPitch.Enabled = true;
+            lblPlayTime.Text = "Playback Time:";
+            lblSelectTime.Text = "Select Time:";
+            lblLoopDuration.Visible = true;
+            txtSelectTime.Visible = true;
+            txtLoopTime.Visible = true;
+            prbLevelMeter.Visible = false;
             SetSelectTime(0);
             SetLoopTime(0);
         }
@@ -89,6 +97,7 @@ namespace MusicAnalyser
             cwvViewer.LoopEndSample = 0;
             cwvViewer.Overlay.Controls.Clear();
             cwvViewer.Overlay.ResetOverlay();
+            cwvViewer.BackColor = SystemColors.ControlLight;
             txtPlayTime.Text = "";
             txtSelectTime.Text = "";
             txtLoopTime.Text = "";
@@ -208,14 +217,6 @@ namespace MusicAnalyser
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
         }
 
-        //public void DisplayLiveWaveform(double[] dataPcm, double pcmScale)
-        //{
-        //    spLiveWav.plt.Clear();
-        //    spLiveWav.plt.PlotSignal(dataPcm, pcmScale, markerSize: 0);
-        //    spLiveWav.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
-        //    spLiveWav.plt.AxisAuto();
-        //}
-
         public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
         {
             switch (noteName)
@@ -288,6 +289,7 @@ namespace MusicAnalyser
 
         public void SetupLiveModeUI()
         {
+            cwvViewer.BackColor = SystemColors.Control;
             btnOpenClose.Enabled = false;
             btnStop.Enabled = false;
             barVolume.Enabled = false;
@@ -296,6 +298,12 @@ namespace MusicAnalyser
             btnPlay.Enabled = true;
             btnLiveMode.Text = "Exit Live Mode";
             btnPlay.Text = "Start Recording";
+            lblPlayTime.Text = "Recording Time:";
+            lblSelectTime.Text = "Recording Level:";
+            lblLoopDuration.Visible = false;
+            txtSelectTime.Visible = false; 
+            txtLoopTime.Visible = false;
+            prbLevelMeter.Visible = true;
         }
 
         private void barVolume_Scroll(object sender, EventArgs e)
@@ -397,6 +405,14 @@ namespace MusicAnalyser
                 app.ExitLiveMode();
             else
                 app.EnableLiveMode();
+        }
+
+        public void OnRecordDataAvailable(byte[] data, float maxLevel)
+        {
+            cwvViewer.WaveStream = new RawSourceWaveStream(new MemoryStream(data), new WaveFormat(48000, 2));
+            cwvViewer.FitToScreen();
+            txtPlayTime.Text = TimeSpan.FromSeconds(data.Length / (48000 * 2 * 2)).ToString();
+            prbLevelMeter.Value = (int)(maxLevel * 100);
         }
     }
 }
