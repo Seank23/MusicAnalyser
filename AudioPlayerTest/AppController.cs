@@ -82,7 +82,7 @@ namespace MusicAnalyser
                 }
                 else return;
 
-                ui.SetupPlaybackUI(source.AudioGraph, false);
+                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false);
                 Opened = true;
             }
         }
@@ -705,7 +705,7 @@ namespace MusicAnalyser
                 IsRecording = false;
                 LiveMode = false;
                 FileHandler.OpenWav(Path.Combine(Path.GetTempPath(), "recording.wav"), out source);
-                ui.SetupPlaybackUI(source.AudioGraph, true);
+                ui.SetupPlaybackUI(source.AudioGraph, "", true);
                 Opened = true;
             }
         }

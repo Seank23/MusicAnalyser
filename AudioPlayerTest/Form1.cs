@@ -40,7 +40,7 @@ namespace MusicAnalyser
             }
         }
 
-        public void SetupPlaybackUI(WaveStream audioGraph, bool wasRecording)
+        public void SetupPlaybackUI(WaveStream audioGraph, string filename, bool wasRecording)
         {
             output = new DirectSoundOut();
             cwvViewer.WaveStream = audioGraph;
@@ -50,8 +50,10 @@ namespace MusicAnalyser
             btnPlay.Text = "Play";
             btnLiveMode.Text = "Live Mode";
             btnOpenClose.Enabled = true;
+            closeToolStripMenuItem.Enabled = true;
             btnPlay.Enabled = true;
             btnStop.Enabled = true;
+            stopToolStripMenuItem.Enabled = true;
             playToolStripMenuItem.Enabled = true;
             openToolStripMenuItem.Enabled = false;
             barVolume.Enabled = true;
@@ -66,7 +68,13 @@ namespace MusicAnalyser
             SetSelectTime(0);
             SetLoopTime(0);
             if (wasRecording)
+            {
                 saveRecordingToolStripMenuItem.Enabled = true;
+                this.Text = "Music Analyser - Live Mode - Playback";
+            }
+            else
+                this.Text = "Music Analyser - " + filename;
+                
         }
 
         public bool SelectFile(out OpenFileDialog dialog)
@@ -90,6 +98,7 @@ namespace MusicAnalyser
 
         public void ClearUI()
         {
+            this.Text = "Music Analyser";
             lstChords.Items.Clear();
             spFFT.plt.Clear();
             spFFT.Render();
@@ -106,9 +115,13 @@ namespace MusicAnalyser
             UpdateFFTDrawsUI(0);
             SetExecTimeText(0);
             btnStop.Enabled = false;
+            stopToolStripMenuItem.Enabled = false;
             btnOpenClose.Enabled = true;
+            closeToolStripMenuItem.Enabled = false;
             btnPlay.Enabled = false;
             btnPlay.Text = "Play";
+            playToolStripMenuItem.Enabled = false;
+            playToolStripMenuItem.Text = "Play";
             btnOpenClose.Text = "Open";
             btnLiveMode.Text = "Live Mode";
             barTempo.Enabled = false;
@@ -117,6 +130,7 @@ namespace MusicAnalyser
             barVolume.Value = 10;
             barTempo.Value = 10;
             barPitch.Value = 50;
+            app.PitchChange(barPitch.Value);
             saveRecordingToolStripMenuItem.Enabled = false;
         }
 
@@ -290,8 +304,11 @@ namespace MusicAnalyser
 
         public void SetupLiveModeUI()
         {
+            this.Text = "Music Analyser - Live Mode";
             cwvViewer.BackColor = SystemColors.Control;
             btnOpenClose.Enabled = false;
+            closeToolStripMenuItem.Enabled = false;
+            stopToolStripMenuItem.Enabled = false;
             btnStop.Enabled = false;
             barVolume.Enabled = false;
             barTempo.Enabled = false;
@@ -383,6 +400,7 @@ namespace MusicAnalyser
 
         public void OnRecordDataAvailable(byte[] data, float maxLevel)
         {
+            this.Text = "Music Analyser - Live Mode - Recording";
             cwvViewer.WaveStream = new RawSourceWaveStream(new MemoryStream(data), new WaveFormat(48000, 2));
             cwvViewer.FitToScreen();
             txtPlayTime.Text = TimeSpan.FromSeconds((double)data.Length / (48000 * 2 * 2)).ToString(@"mm\:ss\:fff");
@@ -400,6 +418,7 @@ namespace MusicAnalyser
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            e.Handled = true;
             switch (e.KeyCode)
             {
                 case Keys.Space:
@@ -422,6 +441,16 @@ namespace MusicAnalyser
                         cwvViewer.FitToScreen();
                     break;
             }
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            app.TriggerClose();
+        }
+
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            app.TriggerStop();
         }
     }
 }
