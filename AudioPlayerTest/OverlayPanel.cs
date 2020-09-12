@@ -157,24 +157,31 @@ namespace MusicAnalyser
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            parent.InteractDown(e);
+            if(!parent.GetIsRecording())
+                parent.InteractDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            parent.InteractMove(e);
+            if (!parent.GetIsRecording())
+                parent.InteractMove(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            parent.InteractUp(e);
+            if (!parent.GetIsRecording())
+                parent.InteractUp(e);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            Graphics g = e.Graphics;
+            if(parent.GetIsRecording())
+            {
+                g.DrawString("Recording...", new Font(this.Font.FontFamily, 16), new SolidBrush(Color.Red), new Point(this.Width / 2 - (this.Width / 14), this.Height / 2 - (this.Height / 10)));
+            }
             if (parent.WaveStream != null)
             {
-                Graphics g = e.Graphics;
                 g.FillRectangle(new SolidBrush(Color.Black), posIndicator);
                 g.FillRectangle(new SolidBrush(Color.DarkBlue), selectMarker);
                 g.FillRectangle(new SolidBrush(Color.Blue), loopEndMarker);
@@ -188,6 +195,10 @@ namespace MusicAnalyser
                 {
                     g.FillRectangle(new SolidBrush(Color.Black), tick);
                 }
+            }
+            else
+            {
+                g.DrawString("No file selected", new Font(this.Font.FontFamily, 12), new SolidBrush(Color.Gray), new Point(this.Width / 2 - (this.Width / 14), this.Height / 2));
             }
         }
     }

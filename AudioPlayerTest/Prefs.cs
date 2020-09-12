@@ -9,10 +9,10 @@ namespace MusicAnalyser
         {
             { "UI_THEME", "0" }, { "FOLLOW_SECS", "10" }, { "UPDATE_MODE", "0" }, { "MIN_UPDATE_TIME", "12" }, { "NOTE_ALGORITHM", "0" }, { "MIN_FREQ", "30" },{ "MAX_FREQ", "1000" },
             { "SMOOTH_FACTOR", "4" }, { "SPECTRUM_AA", "1"}, { "PEAK_BUFFER", "120" }, { "MAX_GAIN_CHANGE", "8" }, { "MAX_FREQ_CHANGE", "2.8" }, { "SIMILAR_GAIN_THRESHOLD", "5" },
-            { "CHORD_DETECTION_INTERVAL", "10"}, {"CHORD_NOTE_OCCURENCE_OFFSET", "8"}
+            { "CHORD_DETECTION_INTERVAL", "10"}, {"CHORD_NOTE_OCCURENCE_OFFSET", "8"}, {"CAPTURE_DEVICE", "0"}
         };
 
-        public static int UI_DELAY_FACTOR = 2000000;
+        public static int UI_DELAY_FACTOR = 1000000;
         public static int FOLLOW_SECS = 10;
         public static int BUFFERSIZE = (int)Math.Pow(2, 13);
         public static double PEAK_FFT_POWER = 20 * Math.Log10(12020);
@@ -34,6 +34,7 @@ namespace MusicAnalyser
         public static float MODAL_ROOT_DIFF = 2.0f;
         public static int CHORD_DETECTION_INTERVAL = 10;
         public static int CHORD_NOTE_OCCURENCE_OFFSET = 8;
+        public static int CAPTURE_DEVICE = 0;
 
         public static void LoadPrefs(Dictionary<string, string> prefsLoaded)
         {
@@ -85,6 +86,9 @@ namespace MusicAnalyser
                         break;
                     case "CHORD_NOTE_OCCURENCE_OFFSET":
                         CHORD_NOTE_OCCURENCE_OFFSET = Convert.ToInt32(prefsLoaded[key]);
+                        break;
+                    case "CAPTURE_DEVICE":
+                        CAPTURE_DEVICE = Convert.ToInt32(prefsLoaded[key]);
                         break;
                     default:
                         Console.WriteLine("Error: Preference '" + key + "' could not be loaded");

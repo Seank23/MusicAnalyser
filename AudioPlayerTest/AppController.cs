@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,6 +16,7 @@ namespace MusicAnalyser
         private Form1 ui;
         private AudioSource source;
         private Analyser analyser;
+        private LiveInputRecorder liveRecorder;
 
         private double[] dataFft;
         private List<double[]> dataFftPrev = new List<double[]>();
@@ -27,12 +29,16 @@ namespace MusicAnalyser
         private bool started = false;
         private long startSample = 0;
 
+        public bool LiveMode { get; set; }
+        public bool IsRecording { get; set; }
         public bool Opened { get; set; }
 
         public AppController(Form1 form)
         {
             ui = form;
             analyser = new Analyser(ui, this);
+            liveRecorder = new LiveInputRecorder(ui);
+            LiveMode = false;
             LoadPrefs();
             ui.UpdateUI();
         }
@@ -76,7 +82,7 @@ namespace MusicAnalyser
                 }
                 else return;
 
-                ui.SetupPlaybackUI(source.AudioGraph);
+                ui.SetupPlaybackUI(source.AudioGraph, false);
                 Opened = true;
             }
         }
@@ -149,16 +155,20 @@ namespace MusicAnalyser
         /*
          * Master method for calculating realtime frequency domain data from audio playback
          */
-        private void PerformFFT()
+        private bool PerformFFT()
         {
-            byte[] bytesBuffer = new byte[Prefs.BUFFERSIZE];
+            byte[] bytesBuffer;
+            short[] audioBuffer;
+            int fftPoints;
+
+            bytesBuffer = new byte[Prefs.BUFFERSIZE];
             double posScaleFactor = (double)source.Audio.WaveFormat.SampleRate / (double)source.AudioFFT.WaveFormat.SampleRate;
             source.AudioFFT.Position = (long)(source.AudioStream.Position / posScaleFactor / source.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
             source.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
-            short[] audioBuffer = new short[Prefs.BUFFERSIZE];
+            audioBuffer = new short[Prefs.BUFFERSIZE];
             Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
 
-            int fftPoints = 2;
+            fftPoints = 2;
             while (fftPoints * 2 <= Prefs.BUFFERSIZE) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
                 fftPoints *= 2;
 
@@ -167,7 +177,6 @@ namespace MusicAnalyser
             for (int i = 0; i < fftPoints; i++)
                 fftFull[i].X = (float)(audioBuffer[i] * NAudio.Dsp.FastFourierTransform.HammingWindow(i, fftPoints));
             NAudio.Dsp.FastFourierTransform.FFT(true, (int)Math.Log(fftPoints, 2.0), fftFull);
-
 
             if (dataFft == null)
                 dataFft = new double[fftPoints / 2];
@@ -188,6 +197,22 @@ namespace MusicAnalyser
             ui.UpdateFFTDrawsUI(analysisUpdates);
 
             Application.DoEvents();
+            return true;
+        }
+
+        private void CreateLiveWaveform(byte[] bytes)
+        {
+            int BYTES_PER_POINT = 2;
+            int graphPointCount = bytes.Length / BYTES_PER_POINT;
+            double[] pcm = new double[graphPointCount];
+
+            for (int i = 0; i < graphPointCount; i++)
+            {
+                Int16 val = BitConverter.ToInt16(bytes, i * 2);
+                pcm[i] = (double)(val) / Math.Pow(2, 16) * 200.0;
+            }
+            //double pcmPointSpacingMs = liveListener.getSampleRate() / 1000;
+            //ui.DisplayLiveWaveform(pcm, pcmPointSpacingMs);
         }
 
         /*
@@ -435,29 +460,33 @@ namespace MusicAnalyser
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                PerformFFT();
-
-                if(Prefs.NOTE_ALGORITHM == 0) // By Magnitude
-                    GetPeaksByMagnitude();
-                else if(Prefs.NOTE_ALGORITHM == 1) // By Slope
-                    GetPeaksBySlope();
-
-                analyser.GetNotes(fftPeaks, analysisUpdates);
-                Task asyncAnalysis = RunAnalysisAsync();
-                DisplayAnalysisUI();
-                ui.RenderSpectrum();
-
-                if (analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
+                if (PerformFFT())
                 {
-                    int error = (int)analyser.GetAvgError().Average();
-                    if (error >= 0)
-                        ui.SetErrorText("+ " + Math.Abs(error) + " Cents");
-                    else
-                        ui.SetErrorText("- " + Math.Abs(error) + " Cents");
-                    analyser.ResetError();
-                }
 
-                await asyncAnalysis;
+                    if (Prefs.NOTE_ALGORITHM == 0) // By Magnitude
+                        GetPeaksByMagnitude();
+                    else if (Prefs.NOTE_ALGORITHM == 1) // By Slope
+                        GetPeaksBySlope();
+
+                    analyser.GetNotes(fftPeaks, analysisUpdates);
+                    Task asyncAnalysis = RunAnalysisAsync();
+                    DisplayAnalysisUI();
+                    ui.RenderSpectrum();
+                    //if (LiveMode)
+                        //ui.RenderLiveWaveform();
+
+                    if (analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
+                    {
+                        int error = (int)analyser.GetAvgError().Average();
+                        if (error >= 0)
+                            ui.SetErrorText("+ " + Math.Abs(error) + " Cents");
+                        else
+                            ui.SetErrorText("- " + Math.Abs(error) + " Cents");
+                        analyser.ResetError();
+                    }
+
+                    await asyncAnalysis;
+                }
                 watch.Stop();
 
                 if (Prefs.UPDATE_MODE == 0) // Dynamic update mode
@@ -641,6 +670,50 @@ namespace MusicAnalyser
             int centDifference = 50 - value;
             analyser.GetMusic().GetPercentChange(centDifference);
             analyser.GetMusic().ResetNoteCount();
+        }
+    
+        public void EnableLiveMode()
+        {
+            if(ui.output != null)
+               TriggerClose();
+            liveRecorder = new LiveInputRecorder(ui);
+            LiveMode = true;
+            ui.SetupLiveModeUI();
+        }
+
+        public void ExitLiveMode()
+        {
+            if(liveRecorder.Recording)
+                liveRecorder.StopRecording();
+            LiveMode = false;
+            ui.ClearUI();
+        }
+
+        public void TriggerLiveModeStartStop()
+        {
+            if (!liveRecorder.Recording)
+            {
+                if (liveRecorder.StartRecording())
+                {
+                    IsRecording = true;
+                    ui.SetPlayBtnText("Stop Recording");
+                }
+            }
+            else
+            { 
+                liveRecorder.StopRecording();
+                IsRecording = false;
+                LiveMode = false;
+                FileHandler.OpenWav(Path.Combine(Path.GetTempPath(), "recording.wav"), out source);
+                ui.SetupPlaybackUI(source.AudioGraph, true);
+                Opened = true;
+            }
+        }
+
+        public void SaveRecording(string filename)
+        {
+            if (!FileHandler.WriteMp3(filename, source.Audio.WaveFormat))
+                MessageBox.Show("Error: Recording could not be saved");
         }
 
         public void DisposeAudio()

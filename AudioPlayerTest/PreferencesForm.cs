@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NAudio.CoreAudioApi;
+using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,6 +25,7 @@ namespace MusicAnalyser
             InitializeComponent();
             ui = form;
             InitPrefs();
+            SetupDeviceList();
         }
 
         private void InitPrefs()
@@ -46,7 +49,7 @@ namespace MusicAnalyser
 
         private void SavePrefs()
         {
-            string[] prefsToSave = new string[15];
+            string[] prefsToSave = new string[16];
             prefsToSave[0] = "UI_THEME=" + DictIndexOf(uiThemeDict, comboTheme.Text);
             prefsToSave[1] = "FOLLOW_SECS=" + numFollowSecs.Value;
             prefsToSave[2] = "UPDATE_MODE=" + DictIndexOf(updateModeDict, comboMode.Text);
@@ -62,7 +65,18 @@ namespace MusicAnalyser
             prefsToSave[12] = "SIMILAR_GAIN_THRESHOLD=" + txtSimilarGainThd.Text;
             prefsToSave[13] = "CHORD_DETECTION_INTERVAL=" + numChordInterval.Value;
             prefsToSave[14] = "CHORD_NOTE_OCCURENCE_OFFSET=" + numOccurThd.Value;
+            prefsToSave[15] = "CAPTURE_DEVICE=" + comDevices.SelectedIndex; 
             FileHandler.WriteFile("prefs.ini", prefsToSave); 
+        }
+
+        private void SetupDeviceList()
+        {
+            for (int n = 0; n < WaveIn.DeviceCount; n++)
+            {
+                var device = WaveIn.GetCapabilities(n);
+                comDevices.Items.Add(device.ProductName);
+            }
+            comDevices.SelectedIndex = Prefs.CAPTURE_DEVICE;
         }
 
         private void btnSave_Click(object sender, EventArgs e)

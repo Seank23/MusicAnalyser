@@ -40,6 +40,12 @@ namespace MusicAnalyser
         public int GetWaveformPadding() { return waveformPadding; }
         public bool GetIsLooping() { return isLooping; }
 
+        public bool GetIsRecording() 
+        {
+            Form1 frm = (Form1)ParentForm;
+            return frm.GetApp().IsRecording;
+        }
+
         private void InvokeUI(Action a)
         {
             this.BeginInvoke(new MethodInvoker(a));

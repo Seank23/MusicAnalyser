@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using NAudio.Wave;
 
@@ -9,7 +11,6 @@ namespace MusicAnalyser
     public partial class Form1 : Form
     {
         private AppController app;
-        private Music music;
         public DirectSoundOut output { get; set; }
         public int fftZoom = 1000;
 
@@ -17,7 +18,6 @@ namespace MusicAnalyser
         {
             InitializeComponent();
             app = new AppController(this);
-            music = new Music();
             SetupFFTPlot();
             barVolume.Value = 10;
             SetModeText("");
@@ -40,12 +40,16 @@ namespace MusicAnalyser
             }
         }
 
-        public void SetupPlaybackUI(WaveStream audioGraph)
+        public void SetupPlaybackUI(WaveStream audioGraph, bool wasRecording)
         {
             output = new DirectSoundOut();
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
+            cwvViewer.BackColor = SystemColors.Control;
             btnOpenClose.Text = "Close";
+            btnPlay.Text = "Play";
+            btnLiveMode.Text = "Live Mode";
+            btnOpenClose.Enabled = true;
             btnPlay.Enabled = true;
             btnStop.Enabled = true;
             playToolStripMenuItem.Enabled = true;
@@ -53,8 +57,16 @@ namespace MusicAnalyser
             barVolume.Enabled = true;
             barTempo.Enabled = true;
             barPitch.Enabled = true;
+            lblPlayTime.Text = "Playback Time:";
+            lblSelectTime.Text = "Select Time:";
+            lblLoopDuration.Visible = true;
+            txtSelectTime.Visible = true;
+            txtLoopTime.Visible = true;
+            prbLevelMeter.Visible = false;
             SetSelectTime(0);
             SetLoopTime(0);
+            if (wasRecording)
+                saveRecordingToolStripMenuItem.Enabled = true;
         }
 
         public bool SelectFile(out OpenFileDialog dialog)
@@ -70,7 +82,10 @@ namespace MusicAnalyser
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            app.TriggerPlayPause();
+            if (app.LiveMode)
+                app.TriggerLiveModeStartStop();
+            else
+                app.TriggerPlayPause();
         }
 
         public void ClearUI()
@@ -83,6 +98,7 @@ namespace MusicAnalyser
             cwvViewer.LoopEndSample = 0;
             cwvViewer.Overlay.Controls.Clear();
             cwvViewer.Overlay.ResetOverlay();
+            cwvViewer.BackColor = SystemColors.ControlLight;
             txtPlayTime.Text = "";
             txtSelectTime.Text = "";
             txtLoopTime.Text = "";
@@ -94,13 +110,14 @@ namespace MusicAnalyser
             btnPlay.Enabled = false;
             btnPlay.Text = "Play";
             btnOpenClose.Text = "Open";
-            music = new Music();
+            btnLiveMode.Text = "Live Mode";
             barTempo.Enabled = false;
             barVolume.Enabled = false;
             barPitch.Enabled = false;
             barVolume.Value = 10;
             barTempo.Value = 10;
             barPitch.Value = 50;
+            saveRecordingToolStripMenuItem.Enabled = false;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -181,7 +198,7 @@ namespace MusicAnalyser
         public void DisplayFFT(double[] dataFft, double fftScale, double avgGain, double maxGain)
         {
             spFFT.plt.Clear();
-            spFFT.plt.PlotSignalConst(dataFft, fftScale, markerSize: 0);
+            spFFT.plt.PlotSignal(dataFft, fftScale, markerSize: 0);
             switch (barZoom.Value)
             {
                 case 0:
@@ -199,7 +216,6 @@ namespace MusicAnalyser
             }
             spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
-            spFFT.plt.Benchmark();
         }
 
         public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
@@ -259,6 +275,8 @@ namespace MusicAnalyser
 
         private void timerFFT_Tick(object sender, EventArgs e)
         {
+            if (output == null)
+                output = new DirectSoundOut();
             app.RunAnalysis();
         }
 
@@ -268,6 +286,25 @@ namespace MusicAnalyser
             spFFT.plt.YLabel("Gain (dB)", fontSize: 12);
             spFFT.plt.XLabel("Frequency (Hz)", fontSize: 12);
             spFFT.Render();
+        }
+
+        public void SetupLiveModeUI()
+        {
+            cwvViewer.BackColor = SystemColors.Control;
+            btnOpenClose.Enabled = false;
+            btnStop.Enabled = false;
+            barVolume.Enabled = false;
+            barTempo.Enabled = false;
+            chbFollow.Enabled = false;
+            btnPlay.Enabled = true;
+            btnLiveMode.Text = "Exit Live Mode";
+            btnPlay.Text = "Start Recording";
+            lblPlayTime.Text = "Recording Time:";
+            lblSelectTime.Text = "Recording Level:";
+            lblLoopDuration.Visible = false;
+            txtSelectTime.Visible = false; 
+            txtLoopTime.Visible = false;
+            prbLevelMeter.Visible = true;
         }
 
         private void barVolume_Scroll(object sender, EventArgs e)
@@ -336,26 +373,51 @@ namespace MusicAnalyser
             app.TriggerStop();
         }
 
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        private void btnLiveMode_Click(object sender, EventArgs e)
         {
-            switch(e.KeyChar)
+            if(app.LiveMode)
+                app.ExitLiveMode();
+            else
+                app.EnableLiveMode();
+        }
+
+        public void OnRecordDataAvailable(byte[] data, float maxLevel)
+        {
+            cwvViewer.WaveStream = new RawSourceWaveStream(new MemoryStream(data), new WaveFormat(48000, 2));
+            cwvViewer.FitToScreen();
+            txtPlayTime.Text = TimeSpan.FromSeconds((double)data.Length / (48000 * 2 * 2)).ToString(@"mm\:ss\:fff");
+            prbLevelMeter.Value = (int)(maxLevel * 100);
+        }
+
+        private void saveRecordingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "MP3 File (*.mp3)|*.mp3;";
+
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+                app.SaveRecording(saveDialog.FileName);
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
             {
-                case (char)32:
-                    if(output != null)
+                case Keys.Space:
+                    if (output != null)
                         app.TriggerPlayPause();
                     break;
-                case (char)8:
+                case Keys.Back:
                     if (output != null)
                         app.TriggerStop();
                     break;
-                case (char)27:
+                case Keys.Escape:
                     if (output != null)
                         app.TriggerClose();
                     break;
-                case (char)111:
+                case Keys.O:
                     app.TriggerOpenFile();
                     break;
-                case (char)13:
+                case Keys.Tab:
                     if (output != null)
                         cwvViewer.FitToScreen();
                     break;
