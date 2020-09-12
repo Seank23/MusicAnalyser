@@ -1,4 +1,5 @@
 ﻿using NAudio.Dsp;
+using NAudio.MediaFoundation;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MusicAnalyser
 {
@@ -84,6 +86,21 @@ namespace MusicAnalyser
             }
             lines = list.ToArray();
             return lines;
+        }
+
+        public static bool WriteMp3(string filename, WaveFormat format)
+        {
+            var mediaType = MediaFoundationEncoder.SelectMediaType(AudioSubtypes.MFAudioFormat_MP3, format, 192000);
+
+            if(mediaType != null)
+            {
+                using (var reader = new WaveFileReader(Path.Combine(Path.GetTempPath(), "recording.wav")))
+                {
+                    MediaFoundationEncoder.EncodeToMp3(reader, filename, 192000);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

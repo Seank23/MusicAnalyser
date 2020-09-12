@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using NAudio.Wave;
 
@@ -10,7 +11,6 @@ namespace MusicAnalyser
     public partial class Form1 : Form
     {
         private AppController app;
-        private Music music;
         public DirectSoundOut output { get; set; }
         public int fftZoom = 1000;
 
@@ -18,7 +18,6 @@ namespace MusicAnalyser
         {
             InitializeComponent();
             app = new AppController(this);
-            music = new Music();
             SetupFFTPlot();
             barVolume.Value = 10;
             SetModeText("");
@@ -41,7 +40,7 @@ namespace MusicAnalyser
             }
         }
 
-        public void SetupPlaybackUI(WaveStream audioGraph)
+        public void SetupPlaybackUI(WaveStream audioGraph, bool wasRecording)
         {
             output = new DirectSoundOut();
             cwvViewer.WaveStream = audioGraph;
@@ -66,6 +65,8 @@ namespace MusicAnalyser
             prbLevelMeter.Visible = false;
             SetSelectTime(0);
             SetLoopTime(0);
+            if (wasRecording)
+                saveRecordingToolStripMenuItem.Enabled = true;
         }
 
         public bool SelectFile(out OpenFileDialog dialog)
@@ -110,13 +111,13 @@ namespace MusicAnalyser
             btnPlay.Text = "Play";
             btnOpenClose.Text = "Open";
             btnLiveMode.Text = "Live Mode";
-            music = new Music();
             barTempo.Enabled = false;
             barVolume.Enabled = false;
             barPitch.Enabled = false;
             barVolume.Value = 10;
             barTempo.Value = 10;
             barPitch.Value = 50;
+            saveRecordingToolStripMenuItem.Enabled = false;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -346,7 +347,6 @@ namespace MusicAnalyser
         public void SetTimerInterval(int interval) { timerFFT.Interval = interval; }
         public void SetExecTimeText(int time) { lblExeTime.Text = "Execution Time: " + time + " ms"; }
         public void RenderSpectrum() { spFFT.Render(); }
-        //public void RenderLiveWaveform() { spLiveWav.Render(); }
         public void SetSelectTime(double seconds) { txtSelectTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetLoopTime(double seconds) { txtLoopTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetPlayBtnText(string text) { btnPlay.Text = text; }
@@ -373,32 +373,6 @@ namespace MusicAnalyser
             app.TriggerStop();
         }
 
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            switch(e.KeyChar)
-            {
-                case (char)32:
-                    if(output != null)
-                        app.TriggerPlayPause();
-                    break;
-                case (char)8:
-                    if (output != null)
-                        app.TriggerStop();
-                    break;
-                case (char)27:
-                    if (output != null)
-                        app.TriggerClose();
-                    break;
-                case (char)111:
-                    app.TriggerOpenFile();
-                    break;
-                case (char)13:
-                    if (output != null)
-                        cwvViewer.FitToScreen();
-                    break;
-            }
-        }
-
         private void btnLiveMode_Click(object sender, EventArgs e)
         {
             if(app.LiveMode)
@@ -411,8 +385,43 @@ namespace MusicAnalyser
         {
             cwvViewer.WaveStream = new RawSourceWaveStream(new MemoryStream(data), new WaveFormat(48000, 2));
             cwvViewer.FitToScreen();
-            txtPlayTime.Text = TimeSpan.FromSeconds(data.Length / (48000 * 2 * 2)).ToString();
+            txtPlayTime.Text = TimeSpan.FromSeconds((double)data.Length / (48000 * 2 * 2)).ToString(@"mm\:ss\:fff");
             prbLevelMeter.Value = (int)(maxLevel * 100);
+        }
+
+        private void saveRecordingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "MP3 File (*.mp3)|*.mp3;";
+
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+                app.SaveRecording(saveDialog.FileName);
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Space:
+                    if (output != null)
+                        app.TriggerPlayPause();
+                    break;
+                case Keys.Back:
+                    if (output != null)
+                        app.TriggerStop();
+                    break;
+                case Keys.Escape:
+                    if (output != null)
+                        app.TriggerClose();
+                    break;
+                case Keys.O:
+                    app.TriggerOpenFile();
+                    break;
+                case Keys.Tab:
+                    if (output != null)
+                        cwvViewer.FitToScreen();
+                    break;
+            }
         }
     }
 }

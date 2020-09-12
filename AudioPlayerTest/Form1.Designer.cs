@@ -80,6 +80,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveRecordingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analyseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,8 +94,8 @@
             this.lblLoopDuration = new System.Windows.Forms.Label();
             this.txtLoopTime = new System.Windows.Forms.TextBox();
             this.btnLiveMode = new System.Windows.Forms.Button();
-            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             this.prbLevelMeter = new System.Windows.Forms.ProgressBar();
+            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -595,24 +596,33 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem});
+            this.openToolStripMenuItem,
+            this.saveRecordingToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
-            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // saveRecordingToolStripMenuItem
+            // 
+            this.saveRecordingToolStripMenuItem.Enabled = false;
+            this.saveRecordingToolStripMenuItem.Name = "saveRecordingToolStripMenuItem";
+            this.saveRecordingToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.saveRecordingToolStripMenuItem.Text = "Save Recording...";
+            this.saveRecordingToolStripMenuItem.Click += new System.EventHandler(this.saveRecordingToolStripMenuItem_Click);
             // 
             // playbackToolStripMenuItem
             // 
             this.playbackToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.playToolStripMenuItem});
             this.playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
             this.playbackToolStripMenuItem.Text = "Playback";
             // 
             // playToolStripMenuItem
@@ -626,7 +636,7 @@
             // analyseToolStripMenuItem
             // 
             this.analyseToolStripMenuItem.Name = "analyseToolStripMenuItem";
-            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
+            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(74, 26);
             this.analyseToolStripMenuItem.Text = "Analyse";
             // 
             // helpToolStripMenuItem
@@ -635,7 +645,7 @@
             this.aboutToolStripMenuItem,
             this.perferencesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
@@ -717,6 +727,14 @@
             this.btnLiveMode.UseVisualStyleBackColor = true;
             this.btnLiveMode.Click += new System.EventHandler(this.btnLiveMode_Click);
             // 
+            // prbLevelMeter
+            // 
+            this.prbLevelMeter.Location = new System.Drawing.Point(1309, 32);
+            this.prbLevelMeter.Name = "prbLevelMeter";
+            this.prbLevelMeter.Size = new System.Drawing.Size(268, 23);
+            this.prbLevelMeter.TabIndex = 28;
+            this.prbLevelMeter.Visible = false;
+            // 
             // cwvViewer
             // 
             this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -736,14 +754,6 @@
             this.cwvViewer.StartPosition = ((long)(0));
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
-            // 
-            // prbLevelMeter
-            // 
-            this.prbLevelMeter.Location = new System.Drawing.Point(1309, 32);
-            this.prbLevelMeter.Name = "prbLevelMeter";
-            this.prbLevelMeter.Size = new System.Drawing.Size(268, 23);
-            this.prbLevelMeter.TabIndex = 28;
-            this.prbLevelMeter.Visible = false;
             // 
             // Form1
             // 
@@ -813,7 +823,7 @@
             this.Name = "Form1";
             this.Text = "Music Analyser";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).EndInit();
@@ -893,6 +903,7 @@
         private System.Windows.Forms.TextBox txtLoopTime;
         private System.Windows.Forms.Button btnLiveMode;
         private System.Windows.Forms.ProgressBar prbLevelMeter;
+        private System.Windows.Forms.ToolStripMenuItem saveRecordingToolStripMenuItem;
     }
 }
 

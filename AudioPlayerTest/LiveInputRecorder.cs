@@ -64,14 +64,14 @@ namespace MusicAnalyser
             Recording = false;
         }
 
-        public bool StartRecording(int audioDeviceNumber = 0)
+        public bool StartRecording()
         {
             try
             {
                 MyBuffer = new List<byte>();
                 waveSource = new WaveIn();
                 waveSource.WaveFormat = new WaveFormat(48000, 2);
-
+                waveSource.DeviceNumber = Prefs.CAPTURE_DEVICE;
                 waveSource.DataAvailable += new EventHandler<WaveInEventArgs>(waveSource_DataAvailable);
 
                 waveFile = new WaveFileWriter(Path.Combine(Path.GetTempPath(), "recording.wav"), waveSource.WaveFormat);

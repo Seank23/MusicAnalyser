@@ -30,6 +30,7 @@ namespace MusicAnalyser
         private long startSample = 0;
 
         public bool LiveMode { get; set; }
+        public bool IsRecording { get; set; }
         public bool Opened { get; set; }
 
         public AppController(Form1 form)
@@ -81,7 +82,7 @@ namespace MusicAnalyser
                 }
                 else return;
 
-                ui.SetupPlaybackUI(source.AudioGraph);
+                ui.SetupPlaybackUI(source.AudioGraph, false);
                 Opened = true;
             }
         }
@@ -694,17 +695,25 @@ namespace MusicAnalyser
             {
                 if (liveRecorder.StartRecording())
                 {
+                    IsRecording = true;
                     ui.SetPlayBtnText("Stop Recording");
                 }
             }
             else
             { 
                 liveRecorder.StopRecording();
+                IsRecording = false;
                 LiveMode = false;
                 FileHandler.OpenWav(Path.Combine(Path.GetTempPath(), "recording.wav"), out source);
-                ui.SetupPlaybackUI(source.AudioGraph);
+                ui.SetupPlaybackUI(source.AudioGraph, true);
                 Opened = true;
             }
+        }
+
+        public void SaveRecording(string filename)
+        {
+            if (!FileHandler.WriteMp3(filename, source.Audio.WaveFormat))
+                MessageBox.Show("Error: Recording could not be saved");
         }
 
         public void DisposeAudio()
