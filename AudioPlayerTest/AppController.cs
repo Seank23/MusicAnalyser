@@ -68,9 +68,11 @@ namespace MusicAnalyser
          */
         public void TriggerOpenFile()
         {
-            OpenFileDialog open = null;
+            if (IsRecording || Opened)
+                return;
 
-            if(ui.SelectFile(out open))
+            OpenFileDialog open;
+            if (ui.SelectFile(out open))
             {
                 if (open.FileName.EndsWith(".wav"))
                 {
@@ -686,6 +688,7 @@ namespace MusicAnalyser
             if(liveRecorder.Recording)
                 liveRecorder.StopRecording();
             LiveMode = false;
+            IsRecording = false;
             ui.ClearUI();
         }
 

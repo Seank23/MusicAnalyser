@@ -41,6 +41,9 @@
             this.numFollowSecs = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.tabLive = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.comDevices = new System.Windows.Forms.ComboBox();
             this.tabNotes = new System.Windows.Forms.TabPage();
             this.txtSimilarGainThd = new System.Windows.Forms.TextBox();
             this.txtMaxFreqChange = new System.Windows.Forms.TextBox();
@@ -75,13 +78,11 @@
             this.numChordInterval = new System.Windows.Forms.NumericUpDown();
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
-            this.tabLive = new System.Windows.Forms.TabPage();
-            this.comDevices = new System.Windows.Forms.ComboBox();
-            this.label24 = new System.Windows.Forms.Label();
             this.tabControlPrefs.SuspendLayout();
             this.tabUI.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFollowSecs)).BeginInit();
+            this.tabLive.SuspendLayout();
             this.tabNotes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSmooth)).BeginInit();
@@ -91,7 +92,6 @@
             this.tabChords.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numOccurThd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChordInterval)).BeginInit();
-            this.tabLive.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSave
@@ -232,6 +232,34 @@
             this.label1.Size = new System.Drawing.Size(120, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Following Interval:";
+            // 
+            // tabLive
+            // 
+            this.tabLive.Controls.Add(this.label24);
+            this.tabLive.Controls.Add(this.comDevices);
+            this.tabLive.Location = new System.Drawing.Point(4, 25);
+            this.tabLive.Name = "tabLive";
+            this.tabLive.Size = new System.Drawing.Size(768, 352);
+            this.tabLive.TabIndex = 5;
+            this.tabLive.Text = "Live Mode";
+            this.tabLive.UseVisualStyleBackColor = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(22, 23);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(109, 17);
+            this.label24.TabIndex = 1;
+            this.label24.Text = "Capture Device:";
+            // 
+            // comDevices
+            // 
+            this.comDevices.FormattingEnabled = true;
+            this.comDevices.Location = new System.Drawing.Point(144, 20);
+            this.comDevices.Name = "comDevices";
+            this.comDevices.Size = new System.Drawing.Size(394, 24);
+            this.comDevices.TabIndex = 0;
             // 
             // tabNotes
             // 
@@ -570,34 +598,6 @@
             this.label22.TabIndex = 6;
             this.label22.Text = "Analysis Duration:";
             // 
-            // tabLive
-            // 
-            this.tabLive.Controls.Add(this.label24);
-            this.tabLive.Controls.Add(this.comDevices);
-            this.tabLive.Location = new System.Drawing.Point(4, 25);
-            this.tabLive.Name = "tabLive";
-            this.tabLive.Size = new System.Drawing.Size(768, 352);
-            this.tabLive.TabIndex = 5;
-            this.tabLive.Text = "Live Mode";
-            this.tabLive.UseVisualStyleBackColor = true;
-            // 
-            // comDevices
-            // 
-            this.comDevices.FormattingEnabled = true;
-            this.comDevices.Location = new System.Drawing.Point(144, 20);
-            this.comDevices.Name = "comDevices";
-            this.comDevices.Size = new System.Drawing.Size(394, 24);
-            this.comDevices.TabIndex = 0;
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(22, 23);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(116, 17);
-            this.label24.TabIndex = 1;
-            this.label24.Text = "Capture Devices:";
-            // 
             // PreferencesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -615,6 +615,8 @@
             this.tabPlayback.ResumeLayout(false);
             this.tabPlayback.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFollowSecs)).EndInit();
+            this.tabLive.ResumeLayout(false);
+            this.tabLive.PerformLayout();
             this.tabNotes.ResumeLayout(false);
             this.tabNotes.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxFreq)).EndInit();
@@ -626,8 +628,6 @@
             this.tabChords.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numOccurThd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChordInterval)).EndInit();
-            this.tabLive.ResumeLayout(false);
-            this.tabLive.PerformLayout();
             this.ResumeLayout(false);
 
         }

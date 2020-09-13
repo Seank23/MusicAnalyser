@@ -122,6 +122,7 @@ namespace MusicAnalyser
             btnPlay.Text = "Play";
             playToolStripMenuItem.Enabled = false;
             playToolStripMenuItem.Text = "Play";
+            openToolStripMenuItem.Enabled = true;
             btnOpenClose.Text = "Open";
             btnLiveMode.Text = "Live Mode";
             barTempo.Enabled = false;
@@ -309,6 +310,7 @@ namespace MusicAnalyser
             btnOpenClose.Enabled = false;
             closeToolStripMenuItem.Enabled = false;
             stopToolStripMenuItem.Enabled = false;
+            openToolStripMenuItem.Enabled = false;
             btnStop.Enabled = false;
             barVolume.Enabled = false;
             barTempo.Enabled = false;

@@ -7,8 +7,8 @@ namespace MusicAnalyser
     {
         public static Dictionary<string, string> DefaultsDict = new Dictionary<string, string>
         {
-            { "UI_THEME", "0" }, { "FOLLOW_SECS", "10" }, { "UPDATE_MODE", "0" }, { "MIN_UPDATE_TIME", "12" }, { "NOTE_ALGORITHM", "0" }, { "MIN_FREQ", "30" },{ "MAX_FREQ", "1000" },
-            { "SMOOTH_FACTOR", "4" }, { "SPECTRUM_AA", "1"}, { "PEAK_BUFFER", "120" }, { "MAX_GAIN_CHANGE", "8" }, { "MAX_FREQ_CHANGE", "2.8" }, { "SIMILAR_GAIN_THRESHOLD", "5" },
+            { "UI_THEME", "0" }, { "FOLLOW_SECS", "10" }, { "UPDATE_MODE", "0" }, { "MIN_UPDATE_TIME", "10" }, { "NOTE_ALGORITHM", "0" }, { "MIN_FREQ", "30" },{ "MAX_FREQ", "2000" },
+            { "SMOOTH_FACTOR", "4" }, { "SPECTRUM_AA", "1"}, { "PEAK_BUFFER", "90" }, { "MAX_GAIN_CHANGE", "8" }, { "MAX_FREQ_CHANGE", "2.8" }, { "SIMILAR_GAIN_THRESHOLD", "5" },
             { "CHORD_DETECTION_INTERVAL", "10"}, {"CHORD_NOTE_OCCURENCE_OFFSET", "8"}, {"CAPTURE_DEVICE", "0"}
         };
 
@@ -17,8 +17,8 @@ namespace MusicAnalyser
         public static int BUFFERSIZE = (int)Math.Pow(2, 13);
         public static double PEAK_FFT_POWER = 20 * Math.Log10(12020);
         public static int SMOOTH_FACTOR = 3;
-        public static int PEAK_BUFFER = 120;
-        public static int MAX_FREQ = 1000;
+        public static int PEAK_BUFFER = 90;
+        public static int MAX_FREQ = 2000;
         public static int MIN_FREQ = 30;
         public static float MAX_GAIN_CHANGE = 8.0f;
         public static float MAX_FREQ_CHANGE = 2.8f;
@@ -26,7 +26,7 @@ namespace MusicAnalyser
         public static int NOTE_BUFFER_SIZE = 10000;
         public static int ERROR_DURATION = 5;
         public static int AVG_EXECUTIONS = 10;
-        public static int MIN_UPDATE_TIME = 12;
+        public static int MIN_UPDATE_TIME = 10;
         public static int UPDATE_MODE = 0;
         public static int NOTE_ALGORITHM = 0;
         public static int SPECTRUM_AA = 1;
