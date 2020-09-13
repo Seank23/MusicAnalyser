@@ -1,12 +1,25 @@
-# MusicAnalyser
+# Music Analyser
 
-TODO (9/12/2019)
+![MusicAnalyser](https://github.com/Seank23/MusicAnalyser/blob/master/Images/MusicAnalyser1.PNG)
 
-  * Version 1:
-    * Improve playback functionality (Play from any position, improve animation)
-    * Implement By-Slope note detection algorithm
-    * Add live mode (Realtime input)
-    * Improve chord detection
-      
-  * Version 2:
-    * Implement separate FFTs for different frequency bands (bass, low-mid, high-mid, etc.) using hardware accelerated processing (cuFFT)
+## Features
+- Functional and intuative GUI.
+- Support for playback and analysis of .MP3 and .WAV audio files.
+- Support for playback and analysis of recording capture device using Live Mode.
+- FFT-based frequency analysis of audio.
+- Algorithmic pitch detection from frequency analysis.
+- Chord and key signature prediction.
+- Change tempo of audio (affects both playback and analysis).
+- Detect non standard tuned (A440) notes using Pitch Sync.
+- Interactive playback roll - select start position and loop playback.
+- Save audio recordings as .MP3s.
+- Locally stored preferences.
+
+## How To Use
+TODO
+### UI Setting Descriptions
+TODO
+### Preference Descriptions
+TODO
+
+
