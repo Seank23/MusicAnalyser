@@ -1,6 +1,7 @@
 # Music Analyser
 
-![MusicAnalyser](https://github.com/Seank23/MusicAnalyser/blob/master/Images/MusicAnalyser1.PNG)
+
+![MusicAnalyser](https://github.com/Seank23/MusicAnalyser/blob/master/Images/MusicAnalyser1.gif)
 
 ## Features
 - Functional and intuative GUI.
