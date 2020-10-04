@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -200,21 +199,6 @@ namespace MusicAnalyser
 
             Application.DoEvents();
             return true;
-        }
-
-        private void CreateLiveWaveform(byte[] bytes)
-        {
-            int BYTES_PER_POINT = 2;
-            int graphPointCount = bytes.Length / BYTES_PER_POINT;
-            double[] pcm = new double[graphPointCount];
-
-            for (int i = 0; i < graphPointCount; i++)
-            {
-                Int16 val = BitConverter.ToInt16(bytes, i * 2);
-                pcm[i] = (double)(val) / Math.Pow(2, 16) * 200.0;
-            }
-            //double pcmPointSpacingMs = liveListener.getSampleRate() / 1000;
-            //ui.DisplayLiveWaveform(pcm, pcmPointSpacingMs);
         }
 
         /*
@@ -474,8 +458,6 @@ namespace MusicAnalyser
                     Task asyncAnalysis = RunAnalysisAsync();
                     DisplayAnalysisUI();
                     ui.RenderSpectrum();
-                    //if (LiveMode)
-                        //ui.RenderLiveWaveform();
 
                     if (analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
                     {
@@ -544,6 +526,8 @@ namespace MusicAnalyser
                 {
                     if (notes[i] != null)
                         ui.PlotNote(notes[i].Name + notes[i].Octave, notes[i].Frequency, notes[i].Magnitude, noteColors[notes[i].NoteIndex], false);
+                    else
+                        return;
 
                     if (chordNotes != null)
                     {
@@ -564,7 +548,7 @@ namespace MusicAnalyser
                 float X = 0;
                 for (int i = 0; i < chords.Count; i++)
                 {
-                    if (chords[i].Name != "N/A" && chords[i] != null)
+                    if (chords[i] != null && chords[i].Name != "N/A")
                     {
                         if(!ui.IsShowAllChordsChecked())
                         {
@@ -588,7 +572,7 @@ namespace MusicAnalyser
             {
                 for (int i = 0; i < notePercents.Length; i++)
                 {
-                    if (noteColors[i] != null && notePercents != null)
+                    if (noteColors[i] != null)
                         ui.UpdateNoteOccurencesUI(Music.Scales[i * 7], (int)(notePercents[i] / 100 * Prefs.NOTE_BUFFER_SIZE), notePercents[i], noteColors[i]);
                 }
             }

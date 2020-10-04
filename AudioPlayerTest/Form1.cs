@@ -5,7 +5,6 @@ using System.Threading;
 using System.Windows.Forms;
 using NAudio.Wave;
 
-
 namespace MusicAnalyser
 {
     public partial class Form1 : Form
