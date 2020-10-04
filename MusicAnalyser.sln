@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicAnalyser", "AudioPlayerTest\MusicAnalyser.csproj", "{C66B04A7-1C7A-451D-9BEC-8FE52847869B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicAnalyser", "MusicAnalyser\MusicAnalyser.csproj", "{C66B04A7-1C7A-451D-9BEC-8FE52847869B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicAnalyser.UnitTests", "MusicAnalyser.UnitTests\MusicAnalyser.UnitTests.csproj", "{67677509-6330-4F73-913E-134393DDABC1}"
 EndProject
