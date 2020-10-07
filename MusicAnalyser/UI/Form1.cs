@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NAudio.Wave;
+using MusicAnalyser.App;
 
 namespace MusicAnalyser
 {

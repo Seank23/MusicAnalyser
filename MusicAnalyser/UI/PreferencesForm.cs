@@ -1,4 +1,5 @@
-﻿using NAudio.CoreAudioApi;
+﻿using MusicAnalyser.App;
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;

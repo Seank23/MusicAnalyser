@@ -1,4 +1,5 @@
-﻿using NAudio.Dsp;
+﻿using MusicAnalyser.App.DSP;
+using NAudio.Dsp;
 using NAudio.MediaFoundation;
 using NAudio.Wave;
 using System;
@@ -9,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.App
 {
     static class FileHandler
     {

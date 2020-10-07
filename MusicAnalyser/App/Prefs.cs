@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.App
 {
     public static class Prefs
     {

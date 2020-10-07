@@ -1,4 +1,5 @@
 ﻿using Accord;
+using MusicAnalyser.App.Analysis;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.App
 {
     public class AppController
     {

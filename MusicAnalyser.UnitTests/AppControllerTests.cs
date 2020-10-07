@@ -1,3 +1,4 @@
+using MusicAnalyser.App;
 using NUnit.Framework;
 using System;
 using System.Runtime.CompilerServices;
