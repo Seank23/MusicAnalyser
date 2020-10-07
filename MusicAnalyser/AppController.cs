@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using Accord;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,7 +19,7 @@ namespace MusicAnalyser
         private LiveInputRecorder liveRecorder;
 
         private double[] dataFft;
-        private List<double[]> dataFftPrev = new List<double[]>();
+        public List<double[]> dataFftPrev = new List<double[]>();
         private Dictionary<double, double> fftPeaks;
         private List<int> executionTime = new List<int>();
         private double fftScale;
@@ -156,11 +157,10 @@ namespace MusicAnalyser
         /*
          * Master method for calculating realtime frequency domain data from audio playback
          */
-        private bool PerformFFT()
+        private bool FFTMain()
         {
             byte[] bytesBuffer;
             short[] audioBuffer;
-            int fftPoints;
 
             bytesBuffer = new byte[Prefs.BUFFERSIZE];
             double posScaleFactor = (double)source.Audio.WaveFormat.SampleRate / (double)source.AudioFFT.WaveFormat.SampleRate;
@@ -169,27 +169,9 @@ namespace MusicAnalyser
             audioBuffer = new short[Prefs.BUFFERSIZE];
             Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
 
-            fftPoints = 2;
-            while (fftPoints * 2 <= Prefs.BUFFERSIZE) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
-                fftPoints *= 2;
+            fftScale = PerformFFT(audioBuffer, out dataFft, source.AudioFFT.WaveFormat.SampleRate);
 
-            // FFT Process
-            NAudio.Dsp.Complex[] fftFull = new NAudio.Dsp.Complex[fftPoints];
-            for (int i = 0; i < fftPoints; i++)
-                fftFull[i].X = (float)(audioBuffer[i] * NAudio.Dsp.FastFourierTransform.HammingWindow(i, fftPoints));
-            NAudio.Dsp.FastFourierTransform.FFT(true, (int)Math.Log(fftPoints, 2.0), fftFull);
-
-            if (dataFft == null)
-                dataFft = new double[fftPoints / 2];
-            for (int i = 0; i < fftPoints / 2; i++) // Since FFT output is mirrored above Nyquist limit (fftPoints / 2), these bins are summed with those in base band
-            {
-                double fft = Math.Abs(fftFull[i].X + fftFull[i].Y);
-                double fftMirror = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
-                dataFft[i] = 20 * Math.Log10(fft + fftMirror) - Prefs.PEAK_FFT_POWER; // Estimates gain of FFT bin
-            }
-            fftScale = (double)fftPoints / source.AudioFFT.WaveFormat.SampleRate;
-
-            SmoothSignal();
+            dataFft = SmoothSignal(dataFft, Prefs.SMOOTH_FACTOR);
             avgGain = dataFft.Average();
             maxGain = dataFft.Max();
             ui.DisplayFFT(dataFft, fftScale, avgGain, maxGain);
@@ -201,19 +183,41 @@ namespace MusicAnalyser
             return true;
         }
 
+        public double PerformFFT(short[] audioBuffer, out double[] fftOutput, int sampleRate)
+        {
+            int fftPoints = 2;
+            while (fftPoints * 2 <= audioBuffer.Length) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
+                fftPoints *= 2;
+            fftOutput = new double[fftPoints / 2];
+
+            // FFT Process
+            NAudio.Dsp.Complex[] fftFull = new NAudio.Dsp.Complex[fftPoints];
+            for (int i = 0; i < fftPoints; i++)
+                fftFull[i].X = (float)(audioBuffer[i] * NAudio.Dsp.FastFourierTransform.HammingWindow(i, fftPoints));
+            NAudio.Dsp.FastFourierTransform.FFT(true, (int)Math.Log(fftPoints, 2.0), fftFull);
+
+            for (int i = 0; i < fftPoints / 2; i++) // Since FFT output is mirrored above Nyquist limit (fftPoints / 2), these bins are summed with those in base band
+            {
+                double fft = Math.Abs(fftFull[i].X + fftFull[i].Y);
+                double fftMirror = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
+                fftOutput[i] = 20 * Math.Log10(fft + fftMirror) - Prefs.PEAK_FFT_POWER; // Estimates gain of FFT bin
+            }
+            return (double)fftPoints / sampleRate;
+        }
+
         /*
          * Performs smoothing on frequency domain data by averaging several frames
          */
-        private void SmoothSignal()
+        public double[] SmoothSignal(double[] signal, int smoothDepth)
         {
-            double[] signal = new double[dataFft.Length];
-            Array.Copy(dataFft, signal, dataFft.Length);
-            dataFftPrev.Add(signal);
+            double[] newSignal = new double[signal.Length];
+            Array.Copy(signal, newSignal, signal.Length);
+            dataFftPrev.Add(newSignal);
 
-            if (dataFftPrev.Count > Prefs.SMOOTH_FACTOR)
+            if (dataFftPrev.Count > smoothDepth)
                 dataFftPrev.RemoveAt(0);
 
-            for (int i = 0; i < signal.Length; i++)
+            for (int i = 0; i < newSignal.Length; i++)
             {
                 double smoothedValue = 0;
                 for (int j = 0; j < dataFftPrev.Count; j++)
@@ -221,8 +225,9 @@ namespace MusicAnalyser
                     smoothedValue += dataFftPrev[j][i];
                 }
                 smoothedValue /= dataFftPrev.Count;
-                dataFft[i] = smoothedValue;
+                newSignal[i] = smoothedValue;
             }
+            return newSignal;
         }
 
         /*
@@ -446,7 +451,7 @@ namespace MusicAnalyser
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                if (PerformFFT())
+                if (FFTMain())
                 {
 
                     if (Prefs.NOTE_ALGORITHM == 0) // By Magnitude
