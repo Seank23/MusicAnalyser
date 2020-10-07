@@ -159,32 +159,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analyser.cs" />
-    <Compile Include="AppController.cs" />
-    <Compile Include="AudioSource.cs" />
-    <Compile Include="Chord.cs" />
-    <Compile Include="CustomWaveViewer.cs">
+    <Compile Include="App\Analysis\Analyser.cs" />
+    <Compile Include="App\AppController.cs" />
+    <Compile Include="App\AudioSource.cs" />
+    <Compile Include="App\Analysis\Chord.cs" />
+    <Compile Include="UI\CustomWaveViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FileHandler.cs" />
-    <Compile Include="FilterWaveProvider.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="App\FileHandler.cs" />
+    <Compile Include="App\DSP\FilterWaveProvider.cs" />
+    <Compile Include="UI\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="UI\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="LiveInputRecorder.cs" />
-    <Compile Include="Music.cs" />
-    <Compile Include="Note.cs" />
-    <Compile Include="OverlayPanel.cs">
+    <Compile Include="App\LiveInputRecorder.cs" />
+    <Compile Include="App\Analysis\Music.cs" />
+    <Compile Include="App\Analysis\Note.cs" />
+    <Compile Include="UI\OverlayPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Prefs.cs" />
-    <Compile Include="PreferencesForm.cs">
+    <Compile Include="App\Prefs.cs" />
+    <Compile Include="UI\PreferencesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PreferencesForm.Designer.cs">
+    <Compile Include="UI\PreferencesForm.Designer.cs">
       <DependentUpon>PreferencesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -196,10 +196,10 @@
     <Compile Include="SoundTouch\SoundTouchProfile.cs" />
     <Compile Include="SoundTouch\SoundTouchSettings.cs" />
     <Compile Include="SoundTouch\VarispeedSampleProvider.cs" />
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="UI\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PreferencesForm.resx">
+    <EmbeddedResource Include="UI\PreferencesForm.resx">
       <DependentUpon>PreferencesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
