@@ -146,7 +146,7 @@ namespace MusicAnalyser
             int previousPos = 0;
             long currentSample;
             int index = 0;
-            AudioSource source = app.GetSource();
+            AudioSource source = app.AudioSource;
 
             while (app.Opened)
             {

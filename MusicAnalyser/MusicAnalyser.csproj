@@ -163,6 +163,7 @@
     <Compile Include="App\AppController.cs" />
     <Compile Include="App\AudioSource.cs" />
     <Compile Include="App\Analysis\Chord.cs" />
+    <Compile Include="App\DSP\DSPMain.cs" />
     <Compile Include="UI\CustomWaveViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
