@@ -168,12 +168,12 @@ namespace MusicAnalyser.App
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                if (dsp.FFTMain())
+                if (dsp.GetFrequencyAnalysis())
                 {
                     if (Prefs.NOTE_ALGORITHM == 0) // By Magnitude
-                        dsp.GetPeaksByMagnitude();
+                        dsp.GetDetectedPitches();
                     else if (Prefs.NOTE_ALGORITHM == 1) // By Slope
-                        dsp.GetPeaksBySlope();
+                        dsp.GetDetectedPitches();
 
                     dsp.Analyser.GetNotes(dsp.fftPeaks, analysisUpdates);
                     Task asyncAnalysis = RunAnalysisAsync();
@@ -276,15 +276,15 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, dsp.maxGain + 7.5, Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + 7.5, Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, dsp.maxGain + 7.5, Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + 7.5, Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, dsp.maxGain + 7.5, Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + 7.5, Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, dsp.maxGain + 7.5, Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + 7.5, Color.Blue, false);
 
                         X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }

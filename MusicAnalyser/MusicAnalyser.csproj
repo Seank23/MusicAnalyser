@@ -164,8 +164,12 @@
     <Compile Include="App\AudioSource.cs" />
     <Compile Include="App\Analysis\Chord.cs" />
     <Compile Include="App\DSP\DSPMain.cs" />
+    <Compile Include="App\DSP\ISignalDetector.cs" />
     <Compile Include="App\DSP\ISignalProcessor.cs" />
-    <Compile Include="App\DSP\Scripts\BasicFFT.cs" />
+    <Compile Include="App\DSP\Scripts\BasicFFTProcessor.cs" />
+    <Compile Include="App\DSP\Scripts\ByMagnitudeDetector.cs" />
+    <Compile Include="App\DSP\Scripts\BySlopeDetector.cs" />
+    <Compile Include="App\DSP\Scripts\RemoveKickNoiseProcessor.cs" />
     <Compile Include="UI\CustomWaveViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
