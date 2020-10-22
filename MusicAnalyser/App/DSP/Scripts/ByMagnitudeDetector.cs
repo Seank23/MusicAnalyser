@@ -6,33 +6,37 @@ namespace MusicAnalyser.App.DSP.Scripts
 {
     class ByMagnitudeDetector : ISignalDetector
     {
+        public class Settings
+        {
+            public static int MIN_FREQ = 30;
+            public static int MAX_FREQ = 2000;
+            public static int PEAK_BUFFER = 90;
+            public static float MAX_GAIN_CHANGE = 8.0f;
+            public static float MAX_FREQ_CHANGE = 2.8f;
+        }
+
         public double[] InputData { get; set; }
         public double InputScale { get; set; }
         public Dictionary<double, double> Output { get; set; }
 
         public void Detect()
         {
-            GetPeaksByMagnitude();
-        }
-
-        public void GetPeaksByMagnitude()
-        {
             Output = new Dictionary<double, double>();
             double freq;
             double gainThreshold = InputData.Average() + 25;
 
             // Iterates through frequency data, storing the frequency and gain of the largest frequency bins 
-            for (int i = (int)(InputScale * Prefs.MIN_FREQ); i < Math.Min(InputData.Length, (int)(InputScale * Prefs.MAX_FREQ)); i++)
+            for (int i = (int)(InputScale * Settings.MIN_FREQ); i < Math.Min(InputData.Length, (int)(InputScale * Settings.MAX_FREQ)); i++)
             {
                 if (InputData[i] > gainThreshold)
                 {
                     freq = (i + 1) / InputScale; // Frequency value of bin
 
                     Output.Add(freq, InputData[i]);
-                    Output = Output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
 
-                    if (Output.Count > Prefs.PEAK_BUFFER) // When fftPeaks overflows, remove smallest frequency bin
+                    if (Output.Count > Settings.PEAK_BUFFER) // When fftPeaks overflows, remove smallest frequency bin
                     {
+                        Output = Output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
                         double keyToRemove = GetDictKey(Output, Output.Count - 1);
                         Output.Remove(keyToRemove);
                     }
@@ -55,7 +59,7 @@ namespace MusicAnalyser.App.DSP.Scripts
                     peakIndex++;
                     continue;
                 }
-                else if ((myFreq - largestGain.Key) <= largestGain.Key / 100 * Prefs.MAX_FREQ_CHANGE) // Finds clusters of points that represent the same peak
+                else if ((myFreq - largestGain.Key) <= largestGain.Key / 100 * Settings.MAX_FREQ_CHANGE) // Finds clusters of points that represent the same peak
                 {
                     cluster.Add(new KeyValuePair<double, double>(myFreq, Output[myFreq]));
 
@@ -88,7 +92,7 @@ namespace MusicAnalyser.App.DSP.Scripts
             {
                 double freqA = GetDictKey(Output, i);
                 double freqB = GetDictKey(Output, i + 1);
-                if (Math.Abs(Output[freqA] - Output[freqB]) >= Prefs.MAX_GAIN_CHANGE)
+                if (Math.Abs(Output[freqA] - Output[freqB]) >= Settings.MAX_GAIN_CHANGE)
                 {
                     if (Output[freqA] > Output[freqB]) // Discard lowest value
                         discardFreqs.Add(freqB);

@@ -6,6 +6,12 @@ namespace MusicAnalyser.App.DSP.Scripts
 {
     class RemoveKickNoiseProcessor : ISignalProcessor
     {
+        static class Settings
+        {
+            public static float MAX_FREQ_CHANGE = 2.8f;
+            public static float SIMILAR_GAIN_THRESHOLD = 5.0f;
+        }
+
         public object InputBuffer { get; set; }
         public int SampleRate { get; set; }
         public object OutputBuffer { get; set; }
@@ -27,9 +33,9 @@ namespace MusicAnalyser.App.DSP.Scripts
                     prevFreq = freq;
                     continue;
                 }
-                if ((freq - prevFreq) <= freq / 100 * (2.5 * Prefs.MAX_FREQ_CHANGE)) // Checking for consecutive, closely packed peaks - noise
+                if ((freq - prevFreq) <= freq / 100 * (2.5 * Settings.MAX_FREQ_CHANGE)) // Checking for consecutive, closely packed peaks - noise
                 {
-                    if (Math.Abs(input[freq] - input[prevFreq]) <= Prefs.SIMILAR_GAIN_THRESHOLD)
+                    if (Math.Abs(input[freq] - input[prevFreq]) <= Settings.SIMILAR_GAIN_THRESHOLD)
                     {
                         if (!discardFreqs.Contains(prevFreq))
                             discardFreqs.Add(prevFreq);

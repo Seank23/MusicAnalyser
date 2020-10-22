@@ -6,6 +6,12 @@ namespace MusicAnalyser.App.DSP.Scripts
 {
     class BySlopeDetector : ISignalDetector
     {
+        static class Settings
+        {
+            public static int MIN_FREQ = 30;
+            public static int MAX_FREQ = 2000;
+        }
+
         public double[] InputData { get; set; }
         public double InputScale { get; set; }
         public Dictionary<double, double> Output { get; set; }
@@ -16,7 +22,7 @@ namespace MusicAnalyser.App.DSP.Scripts
             Output = new Dictionary<double, double>();
             double gainThreshold = InputData.Average() + 25;
 
-            for (int i = (int)(InputScale * Prefs.MIN_FREQ); i < Math.Min(InputData.Length, (int)(InputScale * Prefs.MAX_FREQ)); i++)
+            for (int i = (int)(InputScale * Settings.MIN_FREQ); i < Math.Min(InputData.Length, (int)(InputScale * Settings.MAX_FREQ)); i++)
             {
                 if (InputData[i] < gainThreshold)
                     continue;

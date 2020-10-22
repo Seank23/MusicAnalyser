@@ -7,6 +7,7 @@ namespace MusicAnalyser.App.DSP
         double[] InputData { get; set; }
         double InputScale { get; set; }
         Dictionary<double, double> Output { get; set; }
+
         void Detect();
     }
 }
