@@ -1,5 +1,4 @@
 ﻿using MusicAnalyser.App.Analysis;
-using MusicAnalyser.App.DSP.Scripts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +12,7 @@ namespace MusicAnalyser.App.DSP
         public double MaxGain { get; set; }
 
         private AppController app;
+        private ScriptManager scriptManager;
         private ISignalProcessor processor;
         private ISignalDetector detector;
 
@@ -25,6 +25,7 @@ namespace MusicAnalyser.App.DSP
         {
             Analyser = new Analyser();
             app = appController;
+            scriptManager = new ScriptManager();
             processor = new BasicFFTProcessor();
             detector = new ByMagnitudeDetector();
         }

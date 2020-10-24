@@ -2,7 +2,7 @@
 
 namespace MusicAnalyser.App.DSP
 {
-    interface ISignalDetector
+    public interface ISignalDetector
     {
         double[] InputData { get; set; }
         double InputScale { get; set; }

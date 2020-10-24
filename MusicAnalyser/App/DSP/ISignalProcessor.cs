@@ -1,6 +1,6 @@
 ﻿namespace MusicAnalyser.App.DSP
 {
-    interface ISignalProcessor
+    public interface ISignalProcessor
     {
         object InputBuffer { get; set; }
         int SampleRate { get; set; }
