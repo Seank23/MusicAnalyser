@@ -2,7 +2,6 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +17,22 @@ namespace MusicAnalyser.App.DSP
         {
             ProcessorScripts = new List<ISignalProcessor>();
             DetectorScripts = new List<ISignalDetector>();
-            LoadScripts();
+        }
+
+        public string[] GetProcessorNames()
+        {
+            string[] names = new string[ProcessorScripts.Count];
+            for (int i = 0; i < names.Length; i++)
+                names[i] = ProcessorScripts[i].GetType().Name.Replace("Processor", "");
+            return names;
+        }
+
+        public string[] GetDetectorNames()
+        {
+            string[] names = new string[DetectorScripts.Count];
+            for (int i = 0; i < names.Length; i++)
+                names[i] = DetectorScripts[i].GetType().Name.Replace("Detector", "");
+            return names;
         }
 
         public void LoadScripts()

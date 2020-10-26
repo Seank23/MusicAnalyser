@@ -5,16 +5,20 @@ using MusicAnalyser.App.DSP;
 
 class RemoveKickNoiseProcessor : ISignalProcessor
 {
-    static class Settings
-    {
-        public static float MAX_FREQ_CHANGE = 2.8f;
-        public static float SIMILAR_GAIN_THRESHOLD = 5.0f;
-    }
-
+    public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
     public int SampleRate { get; set; }
     public object OutputBuffer { get; set; }
     public double OutputScale { get; set; }
+
+    public RemoveKickNoiseProcessor()
+    {
+        Settings = new Dictionary<string, string[]> 
+        {
+            { "MAX_FREQ_CHANGE", new string[] { "2.5", "double", "Max Frequency Change (Hz)", "0", "50" } },
+            { "SIMILAR_GAIN_THRESHOLD", new string[] { "5", "double", "Similar Gain Threshold (dB)", "0", "50" } },
+        };
+    }
 
     public void Process()
     {
@@ -32,9 +36,9 @@ class RemoveKickNoiseProcessor : ISignalProcessor
                 prevFreq = freq;
                 continue;
             }
-            if ((freq - prevFreq) <= freq / 100 * (2.5 * Settings.MAX_FREQ_CHANGE)) // Checking for consecutive, closely packed peaks - noise
+            if ((freq - prevFreq) <= freq / 100 * (2.5 * double.Parse(Settings["MAX_FREQ_CHANGE"][0]))) // Checking for consecutive, closely packed peaks - noise
             {
-                if (Math.Abs(input[freq] - input[prevFreq]) <= Settings.SIMILAR_GAIN_THRESHOLD)
+                if (Math.Abs(input[freq] - input[prevFreq]) <= double.Parse(Settings["SIMILAR_GAIN_THRESHOLD"][0]))
                 {
                     if (!discardFreqs.Contains(prevFreq))
                         discardFreqs.Add(prevFreq);

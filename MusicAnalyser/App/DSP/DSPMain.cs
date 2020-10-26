@@ -9,10 +9,10 @@ namespace MusicAnalyser.App.DSP
     class DSPMain
     {
         public Analyser Analyser { get; set; }
+        public ScriptManager ScriptManager { get; set; }
         public double MaxGain { get; set; }
 
         private AppController app;
-        private ScriptManager scriptManager;
         private ISignalProcessor processor;
         private ISignalDetector detector;
 
@@ -25,9 +25,20 @@ namespace MusicAnalyser.App.DSP
         {
             Analyser = new Analyser();
             app = appController;
-            scriptManager = new ScriptManager();
-            processor = new BasicFFTProcessor();
-            detector = new ByMagnitudeDetector();
+            ScriptManager = new ScriptManager();
+            LoadScripts();
+        }
+
+        public async void LoadScripts()
+        {
+            await Task.Factory.StartNew(() => ScriptManager.LoadScripts());
+            app.SetScriptSelectorUI(ScriptManager.GetProcessorNames(), ScriptManager.GetDetectorNames());
+        }
+
+        public void ApplyScripts(Dictionary<int, int> selectionDict)
+        {
+            processor = ScriptManager.ProcessorScripts[selectionDict[0]];
+            detector = ScriptManager.DetectorScripts[selectionDict[1]];
         }
 
         /*

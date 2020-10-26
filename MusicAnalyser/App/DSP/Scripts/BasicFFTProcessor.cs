@@ -1,13 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using MusicAnalyser.App.DSP;
 
 class BasicFFTProcessor : ISignalProcessor
 {
-    public class Settings
-    {
-        public static double PEAK_FFT_POWER = 20 * Math.Log10(12020);
-    }
-
+    public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
     public int SampleRate { get; set; }
     public object OutputBuffer { get; set; }
@@ -31,7 +28,7 @@ class BasicFFTProcessor : ISignalProcessor
         {
             double fft = Math.Abs(fftFull[i].X + fftFull[i].Y);
             double fftMirror = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
-            output[i] = 20 * Math.Log10(fft + fftMirror) - Settings.PEAK_FFT_POWER; // Estimates gain of FFT bin
+            output[i] = 20 * Math.Log10(fft + fftMirror) - 20 * Math.Log10(input.Length); // Estimates gain of FFT bin
         }
         OutputBuffer = output;
         OutputScale = (double)fftPoints / SampleRate;

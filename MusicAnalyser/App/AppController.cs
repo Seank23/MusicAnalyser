@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -156,6 +157,16 @@ namespace MusicAnalyser.App
         {
             ui.DisplayFFT(freqData, scale, avgGain, maxGain);
             Application.DoEvents();
+        }
+
+        public void SetScriptSelectorUI(string[] processors, string[] detectors)
+        {
+            ui.SetScriptSelection(processors, detectors);
+        }
+
+        public void ApplyScripts(Dictionary<int, int> selectionDict)
+        {
+            dsp.ApplyScripts(selectionDict);
         }
 
         /*

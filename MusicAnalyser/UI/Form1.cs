@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using NAudio.Wave;
 using MusicAnalyser.App;
+using System.Collections.Generic;
 
 namespace MusicAnalyser
 {
@@ -354,6 +355,12 @@ namespace MusicAnalyser
             timerFFT.Enabled = true;
         }
 
+        public void SetScriptSelection(string[] processors, string[] detectors)
+        {
+            cbProcessor.Items.AddRange(processors);
+            cbDetector.Items.AddRange(detectors);
+        }
+
         public void EnableTimer(bool enable) { timerFFT.Enabled = enable; }
         public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "FFT Updates: " + draws; }
         public void ClearNotesList() { lstChords.Items.Clear(); }
@@ -452,6 +459,14 @@ namespace MusicAnalyser
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             app.TriggerStop();
+        }
+
+        private void btnApplyScripts_Click(object sender, EventArgs e)
+        {
+            Dictionary<int, int> selectionDict = new Dictionary<int, int>();
+            selectionDict.Add(0, cbProcessor.SelectedIndex);
+            selectionDict.Add(1, cbDetector.SelectedIndex);
+            app.ApplyScripts(selectionDict);
         }
     }
 }
