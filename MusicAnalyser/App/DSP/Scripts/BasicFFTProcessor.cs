@@ -4,6 +4,7 @@ using MusicAnalyser.App.DSP;
 
 class BasicFFTProcessor : ISignalProcessor
 {
+    public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
     public int SampleRate { get; set; }

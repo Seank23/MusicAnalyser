@@ -210,6 +210,12 @@
     <Compile Include="SoundTouch\SoundTouchProfile.cs" />
     <Compile Include="SoundTouch\SoundTouchSettings.cs" />
     <Compile Include="SoundTouch\VarispeedSampleProvider.cs" />
+    <Compile Include="UI\ScriptSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ScriptSelector.Designer.cs">
+      <DependentUpon>ScriptSelector.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="UI\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -226,6 +232,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UI\ScriptSelector.resx">
+      <DependentUpon>ScriptSelector.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

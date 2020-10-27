@@ -5,10 +5,11 @@ using MusicAnalyser.App.DSP;
 
 class BySlopeDetector : ISignalDetector
 {
+    public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
-    public double[] InputData { get; set; }
+    public object InputData { get; set; }
     public double InputScale { get; set; }
-    public Dictionary<double, double> Output { get; set; }
+    public object Output { get; set; }
 
     public BySlopeDetector()
     {
@@ -21,13 +22,14 @@ class BySlopeDetector : ISignalDetector
 
     public void Detect()
     {
-        double[] derivative = GetSlope(InputData);
-        Output = new Dictionary<double, double>();
-        double gainThreshold = InputData.Average() + 25;
+        double[] input = (double[])InputData;
+        Dictionary<double, double> output = new Dictionary<double, double>();
+        double[] derivative = GetSlope(input);
+        double gainThreshold = input.Average() + 25;
 
-        for (int i = (int)(InputScale * int.Parse(Settings["MIN_FREQ"][0])); i < Math.Min(InputData.Length, (int)(InputScale * int.Parse(Settings["MAX_FREQ"][0]))); i++)
+        for (int i = (int)(InputScale * int.Parse(Settings["MIN_FREQ"][0])); i < Math.Min(input.Length, (int)(InputScale * int.Parse(Settings["MAX_FREQ"][0]))); i++)
         {
-            if (InputData[i] < gainThreshold)
+            if (input[i] < gainThreshold)
                 continue;
 
             if (derivative[i] > 0 && derivative[i + 1] < 0)
@@ -35,11 +37,11 @@ class BySlopeDetector : ISignalDetector
                 double freq = (i + 1) / InputScale;
                 double avgGainChange = (derivative[i] + derivative[i - 1] + derivative[i - 2]) / 3;
                 if (avgGainChange > 3)
-                    Output.Add(freq, InputData[i]);
+                    output.Add(freq, input[i]);
             }
         }
 
-        Output = Output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
+        Output = output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
     }
 
     private double[] GetSlope(double[] source)

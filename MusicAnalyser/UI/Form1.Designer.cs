@@ -95,19 +95,16 @@
             this.txtLoopTime = new System.Windows.Forms.TextBox();
             this.btnLiveMode = new System.Windows.Forms.Button();
             this.prbLevelMeter = new System.Windows.Forms.ProgressBar();
-            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label21 = new System.Windows.Forms.Label();
-            this.cbDetector = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.cbProcessor = new System.Windows.Forms.ComboBox();
             this.btnApplyScripts = new System.Windows.Forms.Button();
+            this.flpScripts = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnAddScript = new System.Windows.Forms.Button();
+            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barZoom)).BeginInit();
             this.menuStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOpenClose
@@ -595,7 +592,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1908, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1908, 30);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -606,7 +603,7 @@
             this.closeToolStripMenuItem,
             this.saveRecordingToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
@@ -638,7 +635,7 @@
             this.playToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
             this.playbackToolStripMenuItem.Text = "Playback";
             // 
             // playToolStripMenuItem
@@ -662,7 +659,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.perferencesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // perferencesToolStripMenuItem
@@ -746,6 +743,39 @@
             this.prbLevelMeter.TabIndex = 28;
             this.prbLevelMeter.Visible = false;
             // 
+            // btnApplyScripts
+            // 
+            this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 171);
+            this.btnApplyScripts.Name = "btnApplyScripts";
+            this.btnApplyScripts.Size = new System.Drawing.Size(88, 37);
+            this.btnApplyScripts.TabIndex = 4;
+            this.btnApplyScripts.Text = "Apply";
+            this.btnApplyScripts.UseVisualStyleBackColor = true;
+            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
+            // 
+            // flpScripts
+            // 
+            this.flpScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpScripts.AutoScroll = true;
+            this.flpScripts.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpScripts.Location = new System.Drawing.Point(1528, 128);
+            this.flpScripts.Name = "flpScripts";
+            this.flpScripts.Size = new System.Drawing.Size(255, 152);
+            this.flpScripts.TabIndex = 29;
+            this.flpScripts.WrapContents = false;
+            // 
+            // btnAddScript
+            // 
+            this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddScript.Location = new System.Drawing.Point(1789, 128);
+            this.btnAddScript.Name = "btnAddScript";
+            this.btnAddScript.Size = new System.Drawing.Size(88, 37);
+            this.btnAddScript.TabIndex = 30;
+            this.btnAddScript.Text = "Add";
+            this.btnAddScript.UseVisualStyleBackColor = true;
+            this.btnAddScript.Click += new System.EventHandler(this.btnAddScript_Click);
+            // 
             // cwvViewer
             // 
             this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -766,61 +796,16 @@
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
             // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.btnApplyScripts);
-            this.panel1.Controls.Add(this.label21);
-            this.panel1.Controls.Add(this.cbDetector);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.cbProcessor);
-            this.panel1.Location = new System.Drawing.Point(1528, 114);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(368, 301);
-            this.panel1.TabIndex = 29;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(51, 73);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(66, 17);
-            this.label21.TabIndex = 3;
-            this.label21.Text = "Detector:";
-            // 
-            // cbDetector
-            // 
-            this.cbDetector.FormattingEnabled = true;
-            this.cbDetector.Location = new System.Drawing.Point(123, 70);
-            this.cbDetector.Name = "cbDetector";
-            this.cbDetector.Size = new System.Drawing.Size(121, 24);
-            this.cbDetector.TabIndex = 2;
-            // 
             // label6
             // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(41, 40);
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(1636, 86);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(76, 17);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "Processor:";
-            // 
-            // cbProcessor
-            // 
-            this.cbProcessor.FormattingEnabled = true;
-            this.cbProcessor.Location = new System.Drawing.Point(123, 37);
-            this.cbProcessor.Name = "cbProcessor";
-            this.cbProcessor.Size = new System.Drawing.Size(121, 24);
-            this.cbProcessor.TabIndex = 0;
-            // 
-            // btnApplyScripts
-            // 
-            this.btnApplyScripts.Location = new System.Drawing.Point(262, 36);
-            this.btnApplyScripts.Name = "btnApplyScripts";
-            this.btnApplyScripts.Size = new System.Drawing.Size(75, 25);
-            this.btnApplyScripts.TabIndex = 4;
-            this.btnApplyScripts.Text = "Apply";
-            this.btnApplyScripts.UseVisualStyleBackColor = true;
-            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
+            this.label6.Size = new System.Drawing.Size(157, 20);
+            this.label6.TabIndex = 31;
+            this.label6.Text = "Processing Chain";
             // 
             // Form1
             // 
@@ -828,7 +813,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.btnAddScript);
+            this.Controls.Add(this.flpScripts);
+            this.Controls.Add(this.btnApplyScripts);
             this.Controls.Add(this.prbLevelMeter);
             this.Controls.Add(this.btnLiveMode);
             this.Controls.Add(this.lblLoopDuration);
@@ -898,8 +886,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.barZoom)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -974,12 +960,10 @@
         private System.Windows.Forms.ToolStripMenuItem saveRecordingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.ComboBox cbDetector;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox cbProcessor;
         private System.Windows.Forms.Button btnApplyScripts;
+        private System.Windows.Forms.FlowLayoutPanel flpScripts;
+        private System.Windows.Forms.Button btnAddScript;
+        private System.Windows.Forms.Label label6;
     }
 }
 

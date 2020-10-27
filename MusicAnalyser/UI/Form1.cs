@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using NAudio.Wave;
 using MusicAnalyser.App;
 using System.Collections.Generic;
+using MusicAnalyser.UI;
+using System.Linq;
 
 namespace MusicAnalyser
 {
@@ -21,6 +23,8 @@ namespace MusicAnalyser
             SetupFFTPlot();
             barVolume.Value = 10;
             SetModeText("");
+            flpScripts.Controls.Add(new ScriptSelector() { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
+            flpScripts.Controls.Add(new ScriptSelector() { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
         }
 
         public void InvokeUI(Action a)
@@ -355,10 +359,23 @@ namespace MusicAnalyser
             timerFFT.Enabled = true;
         }
 
-        public void SetScriptSelection(string[] processors, string[] detectors)
+        public void SetScriptSelection(Dictionary<int, string> scripts)
         {
-            cbProcessor.Items.AddRange(processors);
-            cbDetector.Items.AddRange(detectors);
+            foreach(ScriptSelector selector in flpScripts.Controls)
+            {
+                selector.DropDown.Items.Clear();
+                for(int i = 0; i < scripts.Count; i++)
+                {
+                    for (int j = 0; j < scripts.Count; j++)
+                    {
+                        if(i == scripts.Keys.ElementAt(j))
+                        {
+                            selector.DropDown.Items.Add(scripts[i]);
+                            break;
+                        }    
+                    }
+                }
+            }
         }
 
         public void EnableTimer(bool enable) { timerFFT.Enabled = enable; }
@@ -464,9 +481,18 @@ namespace MusicAnalyser
         private void btnApplyScripts_Click(object sender, EventArgs e)
         {
             Dictionary<int, int> selectionDict = new Dictionary<int, int>();
-            selectionDict.Add(0, cbProcessor.SelectedIndex);
-            selectionDict.Add(1, cbDetector.SelectedIndex);
+            for(int i = 0; i < flpScripts.Controls.Count; i++)
+            {
+                ScriptSelector selector = (ScriptSelector)flpScripts.Controls[i];
+                selectionDict.Add(i, selector.DropDown.SelectedIndex);
+            }
             app.ApplyScripts(selectionDict);
+        }
+
+        private void btnAddScript_Click(object sender, EventArgs e)
+        {
+            flpScripts.Controls.Add(new ScriptSelector() { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
+            app.AddScript();
         }
     }
 }

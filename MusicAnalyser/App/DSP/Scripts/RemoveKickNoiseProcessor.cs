@@ -5,6 +5,7 @@ using MusicAnalyser.App.DSP;
 
 class RemoveKickNoiseProcessor : ISignalProcessor
 {
+    public bool IsPrimary { get { return false; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
     public int SampleRate { get; set; }

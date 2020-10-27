@@ -5,11 +5,12 @@ using MusicAnalyser.App.DSP;
 
 class ByMagnitudeDetector : ISignalDetector
 {
+    public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
-    public double[] InputData { get; set; }
+    public object InputData { get; set; }
     public double InputScale { get; set; }
-    public Dictionary<double, double> Output { get; set; }
-    
+    public object Output { get; set; }
+
     public ByMagnitudeDetector()
     {
         Settings = new Dictionary<string, string[]>
@@ -25,52 +26,53 @@ class ByMagnitudeDetector : ISignalDetector
 
     public void Detect()
     {
-        Output = new Dictionary<double, double>();
+        double[] input = (double[])InputData;
+        Dictionary<double, double> output = new Dictionary<double, double>();
         double freq;
-        double gainThreshold = InputData.Average() + int.Parse(Settings["THOLD_FROM_AVG"][0]);
+        double gainThreshold = input.Average() + int.Parse(Settings["THOLD_FROM_AVG"][0]);
 
         // Iterates through frequency data, storing the frequency and gain of the largest frequency bins 
-        for (int i = (int)(InputScale * int.Parse(Settings["MIN_FREQ"][0])); i < Math.Min(InputData.Length, (int)(InputScale * int.Parse(Settings["MAX_FREQ"][0]))); i++)
+        for (int i = (int)(InputScale * int.Parse(Settings["MIN_FREQ"][0])); i < Math.Min(input.Length, (int)(InputScale * int.Parse(Settings["MAX_FREQ"][0]))); i++)
         {
-            if (InputData[i] > gainThreshold)
+            if (input[i] > gainThreshold)
             {
                 freq = (i + 1) / InputScale; // Frequency value of bin
 
-                Output.Add(freq, InputData[i]);
+                output.Add(freq, input[i]);
 
-                if (Output.Count > int.Parse(Settings["PEAK_BUFFER"][0])) // When fftPeaks overflows, remove smallest frequency bin
+                if (output.Count > int.Parse(Settings["PEAK_BUFFER"][0])) // When fftPeaks overflows, remove smallest frequency bin
                 {
-                    Output = Output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
-                    double keyToRemove = GetDictKey(Output, Output.Count - 1);
-                    Output.Remove(keyToRemove);
+                    output = output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
+                    double keyToRemove = GetDictKey(output, output.Count - 1);
+                    output.Remove(keyToRemove);
                 }
             }
         }
 
-        Output = Output.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - low to high
+        output = output.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - low to high
         List<KeyValuePair<double, double>> cluster = null;
         KeyValuePair<double, double> largestGain = new KeyValuePair<double, double>();
         int peakIndex = 0;
-        while (peakIndex < Output.Count) // Removes unwanted and redundant peaks
+        while (peakIndex < output.Count) // Removes unwanted and redundant peaks
         {
-            double myFreq = GetDictKey(Output, peakIndex);
+            double myFreq = GetDictKey(output, peakIndex);
 
             if (cluster == null)
             {
                 cluster = new List<KeyValuePair<double, double>>();
-                largestGain = new KeyValuePair<double, double>(myFreq, Output[myFreq]);
+                largestGain = new KeyValuePair<double, double>(myFreq, output[myFreq]);
                 cluster.Add(largestGain);
                 peakIndex++;
                 continue;
             }
             else if ((myFreq - largestGain.Key) <= largestGain.Key / 100 * double.Parse(Settings["MAX_FREQ_CHANGE"][0])) // Finds clusters of points that represent the same peak
             {
-                cluster.Add(new KeyValuePair<double, double>(myFreq, Output[myFreq]));
+                cluster.Add(new KeyValuePair<double, double>(myFreq, output[myFreq]));
 
-                if (Output[myFreq] > largestGain.Value)
-                    largestGain = new KeyValuePair<double, double>(myFreq, Output[myFreq]);
+                if (output[myFreq] > largestGain.Value)
+                    largestGain = new KeyValuePair<double, double>(myFreq, output[myFreq]);
 
-                if (peakIndex < Output.Count - 1)
+                if (peakIndex < output.Count - 1)
                 {
                     peakIndex++;
                     continue;
@@ -82,23 +84,23 @@ class ByMagnitudeDetector : ISignalDetector
                 cluster.Remove(largestGain);
                 for (int j = 0; j < cluster.Count; j++)
                 {
-                    Output.Remove(cluster[j].Key);
+                    output.Remove(cluster[j].Key);
                 }
                 peakIndex -= cluster.Count;
             }
             cluster = null;
         }
 
-        Output = Output.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - low to high
+        output = output.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - low to high
         List<double> discardFreqs = new List<double>();
 
-        for (int i = 0; i < Output.Count - 1; i++) // Removes any unwanted residual peaks after a large peak
+        for (int i = 0; i < output.Count - 1; i++) // Removes any unwanted residual peaks after a large peak
         {
-            double freqA = GetDictKey(Output, i);
-            double freqB = GetDictKey(Output, i + 1);
-            if (Math.Abs(Output[freqA] - Output[freqB]) >= double.Parse(Settings["MAX_GAIN_CHANGE"][0]))
+            double freqA = GetDictKey(output, i);
+            double freqB = GetDictKey(output, i + 1);
+            if (Math.Abs(output[freqA] - output[freqB]) >= double.Parse(Settings["MAX_GAIN_CHANGE"][0]))
             {
-                if (Output[freqA] > Output[freqB]) // Discard lowest value
+                if (output[freqA] > output[freqB]) // Discard lowest value
                     discardFreqs.Add(freqB);
                 else
                     discardFreqs.Add(freqA);
@@ -106,9 +108,9 @@ class ByMagnitudeDetector : ISignalDetector
         }
 
         foreach (double frequency in discardFreqs)
-            Output.Remove(frequency);
+            output.Remove(frequency);
 
-        Output = Output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
+        Output = output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
     }
 
     private double GetDictKey(Dictionary<double, double> dict, int index)

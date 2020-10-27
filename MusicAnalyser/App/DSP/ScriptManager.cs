@@ -10,44 +10,54 @@ namespace MusicAnalyser.App.DSP
 {
     class ScriptManager
     {
-        public List<ISignalProcessor> ProcessorScripts { get; set; }
-        public List<ISignalDetector> DetectorScripts { get; set; }
+        public Dictionary<int, ISignalProcessor> ProcessorScripts { get; set; }
+        public Dictionary<int, ISignalDetector> DetectorScripts { get; set; }
 
         public ScriptManager()
         {
-            ProcessorScripts = new List<ISignalProcessor>();
-            DetectorScripts = new List<ISignalDetector>();
+            ProcessorScripts = new Dictionary<int, ISignalProcessor>();
+            DetectorScripts = new Dictionary<int, ISignalDetector>();
         }
 
-        public string[] GetProcessorNames()
+        public Dictionary<int, string> GetAllScriptNames()
         {
-            string[] names = new string[ProcessorScripts.Count];
-            for (int i = 0; i < names.Length; i++)
-                names[i] = ProcessorScripts[i].GetType().Name.Replace("Processor", "");
+            var scripts = GetProcessorNames();
+            var detectors = GetDetectorNames();
+            detectors.ToList().ForEach(x => scripts.Add(x.Key, x.Value));
+            return scripts;
+        }
+
+        public Dictionary<int, string> GetProcessorNames()
+        {
+            Dictionary<int, string> names = new Dictionary<int, string>();
+            for (int i = 0; i < ProcessorScripts.Keys.Count; i++)
+                names[ProcessorScripts.Keys.ElementAt(i)] = ProcessorScripts[ProcessorScripts.Keys.ElementAt(i)].GetType().Name.Replace("Processor", "");
             return names;
         }
 
-        public string[] GetDetectorNames()
+        public Dictionary<int, string> GetDetectorNames()
         {
-            string[] names = new string[DetectorScripts.Count];
-            for (int i = 0; i < names.Length; i++)
-                names[i] = DetectorScripts[i].GetType().Name.Replace("Detector", "");
+            Dictionary<int, string> names = new Dictionary<int, string>();
+            for (int i = 0; i < DetectorScripts.Keys.Count; i++)
+                names[DetectorScripts.Keys.ElementAt(i)] = DetectorScripts[DetectorScripts.Keys.ElementAt(i)].GetType().Name.Replace("Detector", "");
             return names;
         }
+
+        public int GetScriptCount() { return ProcessorScripts.Count + DetectorScripts.Count; }
 
         public void LoadScripts()
         {
             string[] files = Directory.GetFiles("Scripts");
-            foreach(string filepath in files)
+            for(int i = 0; i < files.Length; i++)
             {
-                if (filepath.Substring(filepath.LastIndexOf('.') + 1) == "cs")
+                if (files[i].Substring(files[i].LastIndexOf('.') + 1) == "cs")
                 {
-                    CompileScript(filepath);
+                    CompileScript(files[i], i);
                 }
             }
         }
 
-        public void CompileScript(string filepath)
+        public void CompileScript(string filepath, int index)
         {
             CSharpCodeProvider provider = new CSharpCodeProvider();
             CompilerParameters parameters = new CompilerParameters()
@@ -78,12 +88,12 @@ namespace MusicAnalyser.App.DSP
 
                 if (instance.GetType().GetInterfaces().Contains(typeof(ISignalProcessor)))
                 {
-                    ProcessorScripts.Add((ISignalProcessor)instance);
+                    ProcessorScripts.Add(index, (ISignalProcessor)instance);
                     Console.WriteLine("Loaded processor script successfully - " + instance.GetType().Name);
                 }
                 else if (instance.GetType().GetInterfaces().Contains(typeof(ISignalDetector)))
                 {
-                    DetectorScripts.Add((ISignalDetector)instance);
+                    DetectorScripts.Add(index, (ISignalDetector)instance);
                     Console.WriteLine("Loaded detector script successfully - " + instance.GetType().Name);
                 }
             }

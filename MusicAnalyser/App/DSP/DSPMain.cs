@@ -13,13 +13,14 @@ namespace MusicAnalyser.App.DSP
         public double MaxGain { get; set; }
 
         private AppController app;
-        private ISignalProcessor processor;
-        private ISignalDetector detector;
+        private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
+        private Dictionary<int, ISignalDetector> detectors = new Dictionary<int, ISignalDetector>();
 
         private double[] processedData;
         public List<double[]> prevProcessedData = new List<double[]>();
         private double scale;
         public Dictionary<double, double> fftPeaks;
+        private int detectorIndex = 0;
 
         public DSPMain(AppController appController)
         {
@@ -32,36 +33,55 @@ namespace MusicAnalyser.App.DSP
         public async void LoadScripts()
         {
             await Task.Factory.StartNew(() => ScriptManager.LoadScripts());
-            app.SetScriptSelectorUI(ScriptManager.GetProcessorNames(), ScriptManager.GetDetectorNames());
+            app.SetScriptSelectorUI(ScriptManager.GetAllScriptNames());
         }
 
         public void ApplyScripts(Dictionary<int, int> selectionDict)
         {
-            processor = ScriptManager.ProcessorScripts[selectionDict[0]];
-            detector = ScriptManager.DetectorScripts[selectionDict[1]];
+            processors.Clear();
+            detectors.Clear();
+
+            for(int i = 0; i < selectionDict.Count; i++)
+            {
+                for(int j = 0; j < ScriptManager.ProcessorScripts.Count + ScriptManager.DetectorScripts.Count; j++)
+                {
+                    if(selectionDict[i] == j)
+                    {
+                        if (ScriptManager.ProcessorScripts.ContainsKey(j))
+                        {
+                            processors.Add(j, ScriptManager.ProcessorScripts[j]);
+                            break;
+                        }
+                        else if (ScriptManager.DetectorScripts.ContainsKey(j))
+                        {
+                            detectors.Add(j, ScriptManager.DetectorScripts[j]);
+                            if (ScriptManager.DetectorScripts[j].IsPrimary && detectorIndex == 0)
+                                detectorIndex = j;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
-        /*
-         * Master method for calculating realtime frequency domain data from audio playback
-         */
         public bool GetFrequencyAnalysis()
         {
-            byte[] bytesBuffer;
-            short[] audioBuffer;
+            object audio = ReadAudioStream();
 
-            bytesBuffer = new byte[Prefs.BUFFERSIZE];
-            double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate / (double)app.AudioSource.AudioFFT.WaveFormat.SampleRate;
-            app.AudioSource.AudioFFT.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
-            app.AudioSource.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
-            audioBuffer = new short[Prefs.BUFFERSIZE];
-            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
+            foreach (int key in processors.Keys)
+            {
+                if (key < detectorIndex)
+                {
+                    processors[key].InputBuffer = audio;
+                    processors[key].SampleRate = app.AudioSource.AudioFFT.WaveFormat.SampleRate;
+                    processors[key].Process();
+                    audio = processors[key].OutputBuffer;
+                    scale = processors[key].OutputScale;
+                }
+                else break;
+            }
 
-            processor.InputBuffer = audioBuffer;
-            processor.SampleRate = app.AudioSource.AudioFFT.WaveFormat.SampleRate;
-            processor.Process();
-            processedData = (double[])processor.OutputBuffer;
-            scale = processor.OutputScale;
-
+            processedData = (double[])audio;
             if (!Double.IsInfinity(processedData[0]))
                 processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
 
@@ -73,13 +93,39 @@ namespace MusicAnalyser.App.DSP
 
         public void GetDetectedPitches()
         {
-            detector.InputData = processedData;
-            detector.InputScale = scale;
-            detector.Detect();
-            RemoveKickNoiseProcessor denoise = new RemoveKickNoiseProcessor();
-            denoise.InputBuffer = detector.Output;
-            denoise.Process();
-            fftPeaks = (Dictionary<double, double>)denoise.OutputBuffer;
+            object data = processedData;
+            for(int i = detectorIndex; i < ScriptManager.GetScriptCount(); i++)
+            {
+                if(processors.ContainsKey(i))
+                {
+                    processors[i].InputBuffer = data;
+                    processors[i].SampleRate = app.AudioSource.AudioFFT.WaveFormat.SampleRate;
+                    processors[i].Process();
+                    data = processors[i].OutputBuffer;
+                }
+                else if(detectors.ContainsKey(i))
+                {
+                    detectors[i].InputData = data;
+                    detectors[i].InputScale = scale;
+                    detectors[i].Detect();
+                    data = detectors[i].Output;
+                }
+            }
+            fftPeaks = (Dictionary<double, double>)data;
+        }
+
+        private short[] ReadAudioStream()
+        {
+            byte[] bytesBuffer;
+            short[] audioBuffer;
+
+            bytesBuffer = new byte[Prefs.BUFFERSIZE];
+            double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate / (double)app.AudioSource.AudioFFT.WaveFormat.SampleRate;
+            app.AudioSource.AudioFFT.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
+            app.AudioSource.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
+            audioBuffer = new short[Prefs.BUFFERSIZE];
+            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
+            return audioBuffer;
         }
 
         /*

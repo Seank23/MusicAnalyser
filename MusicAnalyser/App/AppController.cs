@@ -159,9 +159,14 @@ namespace MusicAnalyser.App
             Application.DoEvents();
         }
 
-        public void SetScriptSelectorUI(string[] processors, string[] detectors)
+        public void SetScriptSelectorUI(Dictionary<int, string> scripts)
         {
-            ui.SetScriptSelection(processors, detectors);
+            ui.SetScriptSelection(scripts);
+        }
+
+        public void AddScript()
+        {
+            SetScriptSelectorUI(dsp.ScriptManager.GetAllScriptNames());
         }
 
         public void ApplyScripts(Dictionary<int, int> selectionDict)
