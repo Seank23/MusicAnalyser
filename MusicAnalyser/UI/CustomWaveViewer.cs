@@ -200,7 +200,7 @@ namespace MusicAnalyser
             {
                 if (e.X >= waveformPadding && e.X <= Width - waveformPadding) // Select play position
                 {
-                    if (UI.output.PlaybackState == PlaybackState.Stopped)
+                    if (UI.Output.PlaybackState == PlaybackState.Stopped)
                         UI.GetApp().TriggerStop();
                 }
                 else if (e.X < waveformPadding) // Pan left

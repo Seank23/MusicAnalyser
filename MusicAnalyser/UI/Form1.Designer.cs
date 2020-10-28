@@ -95,11 +95,12 @@
             this.txtLoopTime = new System.Windows.Forms.TextBox();
             this.btnLiveMode = new System.Windows.Forms.Button();
             this.prbLevelMeter = new System.Windows.Forms.ProgressBar();
-            this.btnApplyScripts = new System.Windows.Forms.Button();
             this.flpScripts = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddScript = new System.Windows.Forms.Button();
-            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             this.label6 = new System.Windows.Forms.Label();
+            this.lblSelMessage = new System.Windows.Forms.Label();
+            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.btnApplyScripts = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -743,23 +744,12 @@
             this.prbLevelMeter.TabIndex = 28;
             this.prbLevelMeter.Visible = false;
             // 
-            // btnApplyScripts
-            // 
-            this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 171);
-            this.btnApplyScripts.Name = "btnApplyScripts";
-            this.btnApplyScripts.Size = new System.Drawing.Size(88, 37);
-            this.btnApplyScripts.TabIndex = 4;
-            this.btnApplyScripts.Text = "Apply";
-            this.btnApplyScripts.UseVisualStyleBackColor = true;
-            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
-            // 
             // flpScripts
             // 
             this.flpScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.flpScripts.AutoScroll = true;
             this.flpScripts.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpScripts.Location = new System.Drawing.Point(1528, 128);
+            this.flpScripts.Location = new System.Drawing.Point(1528, 137);
             this.flpScripts.Name = "flpScripts";
             this.flpScripts.Size = new System.Drawing.Size(255, 152);
             this.flpScripts.TabIndex = 29;
@@ -768,13 +758,35 @@
             // btnAddScript
             // 
             this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddScript.Location = new System.Drawing.Point(1789, 128);
+            this.btnAddScript.Location = new System.Drawing.Point(1789, 137);
             this.btnAddScript.Name = "btnAddScript";
             this.btnAddScript.Size = new System.Drawing.Size(88, 37);
             this.btnAddScript.TabIndex = 30;
             this.btnAddScript.Text = "Add";
             this.btnAddScript.UseVisualStyleBackColor = true;
             this.btnAddScript.Click += new System.EventHandler(this.btnAddScript_Click);
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(1636, 86);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(157, 20);
+            this.label6.TabIndex = 31;
+            this.label6.Text = "Processing Chain";
+            // 
+            // lblSelMessage
+            // 
+            this.lblSelMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSelMessage.AutoSize = true;
+            this.lblSelMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSelMessage.ForeColor = System.Drawing.Color.Crimson;
+            this.lblSelMessage.Location = new System.Drawing.Point(1529, 114);
+            this.lblSelMessage.Name = "lblSelMessage";
+            this.lblSelMessage.Size = new System.Drawing.Size(0, 17);
+            this.lblSelMessage.TabIndex = 32;
             // 
             // cwvViewer
             // 
@@ -796,16 +808,16 @@
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
             // 
-            // label6
+            // btnApplyScripts
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(1636, 86);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(157, 20);
-            this.label6.TabIndex = 31;
-            this.label6.Text = "Processing Chain";
+            this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 180);
+            this.btnApplyScripts.Name = "btnApplyScripts";
+            this.btnApplyScripts.Size = new System.Drawing.Size(88, 37);
+            this.btnApplyScripts.TabIndex = 33;
+            this.btnApplyScripts.Text = "Apply";
+            this.btnApplyScripts.UseVisualStyleBackColor = true;
+            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
             // 
             // Form1
             // 
@@ -813,10 +825,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
+            this.Controls.Add(this.btnApplyScripts);
+            this.Controls.Add(this.lblSelMessage);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.btnAddScript);
             this.Controls.Add(this.flpScripts);
-            this.Controls.Add(this.btnApplyScripts);
             this.Controls.Add(this.prbLevelMeter);
             this.Controls.Add(this.btnLiveMode);
             this.Controls.Add(this.lblLoopDuration);
@@ -960,10 +973,11 @@
         private System.Windows.Forms.ToolStripMenuItem saveRecordingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
-        private System.Windows.Forms.Button btnApplyScripts;
         private System.Windows.Forms.FlowLayoutPanel flpScripts;
         private System.Windows.Forms.Button btnAddScript;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblSelMessage;
+        private System.Windows.Forms.Button btnApplyScripts;
     }
 }
 

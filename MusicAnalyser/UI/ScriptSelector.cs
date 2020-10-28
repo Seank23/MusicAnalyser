@@ -14,19 +14,23 @@ namespace MusicAnalyser.UI
     {
         public string Label { set { label1.Text = value; } }
         public ComboBox DropDown { get { return cbScript; } }
-        public ScriptSelector()
+
+        private Form1 frm;
+        public ScriptSelector(Form1 form)
         {
             InitializeComponent();
+            frm = form;
         }
 
         private void cbScript_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            frm.OnSelectorChange();
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
             this.Dispose();
+            frm.OnSelectorChange();
         }
     }
 }

@@ -33,17 +33,18 @@ namespace MusicAnalyser.App.DSP
         public async void LoadScripts()
         {
             await Task.Factory.StartNew(() => ScriptManager.LoadScripts());
-            app.SetScriptSelectorUI(ScriptManager.GetAllScriptNames());
+            app.SetScriptSelectorUI(ScriptManager.GetAllScriptNames(), false);
         }
 
         public void ApplyScripts(Dictionary<int, int> selectionDict)
         {
             processors.Clear();
             detectors.Clear();
+            detectorIndex = 0;
 
             for(int i = 0; i < selectionDict.Count; i++)
             {
-                for(int j = 0; j < ScriptManager.ProcessorScripts.Count + ScriptManager.DetectorScripts.Count; j++)
+                for(int j = 0; j < ScriptManager.GetScriptCount(); j++)
                 {
                     if(selectionDict[i] == j)
                     {
@@ -62,6 +63,7 @@ namespace MusicAnalyser.App.DSP
                     }
                 }
             }
+            app.ScriptSelectionApplied = true;
         }
 
         public bool GetFrequencyAnalysis()

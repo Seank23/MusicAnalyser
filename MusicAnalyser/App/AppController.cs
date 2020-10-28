@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,6 +29,7 @@ namespace MusicAnalyser.App
         public bool LiveMode { get; set; }
         public bool IsRecording { get; set; }
         public bool Opened { get; set; }
+        public bool ScriptSelectionApplied { get; set; }
 
         public AppController(Form1 form)
         {
@@ -94,24 +94,24 @@ namespace MusicAnalyser.App
          */
         public void TriggerPlayPause()
         {
-            if (ui.output == null)
+            if (ui.Output == null)
             {
                 Console.WriteLine("Error: No output provider exists");
                 return;
             }
 
-            ui.output.Init(AudioSource.SpeedControl); // Using SpeedControl SampleProvider to allow tempo changes
+            ui.Output.Init(AudioSource.SpeedControl); // Using SpeedControl SampleProvider to allow tempo changes
 
-            if (ui.output.PlaybackState == PlaybackState.Playing) // Pause audio
+            if (ui.Output.PlaybackState == PlaybackState.Playing) // Pause audio
             {
-                ui.output.Pause();
+                ui.Output.Pause();
                 startSample = AudioSource.AudioStream.Position;
                 ui.DrawPauseUI();
             }
-            else if (ui.output.PlaybackState == PlaybackState.Paused || ui.output.PlaybackState == PlaybackState.Stopped) // Play audio
+            else if (ui.Output.PlaybackState == PlaybackState.Paused || ui.Output.PlaybackState == PlaybackState.Stopped) // Play audio
             {
                 AudioSource.AudioStream.Seek(startSample, SeekOrigin.Begin);
-                ui.output.Play();
+                ui.Output.Play();
                 ui.DrawPlayUI();
 
                 if (!started)
@@ -125,7 +125,7 @@ namespace MusicAnalyser.App
 
         public void TriggerStop()
         {
-            ui.output.Stop();
+            ui.Output.Stop();
             ui.EnableTimer(false);
             startSample = ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels;
             ui.SetPlayBtnText("Play from " + TimeSpan.FromSeconds((double)ui.cwvViewer.SelectSample / ui.cwvViewer.GetSampleRate()).ToString(@"m\:ss\:fff"));
@@ -138,7 +138,7 @@ namespace MusicAnalyser.App
         {
             Opened = false;
             ui.EnableTimer(false);
-            ui.output.Stop();
+            ui.Output.Stop();
             Thread.Sleep(100);
             DisposeAudio();
             analysisUpdates = 0;
@@ -159,14 +159,14 @@ namespace MusicAnalyser.App
             Application.DoEvents();
         }
 
-        public void SetScriptSelectorUI(Dictionary<int, string> scripts)
+        public void SetScriptSelectorUI(Dictionary<int, string> scripts, bool add)
         {
-            ui.SetScriptSelection(scripts);
+            ui.SetScriptSelection(scripts, add);
         }
 
         public void AddScript()
         {
-            SetScriptSelectorUI(dsp.ScriptManager.GetAllScriptNames());
+            SetScriptSelectorUI(dsp.ScriptManager.GetAllScriptNames(), true);
         }
 
         public void ApplyScripts(Dictionary<int, int> selectionDict)
@@ -174,12 +174,61 @@ namespace MusicAnalyser.App
             dsp.ApplyScripts(selectionDict);
         }
 
+        public bool CheckSelectionValidity(Dictionary<int, int> selectionDict, out string message)
+        {
+            message = "";
+            int primaryProcessor = -1;
+            int primaryDetector = -1;
+            if(selectionDict.Values.Contains(-1) || selectionDict.Count == 0)
+            {
+                message = "One or more scripts are not selected";
+                return false;
+            }
+            for(int i = 0; i < selectionDict.Count; i++)
+            {
+                if(dsp.ScriptManager.ProcessorScripts.ContainsKey(selectionDict[i]))
+                {
+                    bool isPrimary = dsp.ScriptManager.ProcessorScripts[selectionDict[i]].IsPrimary;
+                    if (isPrimary && primaryProcessor == -1)
+                    {
+                        primaryProcessor = i;
+                        continue;
+                    }
+                    if(isPrimary || primaryProcessor == -1 || isPrimary && primaryDetector != -1)
+                    {
+                        message = "Script selection is invalid";
+                        return false;
+                    }
+                }
+                else if(dsp.ScriptManager.DetectorScripts.ContainsKey(selectionDict[i]))
+                {
+                    bool isPrimary = dsp.ScriptManager.DetectorScripts[selectionDict[i]].IsPrimary;
+                    if (isPrimary && primaryDetector == -1 && primaryProcessor != -1)
+                    {
+                        primaryDetector = i;
+                        continue;
+                    }
+                    if(isPrimary || primaryDetector == -1 || isPrimary && primaryProcessor != -1)
+                    {
+                        message = "Script selection is invalid";
+                        return false;
+                    }
+                }
+            }
+            if(primaryProcessor == -1 || primaryDetector == -1)
+            {
+                message = "Selection must contain one Primary Processor and one Primary Detector";
+                return false;
+            }
+            return true;
+        }
+
         /*
          * Master method for performing analysis
          */
         public async void RunAnalysis()
         {
-            if (ui.output.PlaybackState == PlaybackState.Playing)
+            if (ui.Output.PlaybackState == PlaybackState.Playing)
             {
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -399,7 +448,7 @@ namespace MusicAnalyser.App
     
         public void EnableLiveMode()
         {
-            if(ui.output != null)
+            if(ui.Output != null)
                TriggerClose();
             liveRecorder = new LiveInputRecorder(ui);
             LiveMode = true;
@@ -447,11 +496,11 @@ namespace MusicAnalyser.App
         public void DisposeAudio()
         {
             started = false;
-            if (ui.output != null)
+            if (ui.Output != null)
             {
-                ui.output.Stop();
-                ui.output.Dispose();
-                ui.output = null;
+                ui.Output.Stop();
+                ui.Output.Dispose();
+                ui.Output = null;
             }
             if (AudioSource != null)
             {
