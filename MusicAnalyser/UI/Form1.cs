@@ -548,5 +548,48 @@ namespace MusicAnalyser
                 }
             }
         }
+
+        public void DisplayScriptSettings(int scriptIndex)
+        {
+            tblSettings.Controls.Clear();
+            tblSettings.RowCount = 0;
+            tblSettings.HorizontalScroll.Maximum = 0;
+            tblSettings.AutoScroll = false;
+            tblSettings.VerticalScroll.Visible = false;
+            tblSettings.AutoScroll = true;
+
+            Dictionary<string, string[]> settings = app.GetScriptSettings(scriptIndex);
+
+            if (settings == null)
+            {
+                tblSettings.ColumnCount = 1;
+                tblSettings.Controls.Add(new Label() { Text = "This script does not have settings.", AutoSize = true });
+            }
+            else
+            {
+                tblSettings.ColumnCount = 2;
+                tblSettings.ColumnStyles[0] = new ColumnStyle(SizeType.Absolute, 220);
+                foreach (string[] setting in settings.Values)
+                {
+                    tblSettings.RowCount++;
+                    tblSettings.Controls.Add(new Label() { Text = setting[2], MaximumSize = new Size(220, 0), AutoSize = true }, 0, tblSettings.RowCount - 1);
+                    if (setting[1] == "int")
+                        tblSettings.Controls.Add(new NumericUpDown() { Minimum = int.Parse(setting[3]), Maximum = int.Parse(setting[4]), Value = int.Parse(setting[0]), Size = new Size(100, 20) }, 1, tblSettings.RowCount - 1);
+                    else if(setting[1] == "double")
+                        tblSettings.Controls.Add(new NumericUpDown() { Minimum = (decimal)double.Parse(setting[3]), Maximum = (decimal)double.Parse(setting[4]), Value = (decimal)double.Parse(setting[0]), DecimalPlaces = 2, Size = new Size(100, 20) }, 1, tblSettings.RowCount - 1);
+                    else
+                        tblSettings.Controls.Add(new TextBox() { Text = setting[0] }, 1, tblSettings.RowCount - 1);
+                }
+                if (settings.Values.Count < 4)
+                    tblSettings.RowCount++;
+            }
+        }
+
+        public void ClearSettingsTable()
+        {
+            tblSettings.Controls.Clear();
+            tblSettings.ColumnCount = 0;
+            tblSettings.RowCount = 0;
+        }
     }
 }

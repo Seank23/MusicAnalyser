@@ -41,6 +41,7 @@
             this.cbScript.Size = new System.Drawing.Size(121, 24);
             this.cbScript.TabIndex = 0;
             this.cbScript.SelectedIndexChanged += new System.EventHandler(this.cbScript_SelectedIndexChanged);
+            this.cbScript.Click += new System.EventHandler(this.cbScript_Click);
             // 
             // label1
             // 

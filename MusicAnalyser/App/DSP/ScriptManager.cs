@@ -45,6 +45,16 @@ namespace MusicAnalyser.App.DSP
 
         public int GetScriptCount() { return ProcessorScripts.Count + DetectorScripts.Count; }
 
+        public Dictionary<string, string[]> GetScriptSettings(int scriptId)
+        {
+            if (ProcessorScripts.ContainsKey(scriptId))
+                return ProcessorScripts[scriptId].Settings;
+            else if (DetectorScripts.ContainsKey(scriptId))
+                return DetectorScripts[scriptId].Settings;
+            else
+                return null;
+        }
+
         public void LoadScripts()
         {
             string[] files = Directory.GetFiles("Scripts");

@@ -99,8 +99,11 @@
             this.btnAddScript = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.lblSelMessage = new System.Windows.Forms.Label();
-            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             this.btnApplyScripts = new System.Windows.Forms.Button();
+            this.tblSettings = new System.Windows.Forms.TableLayoutPanel();
+            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnDefaults = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -593,7 +596,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1908, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1908, 28);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -604,7 +607,7 @@
             this.closeToolStripMenuItem,
             this.saveRecordingToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
@@ -636,7 +639,7 @@
             this.playToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
+            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
             this.playbackToolStripMenuItem.Text = "Playback";
             // 
             // playToolStripMenuItem
@@ -660,7 +663,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.perferencesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // perferencesToolStripMenuItem
@@ -760,7 +763,7 @@
             this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddScript.Location = new System.Drawing.Point(1789, 137);
             this.btnAddScript.Name = "btnAddScript";
-            this.btnAddScript.Size = new System.Drawing.Size(88, 37);
+            this.btnAddScript.Size = new System.Drawing.Size(88, 30);
             this.btnAddScript.TabIndex = 30;
             this.btnAddScript.Text = "Add";
             this.btnAddScript.UseVisualStyleBackColor = true;
@@ -788,6 +791,30 @@
             this.lblSelMessage.Size = new System.Drawing.Size(0, 17);
             this.lblSelMessage.TabIndex = 32;
             // 
+            // btnApplyScripts
+            // 
+            this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 173);
+            this.btnApplyScripts.Name = "btnApplyScripts";
+            this.btnApplyScripts.Size = new System.Drawing.Size(88, 30);
+            this.btnApplyScripts.TabIndex = 33;
+            this.btnApplyScripts.Text = "Apply";
+            this.btnApplyScripts.UseVisualStyleBackColor = true;
+            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
+            // 
+            // tblSettings
+            // 
+            this.tblSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tblSettings.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tblSettings.ColumnCount = 1;
+            this.tblSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblSettings.Location = new System.Drawing.Point(1528, 296);
+            this.tblSettings.Name = "tblSettings";
+            this.tblSettings.RowCount = 1;
+            this.tblSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblSettings.Size = new System.Drawing.Size(349, 119);
+            this.tblSettings.TabIndex = 34;
+            // 
             // cwvViewer
             // 
             this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -808,16 +835,25 @@
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
             // 
-            // btnApplyScripts
+            // btnSave
             // 
-            this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 180);
-            this.btnApplyScripts.Name = "btnApplyScripts";
-            this.btnApplyScripts.Size = new System.Drawing.Size(88, 37);
-            this.btnApplyScripts.TabIndex = 33;
-            this.btnApplyScripts.Text = "Apply";
-            this.btnApplyScripts.UseVisualStyleBackColor = true;
-            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Location = new System.Drawing.Point(1789, 258);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(88, 30);
+            this.btnSave.TabIndex = 36;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            // 
+            // btnDefaults
+            // 
+            this.btnDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDefaults.Location = new System.Drawing.Point(1789, 222);
+            this.btnDefaults.Name = "btnDefaults";
+            this.btnDefaults.Size = new System.Drawing.Size(88, 30);
+            this.btnDefaults.TabIndex = 35;
+            this.btnDefaults.Text = "Defaults";
+            this.btnDefaults.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -825,6 +861,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnDefaults);
+            this.Controls.Add(this.tblSettings);
             this.Controls.Add(this.btnApplyScripts);
             this.Controls.Add(this.lblSelMessage);
             this.Controls.Add(this.label6);
@@ -978,6 +1017,9 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lblSelMessage;
         private System.Windows.Forms.Button btnApplyScripts;
+        private System.Windows.Forms.TableLayoutPanel tblSettings;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnDefaults;
     }
 }
 

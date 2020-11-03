@@ -223,6 +223,11 @@ namespace MusicAnalyser.App
             return true;
         }
 
+        public Dictionary<string, string[]> GetScriptSettings(int scriptIndex)
+        {
+            return dsp.ScriptManager.GetScriptSettings(scriptIndex);
+        }
+
         /*
          * Master method for performing analysis
          */
