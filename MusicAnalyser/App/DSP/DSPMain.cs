@@ -75,7 +75,7 @@ namespace MusicAnalyser.App.DSP
             app.ScriptSelectionApplied = true;
         }
 
-        public bool GetFrequencyAnalysis()
+        public void RunFrequencyAnalysis()
         {
             object audio = ReadAudioStream();
 
@@ -98,11 +98,9 @@ namespace MusicAnalyser.App.DSP
 
             MaxGain = processedData.Max();
             app.DrawSpectrum(processedData, scale, processedData.Average(), MaxGain);
-
-            return true;
         }
 
-        public void GetDetectedPitches()
+        public void RunPitchDetection()
         {
             object data = processedData;
             for(int i = detectorIndex; i < ScriptManager.GetScriptCount(); i++)

@@ -11,6 +11,14 @@ class BasicFFTProcessor : ISignalProcessor
     public object OutputBuffer { get; set; }
     public double OutputScale { get; set; }
 
+    public BasicFFTProcessor()
+    {
+        Settings = new Dictionary<string, string[]>()
+        {
+            { "WINDOW", new string[] { "Hamming", "enum", "Window Function", "Rectangle|Hamming|Hann|BlackmannHarris", "" } }
+        };
+    }
+
     public void Process()
     {
         short[] input = (short[])InputBuffer;
@@ -22,7 +30,16 @@ class BasicFFTProcessor : ISignalProcessor
         // FFT Process
         NAudio.Dsp.Complex[] fftFull = new NAudio.Dsp.Complex[fftPoints];
         for (int i = 0; i < fftPoints; i++)
-            fftFull[i].X = (float)(input[i] * NAudio.Dsp.FastFourierTransform.HammingWindow(i, fftPoints));
+        {
+            if (Settings["WINDOW"][0] == "Hamming")
+                fftFull[i].X = (float)(input[i] * NAudio.Dsp.FastFourierTransform.HammingWindow(i, fftPoints));
+            else if (Settings["WINDOW"][0] == "Hann")
+                fftFull[i].X = (float)(input[i] * NAudio.Dsp.FastFourierTransform.HannWindow(i, fftPoints));
+            else if (Settings["WINDOW"][0] == "BlackmannHarris")
+                fftFull[i].X = (float)(input[i] * NAudio.Dsp.FastFourierTransform.BlackmannHarrisWindow(i, fftPoints));
+            else
+                fftFull[i].X = input[i];
+        }    
         NAudio.Dsp.FastFourierTransform.FFT(true, (int)Math.Log(fftPoints, 2.0), fftFull);
 
         for (int i = 0; i < fftPoints / 2; i++) // Since FFT output is mirrored above Nyquist limit (fftPoints / 2), these bins are summed with those in base band

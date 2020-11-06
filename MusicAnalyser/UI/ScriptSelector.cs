@@ -42,5 +42,11 @@ namespace MusicAnalyser.UI
             if(cbScript.SelectedIndex != -1)
                 frm.DisplayScriptSettings(cbScript.SelectedIndex);
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            if (cbScript.SelectedIndex != -1)
+                frm.DisplayScriptSettings(cbScript.SelectedIndex);
+        }
     }
 }

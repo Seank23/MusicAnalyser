@@ -9,6 +9,7 @@ using MusicAnalyser.UI;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Scripting.Utils;
 
 namespace MusicAnalyser
 {
@@ -475,11 +476,15 @@ namespace MusicAnalyser
             {
                 app.ApplyScripts(GetSelectionDict());
                 app.ApplyScriptSettings(selectedScript, GetSettingValues());
-                btnApplyScripts.BackColor = Color.LightGreen;
+                lblSelMessage.ForeColor = Color.LimeGreen;
+                lblSelMessage.Text = "Applied!";
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(1000);
-                    InvokeUI(() => { btnApplyScripts.BackColor = Color.FromKnownColor(KnownColor.ControlLight); });
+                    InvokeUI(() => {
+                        lblSelMessage.Text = "";
+                        lblSelMessage.ForeColor = Color.Crimson;
+                    });
                 });
                 btnApplyScripts.Enabled = false;
                 if(app.Opened)
@@ -603,6 +608,15 @@ namespace MusicAnalyser
                             Size = new Size(100, 20)
                         };
                         control.ValueChanged += new EventHandler(SettingChanged);
+                        tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
+                    }
+                    else if(setting[1] == "enum")
+                    {
+                        var control = new ComboBox();
+                        string[] options = setting[3].Split('|');
+                        control.Items.AddRange(options);
+                        control.SelectedItem = setting[0];
+                        control.SelectedIndexChanged += new EventHandler(SettingChanged);
                         tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
                     }
                     else

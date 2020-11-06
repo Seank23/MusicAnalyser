@@ -258,30 +258,24 @@ namespace MusicAnalyser.App
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                if (dsp.GetFrequencyAnalysis())
+                dsp.RunFrequencyAnalysis();
+                dsp.RunPitchDetection();
+                dsp.Analyser.GetNotes(dsp.fftPeaks, analysisUpdates);
+                Task asyncAnalysis = RunAnalysisAsync();
+                DisplayAnalysisUI();
+                ui.RenderSpectrum();
+
+                if (dsp.Analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
                 {
-                    if (Prefs.NOTE_ALGORITHM == 0) // By Magnitude
-                        dsp.GetDetectedPitches();
-                    else if (Prefs.NOTE_ALGORITHM == 1) // By Slope
-                        dsp.GetDetectedPitches();
-
-                    dsp.Analyser.GetNotes(dsp.fftPeaks, analysisUpdates);
-                    Task asyncAnalysis = RunAnalysisAsync();
-                    DisplayAnalysisUI();
-                    ui.RenderSpectrum();
-
-                    if (dsp.Analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
-                    {
-                        int error = (int)dsp.Analyser.GetAvgError().Average();
-                        if (error >= 0)
-                            ui.SetErrorText("+ " + Math.Abs(error) + " Cents");
-                        else
-                            ui.SetErrorText("- " + Math.Abs(error) + " Cents");
-                        dsp.Analyser.ResetError();
-                    }
-
-                    await asyncAnalysis;
+                    int error = (int)dsp.Analyser.GetAvgError().Average();
+                    if (error >= 0)
+                        ui.SetErrorText("+ " + Math.Abs(error) + " Cents");
+                    else
+                        ui.SetErrorText("- " + Math.Abs(error) + " Cents");
+                    dsp.Analyser.ResetError();
                 }
+
+                await asyncAnalysis;
                 watch.Stop();
 
                 if (Prefs.UPDATE_MODE == 0) // Dynamic update mode
@@ -313,8 +307,7 @@ namespace MusicAnalyser.App
                 if (analysisUpdates % Prefs.CHORD_DETECTION_INTERVAL == 0)
                 {
                     ui.InvokeUI(() => ui.ClearNotesList());
-                    int completed = dsp.Analyser.FindChordsNotes();
-                    if (completed == 1)
+                    if (dsp.Analyser.FindChordsNotes())
                     {
                         dsp.Analyser.FindChords();
                         DisplayChords();

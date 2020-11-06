@@ -16,6 +16,7 @@ class RemoveKickNoiseProcessor : ISignalProcessor
     {
         Settings = new Dictionary<string, string[]> 
         {
+            { "CUTOFF_FREQ", new string[] { "200", "double", "Cutoff Frequency (Hz)", "0", "1000" } },
             { "MAX_FREQ_CHANGE", new string[] { "2.5", "double", "Max Frequency Change (Hz)", "0", "50" } },
             { "SIMILAR_GAIN_THRESHOLD", new string[] { "5", "double", "Similar Gain Threshold (dB)", "0", "50" } },
         };
@@ -30,7 +31,7 @@ class RemoveKickNoiseProcessor : ISignalProcessor
 
         foreach (double freq in input.Keys)
         {
-            if (freq > 200)
+            if (freq > double.Parse(Settings["CUTOFF_FREQ"][0]))
                 break;
             if (prevFreq == 0)
             {

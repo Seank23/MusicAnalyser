@@ -221,10 +221,10 @@ namespace MusicAnalyser.App.Analysis
             currentMode = Music.GetMode(notePercent, keyRoot, minorRoot);
         }
 
-        public int FindChordsNotes()
+        public bool FindChordsNotes()
         {
             if (aggregateNotes.Count == 0)
-                return 0;
+                return false;
 
             int[,] tempNoteOccurences = new int[12, 2];
             List<Note>[] notesByName = new List<Note>[12];
@@ -310,7 +310,7 @@ namespace MusicAnalyser.App.Analysis
                 }
             }
             chordNotes = chordTemp;
-            return 1;
+            return true;
         }
 
         /*
