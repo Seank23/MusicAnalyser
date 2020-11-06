@@ -12,11 +12,13 @@ namespace MusicAnalyser.App.DSP
     {
         public Dictionary<int, ISignalProcessor> ProcessorScripts { get; set; }
         public Dictionary<int, ISignalDetector> DetectorScripts { get; set; }
+        public Dictionary<int, string[]> SettingDefaults { get; set; }
 
         public ScriptManager()
         {
             ProcessorScripts = new Dictionary<int, ISignalProcessor>();
             DetectorScripts = new Dictionary<int, ISignalDetector>();
+            SettingDefaults = new Dictionary<int, string[]>();
         }
 
         public Dictionary<int, string> GetAllScriptNames()
@@ -45,6 +47,16 @@ namespace MusicAnalyser.App.DSP
 
         public int GetScriptCount() { return ProcessorScripts.Count + DetectorScripts.Count; }
 
+        public string GetScriptName(int scriptId)
+        {
+            if (ProcessorScripts.ContainsKey(scriptId))
+                return ProcessorScripts[scriptId].GetType().Name;
+            else if (DetectorScripts.ContainsKey(scriptId))
+                return DetectorScripts[scriptId].GetType().Name;
+            else
+                return null;
+        }
+
         public Dictionary<string, string[]> GetScriptSettings(int scriptId)
         {
             if (ProcessorScripts.ContainsKey(scriptId))
@@ -55,14 +67,65 @@ namespace MusicAnalyser.App.DSP
                 return null;
         }
 
+        public void SetScriptSettings(int scriptId, string[] settings)
+        {
+            Dictionary<string, string[]> settingsDict = GetScriptSettings(scriptId);
+
+            if (settingsDict == null || settings.Length == 0)
+                return;
+
+            for (int i = 0; i < settingsDict.Count; i++)
+            {
+                string[] vals = settingsDict[settingsDict.ElementAt(i).Key];
+                vals[0] = settings[i];
+            }
+        }
+
+        public void SaveScriptSettings(int scriptId)
+        {
+            string scriptName = GetScriptName(scriptId);
+            Dictionary<string, string[]> settingsDict = GetScriptSettings(scriptId);
+
+            if (settingsDict == null)
+                return;
+
+            List<string> saveSettings = new List<string>();
+
+            for(int i = 0; i < settingsDict.Count; i++)
+                saveSettings.Add(settingsDict.ElementAt(i).Key + "=" + settingsDict.ElementAt(i).Value[0]);
+
+            FileHandler.WriteFile("Scripts\\" + scriptName + ".ini", saveSettings.ToArray());
+        }
+
+        public void LoadScriptSettings(int scriptId)
+        {
+            string scriptName = GetScriptName(scriptId);
+            string[] loadedSettings = FileHandler.ReadFile("Scripts\\" + scriptName + ".ini");
+            if(loadedSettings != null)
+            {
+                Dictionary<string, string[]> settingsDict = GetScriptSettings(scriptId);
+                for(int i = 0; i < loadedSettings.Length; i++)
+                {
+                    string[] settingSplit = loadedSettings[i].Split('=');
+                    if(settingsDict.ContainsKey(settingSplit[0]))
+                    {
+                        string[] vals = settingsDict[settingSplit[0]];
+                        vals[0] = settingSplit[1];
+                    }
+                }
+            }
+        }
+
         public void LoadScripts()
         {
             string[] files = Directory.GetFiles("Scripts");
+            int scriptIndex = 0;
             for(int i = 0; i < files.Length; i++)
             {
                 if (files[i].Substring(files[i].LastIndexOf('.') + 1) == "cs")
                 {
-                    CompileScript(files[i], i);
+                    CompileScript(files[i], scriptIndex);
+                    scriptIndex++;
                 }
             }
         }
@@ -99,14 +162,19 @@ namespace MusicAnalyser.App.DSP
                 if (instance.GetType().GetInterfaces().Contains(typeof(ISignalProcessor)))
                 {
                     ProcessorScripts.Add(index, (ISignalProcessor)instance);
+                    if(ProcessorScripts[index].Settings != null)
+                        SettingDefaults[index] = ProcessorScripts[index].Settings.Values.ToList().Select(s => s.First()).ToArray();
                     Console.WriteLine("Loaded processor script successfully - " + instance.GetType().Name);
                 }
                 else if (instance.GetType().GetInterfaces().Contains(typeof(ISignalDetector)))
                 {
                     DetectorScripts.Add(index, (ISignalDetector)instance);
+                    if (DetectorScripts[index].Settings != null)
+                        SettingDefaults[index] = DetectorScripts[index].Settings.Values.ToList().Select(s => s.First()).ToArray();
                     Console.WriteLine("Loaded detector script successfully - " + instance.GetType().Name);
                 }
             }
         }
     }
 }
+

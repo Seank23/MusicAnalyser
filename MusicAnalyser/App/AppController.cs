@@ -30,6 +30,7 @@ namespace MusicAnalyser.App
         public bool IsRecording { get; set; }
         public bool Opened { get; set; }
         public bool ScriptSelectionApplied { get; set; }
+        public bool ScriptSelectionValid { get; set; }
 
         public AppController(Form1 form)
         {
@@ -46,14 +47,14 @@ namespace MusicAnalyser.App
 
         public static void LoadPrefs()
         {
-            if (File.Exists("Prefs.ini"))
+            string[] loadedPrefs = FileHandler.ReadFile("prefs.ini");
+            if (loadedPrefs != null)
             {
-                string[] loadedPrefs = FileHandler.ReadFile("prefs.ini");
                 Dictionary<string, string> prefsDict = new Dictionary<string, string>();
-                foreach(string line in loadedPrefs)
+                foreach (string line in loadedPrefs)
                 {
                     string[] lineSplit = line.Split('=');
-                    if(lineSplit.Length == 2)
+                    if (lineSplit.Length == 2)
                         prefsDict.Add(lineSplit[0], lineSplit[1]);
                 }
                 Prefs.LoadPrefs(prefsDict);
@@ -174,8 +175,14 @@ namespace MusicAnalyser.App
             dsp.ApplyScripts(selectionDict);
         }
 
+        public void ApplyScriptSettings(int scriptIndex, string[] settings)
+        {
+            dsp.ScriptManager.SetScriptSettings(scriptIndex, settings);
+        }
+
         public bool CheckSelectionValidity(Dictionary<int, int> selectionDict, out string message)
         {
+            ScriptSelectionValid = false;
             message = "";
             int primaryProcessor = -1;
             int primaryDetector = -1;
@@ -220,12 +227,25 @@ namespace MusicAnalyser.App
                 message = "Selection must contain one Primary Processor and one Primary Detector";
                 return false;
             }
+            ScriptSelectionValid = true;
             return true;
         }
 
         public Dictionary<string, string[]> GetScriptSettings(int scriptIndex)
         {
             return dsp.ScriptManager.GetScriptSettings(scriptIndex);
+        }
+
+        public void SaveScriptSettings(int scriptIndex)
+        {
+            ApplyScriptSettings(scriptIndex, ui.GetSettingValues());
+            dsp.ScriptManager.SaveScriptSettings(scriptIndex);
+        }
+
+        public void SetDefaultSettingValues(int scriptIndex)
+        {
+            dsp.ScriptManager.SetScriptSettings(scriptIndex, dsp.ScriptManager.SettingDefaults[scriptIndex]);
+            ui.DisplayScriptSettings(scriptIndex);
         }
 
         /*

@@ -33,7 +33,16 @@ namespace MusicAnalyser.App.DSP
         public async void LoadScripts()
         {
             await Task.Factory.StartNew(() => ScriptManager.LoadScripts());
+            LoadScriptSettings();
             app.SetScriptSelectorUI(ScriptManager.GetAllScriptNames(), false);
+        }
+
+        public void LoadScriptSettings()
+        {
+            for(int i = 0; i < ScriptManager.GetScriptCount(); i++)
+            {
+                ScriptManager.LoadScriptSettings(i);
+            }
         }
 
         public void ApplyScripts(Dictionary<int, int> selectionDict)

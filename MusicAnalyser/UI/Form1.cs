@@ -18,6 +18,8 @@ namespace MusicAnalyser
         public int fftZoom = 1000;
         private AppController app;
 
+        private int selectedScript;
+
         public Form1()
         {
             InitializeComponent();
@@ -472,6 +474,7 @@ namespace MusicAnalyser
             if (app.CheckSelectionValidity(GetSelectionDict(), out string message))
             {
                 app.ApplyScripts(GetSelectionDict());
+                app.ApplyScriptSettings(selectedScript, GetSettingValues());
                 btnApplyScripts.BackColor = Color.LightGreen;
                 Task.Factory.StartNew(() =>
                 {
@@ -509,6 +512,7 @@ namespace MusicAnalyser
 
         public void OnSelectorChange()
         {
+            btnSave.Enabled = false;
             if (app.CheckSelectionValidity(GetSelectionDict(), out string message))
             {
                 btnApplyScripts.Enabled = true;
@@ -551,6 +555,7 @@ namespace MusicAnalyser
 
         public void DisplayScriptSettings(int scriptIndex)
         {
+            selectedScript = scriptIndex;
             tblSettings.Controls.Clear();
             tblSettings.RowCount = 0;
             tblSettings.HorizontalScroll.Maximum = 0;
@@ -562,11 +567,13 @@ namespace MusicAnalyser
 
             if (settings == null)
             {
+                btnDefaults.Enabled = false;
                 tblSettings.ColumnCount = 1;
                 tblSettings.Controls.Add(new Label() { Text = "This script does not have settings.", AutoSize = true });
             }
             else
             {
+                btnDefaults.Enabled = true;
                 tblSettings.ColumnCount = 2;
                 tblSettings.ColumnStyles[0] = new ColumnStyle(SizeType.Absolute, 220);
                 foreach (string[] setting in settings.Values)
@@ -574,15 +581,47 @@ namespace MusicAnalyser
                     tblSettings.RowCount++;
                     tblSettings.Controls.Add(new Label() { Text = setting[2], MaximumSize = new Size(220, 0), AutoSize = true }, 0, tblSettings.RowCount - 1);
                     if (setting[1] == "int")
-                        tblSettings.Controls.Add(new NumericUpDown() { Minimum = int.Parse(setting[3]), Maximum = int.Parse(setting[4]), Value = int.Parse(setting[0]), Size = new Size(100, 20) }, 1, tblSettings.RowCount - 1);
-                    else if(setting[1] == "double")
-                        tblSettings.Controls.Add(new NumericUpDown() { Minimum = (decimal)double.Parse(setting[3]), Maximum = (decimal)double.Parse(setting[4]), Value = (decimal)double.Parse(setting[0]), DecimalPlaces = 2, Size = new Size(100, 20) }, 1, tblSettings.RowCount - 1);
+                    {
+                        var control = new NumericUpDown()
+                        {
+                            Minimum = int.Parse(setting[3]),
+                            Maximum = int.Parse(setting[4]),
+                            Value = int.Parse(setting[0]),
+                            Size = new Size(100, 20)
+                        };
+                        control.ValueChanged += new EventHandler(SettingChanged);
+                        tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
+                    }
+                    else if (setting[1] == "double")
+                    {
+                        var control = new NumericUpDown()
+                        {
+                            Minimum = (decimal)double.Parse(setting[3]),
+                            Maximum = (decimal)double.Parse(setting[4]),
+                            Value = (decimal)double.Parse(setting[0]),
+                            DecimalPlaces = 2,
+                            Size = new Size(100, 20)
+                        };
+                        control.ValueChanged += new EventHandler(SettingChanged);
+                        tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
+                    }
                     else
-                        tblSettings.Controls.Add(new TextBox() { Text = setting[0] }, 1, tblSettings.RowCount - 1);
+                    {
+                        var control = new TextBox() { Text = setting[0] };
+                        control.TextChanged += new EventHandler(SettingChanged);
+                        tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
+                    }
                 }
                 if (settings.Values.Count < 4)
                     tblSettings.RowCount++;
             }
+        }
+
+        private void SettingChanged(object sender, EventArgs e)
+        {
+            btnSave.Enabled = true;
+            if (app.ScriptSelectionValid)
+                btnApplyScripts.Enabled = true;
         }
 
         public void ClearSettingsTable()
@@ -590,6 +629,39 @@ namespace MusicAnalyser
             tblSettings.Controls.Clear();
             tblSettings.ColumnCount = 0;
             tblSettings.RowCount = 0;
+        }
+
+        public string[] GetSettingValues()
+        {
+            if (tblSettings.ColumnCount == 2)
+            {
+                List<string> settingsList = new List<string>();
+                for (int i = 0; i < tblSettings.Controls.Count / Math.Max(1, tblSettings.ColumnCount); i++)
+                    settingsList.Add(tblSettings.GetControlFromPosition(1, i).Text);
+
+                return settingsList.ToArray();
+            }
+            return null;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (selectedScript != -1)
+            {
+                app.SaveScriptSettings(selectedScript);
+                btnSave.Enabled = false;
+            }
+        }
+
+        private void btnDefaults_Click(object sender, EventArgs e)
+        {
+            if (selectedScript != -1)
+            {
+                app.SetDefaultSettingValues(selectedScript);
+                btnSave.Enabled = true;
+                if (app.ScriptSelectionValid)
+                    btnApplyScripts.Enabled = true;
+            }
         }
     }
 }

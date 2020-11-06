@@ -75,18 +75,23 @@ namespace MusicAnalyser.App
 
         public static string[] ReadFile(string fileName)
         {
-            string[] lines;
-            List<string> list = new List<string>();
-            using (StreamReader file = new StreamReader(fileName))
+            if (File.Exists(fileName))
             {
-                string line;
-                while ((line = file.ReadLine()) != null)
+                string[] lines;
+                List<string> list = new List<string>();
+                using (StreamReader file = new StreamReader(fileName))
                 {
-                    list.Add(line);
+                    string line;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        list.Add(line);
+                    }
                 }
+                lines = list.ToArray();
+                return lines;
             }
-            lines = list.ToArray();
-            return lines;
+            else
+                return null;
         }
 
         public static bool WriteMp3(string filename, WaveFormat format)
