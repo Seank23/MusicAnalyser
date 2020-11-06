@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using NAudio.Wave;
-
+using MusicAnalyser.App;
+using System.Collections.Generic;
+using MusicAnalyser.UI;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Scripting.Utils;
 
 namespace MusicAnalyser
 {
     public partial class Form1 : Form
     {
-        private AppController app;
-        public DirectSoundOut output { get; set; }
+        public DirectSoundOut Output { get; set; }
         public int fftZoom = 1000;
+        private AppController app;
+
+        private int selectedScript;
 
         public Form1()
         {
@@ -21,6 +28,9 @@ namespace MusicAnalyser
             SetupFFTPlot();
             barVolume.Value = 10;
             SetModeText("");
+            flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
+            flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
+            OnSelectorChange();
         }
 
         public void InvokeUI(Action a)
@@ -42,7 +52,7 @@ namespace MusicAnalyser
 
         public void SetupPlaybackUI(WaveStream audioGraph, string filename, bool wasRecording)
         {
-            output = new DirectSoundOut();
+            Output = new DirectSoundOut();
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
             cwvViewer.BackColor = SystemColors.Control;
@@ -50,11 +60,7 @@ namespace MusicAnalyser
             btnPlay.Text = "Play";
             btnLiveMode.Text = "Live Mode";
             btnOpenClose.Enabled = true;
-            closeToolStripMenuItem.Enabled = true;
-            btnPlay.Enabled = true;
-            btnStop.Enabled = true;
-            stopToolStripMenuItem.Enabled = true;
-            playToolStripMenuItem.Enabled = true;
+            closeToolStripMenuItem.Enabled = true;   
             openToolStripMenuItem.Enabled = false;
             barVolume.Enabled = true;
             barTempo.Enabled = true;
@@ -67,6 +73,13 @@ namespace MusicAnalyser
             prbLevelMeter.Visible = false;
             SetSelectTime(0);
             SetLoopTime(0);
+            if (app.ScriptSelectionApplied)
+            {
+                btnPlay.Enabled = true;
+                btnStop.Enabled = true;
+                stopToolStripMenuItem.Enabled = true;
+                playToolStripMenuItem.Enabled = true;
+            }
             if (wasRecording)
             {
                 saveRecordingToolStripMenuItem.Enabled = true;
@@ -146,7 +159,7 @@ namespace MusicAnalyser
             int previousPos = 0;
             long currentSample;
             int index = 0;
-            AudioSource source = app.GetSource();
+            AudioSource source = app.AudioSource;
 
             while (app.Opened)
             {
@@ -157,7 +170,7 @@ namespace MusicAnalyser
                     break;
                 }
 
-                if (output.PlaybackState == PlaybackState.Playing)
+                if (Output.PlaybackState == PlaybackState.Playing)
                 {
                     if (!app.IsStarted() && chbFollow.Checked)
                     {
@@ -290,8 +303,8 @@ namespace MusicAnalyser
 
         private void timerFFT_Tick(object sender, EventArgs e)
         {
-            if (output == null)
-                output = new DirectSoundOut();
+            if (Output == null)
+                Output = new DirectSoundOut();
             app.RunAnalysis();
         }
 
@@ -359,7 +372,7 @@ namespace MusicAnalyser
         public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "FFT Updates: " + draws; }
         public void ClearNotesList() { lstChords.Items.Clear(); }
         public void PrintChord(string text) { lstChords.Items.Add(text); }
-        public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 12, bold: isBold); }
+        public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 16, bold: isBold); }
         public void SetKeyText(string text) { lblKey.Text = text; }
         public void SetModeText(string text) { lblMode.Text = text; }
         public void SetErrorText(string text) { lblError.Text = text; }
@@ -381,10 +394,10 @@ namespace MusicAnalyser
 
         public void UpdateUI()
         {
-            //if (Prefs.SPECTRUM_AA == 1)
-            //    spFFT.plt.AntiAlias(true);
-            //else if (Prefs.SPECTRUM_AA == 0)
-            //    spFFT.plt.AntiAlias(false);
+            if (Prefs.SPECTRUM_AA == 1)
+                spFFT.plt.AntiAlias(true);
+            else if (Prefs.SPECTRUM_AA == 0)
+                spFFT.plt.AntiAlias(false);
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -424,22 +437,22 @@ namespace MusicAnalyser
             switch (e.KeyCode)
             {
                 case Keys.Space:
-                    if (output != null)
+                    if (Output != null)
                         app.TriggerPlayPause();
                     break;
                 case Keys.Back:
-                    if (output != null)
+                    if (Output != null)
                         app.TriggerStop();
                     break;
                 case Keys.Escape:
-                    if (output != null)
+                    if (Output != null)
                         app.TriggerClose();
                     break;
                 case Keys.O:
                     app.TriggerOpenFile();
                     break;
                 case Keys.Tab:
-                    if (output != null)
+                    if (Output != null)
                         cwvViewer.FitToScreen();
                     break;
             }
@@ -453,6 +466,216 @@ namespace MusicAnalyser
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             app.TriggerStop();
+        }
+
+        // Scripts interface
+
+        private void btnApplyScripts_Click(object sender, EventArgs e)
+        {
+            if (app.CheckSelectionValidity(GetSelectionDict(), out string message))
+            {
+                app.ApplyScripts(GetSelectionDict());
+                app.ApplyScriptSettings(selectedScript, GetSettingValues());
+                lblSelMessage.ForeColor = Color.LimeGreen;
+                lblSelMessage.Text = "Applied!";
+                Task.Factory.StartNew(() =>
+                {
+                    Thread.Sleep(1000);
+                    InvokeUI(() => {
+                        lblSelMessage.Text = "";
+                        lblSelMessage.ForeColor = Color.Crimson;
+                    });
+                });
+                btnApplyScripts.Enabled = false;
+                if(app.Opened)
+                {
+                    btnPlay.Enabled = true;
+                    btnStop.Enabled = true;
+                    stopToolStripMenuItem.Enabled = true;
+                    playToolStripMenuItem.Enabled = true;
+                }
+            }
+        }
+
+        private Dictionary<int, int> GetSelectionDict()
+        {
+            Dictionary<int, int> selectionDict = new Dictionary<int, int>();
+            for (int i = 0; i < flpScripts.Controls.Count; i++)
+            {
+                ScriptSelector selector = (ScriptSelector)flpScripts.Controls[i];
+                selectionDict.Add(i, selector.DropDown.SelectedIndex);
+            }
+            return selectionDict;
+        }
+
+        private void btnAddScript_Click(object sender, EventArgs e)
+        {
+            flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
+            app.AddScript();
+            OnSelectorChange();
+        }
+
+        public void OnSelectorChange()
+        {
+            btnSave.Enabled = false;
+            if (app.CheckSelectionValidity(GetSelectionDict(), out string message))
+            {
+                btnApplyScripts.Enabled = true;
+                lblSelMessage.Text = message;
+            }
+            else
+            {
+                btnApplyScripts.Enabled = false;
+                lblSelMessage.Text = message;
+            }
+        }
+
+        public void SetScriptSelection(Dictionary<int, string> scripts, bool add)
+        {
+            if (add)
+            {
+                ScriptSelector selector = (ScriptSelector)flpScripts.Controls[flpScripts.Controls.Count - 1];
+                AddScriptSelectionItems(selector, scripts);
+                return;
+            }
+            foreach (ScriptSelector selector in flpScripts.Controls)
+                AddScriptSelectionItems(selector, scripts);
+        }
+
+        public void AddScriptSelectionItems(ScriptSelector selector, Dictionary<int, string> scripts)
+        {
+            selector.DropDown.Items.Clear();
+            for (int i = 0; i < scripts.Count; i++)
+            {
+                for (int j = 0; j < scripts.Count; j++)
+                {
+                    if (i == scripts.Keys.ElementAt(j))
+                    {
+                        selector.DropDown.Items.Add(scripts[i]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void DisplayScriptSettings(int scriptIndex)
+        {
+            selectedScript = scriptIndex;
+            tblSettings.Controls.Clear();
+            tblSettings.RowCount = 0;
+            tblSettings.HorizontalScroll.Maximum = 0;
+            tblSettings.AutoScroll = false;
+            tblSettings.VerticalScroll.Visible = false;
+            tblSettings.AutoScroll = true;
+
+            Dictionary<string, string[]> settings = app.GetScriptSettings(scriptIndex);
+
+            if (settings == null)
+            {
+                btnDefaults.Enabled = false;
+                tblSettings.ColumnCount = 1;
+                tblSettings.Controls.Add(new Label() { Text = "This script does not have settings.", AutoSize = true });
+            }
+            else
+            {
+                btnDefaults.Enabled = true;
+                tblSettings.ColumnCount = 2;
+                tblSettings.ColumnStyles[0] = new ColumnStyle(SizeType.Absolute, 220);
+                foreach (string[] setting in settings.Values)
+                {
+                    tblSettings.RowCount++;
+                    tblSettings.Controls.Add(new Label() { Text = setting[2], MaximumSize = new Size(220, 0), AutoSize = true }, 0, tblSettings.RowCount - 1);
+                    if (setting[1] == "int")
+                    {
+                        var control = new NumericUpDown()
+                        {
+                            Minimum = int.Parse(setting[3]),
+                            Maximum = int.Parse(setting[4]),
+                            Value = int.Parse(setting[0]),
+                            Size = new Size(100, 20)
+                        };
+                        control.ValueChanged += new EventHandler(SettingChanged);
+                        tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
+                    }
+                    else if (setting[1] == "double")
+                    {
+                        var control = new NumericUpDown()
+                        {
+                            Minimum = (decimal)double.Parse(setting[3]),
+                            Maximum = (decimal)double.Parse(setting[4]),
+                            Value = (decimal)double.Parse(setting[0]),
+                            DecimalPlaces = 2,
+                            Size = new Size(100, 20)
+                        };
+                        control.ValueChanged += new EventHandler(SettingChanged);
+                        tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
+                    }
+                    else if(setting[1] == "enum")
+                    {
+                        var control = new ComboBox();
+                        string[] options = setting[3].Split('|');
+                        control.Items.AddRange(options);
+                        control.SelectedItem = setting[0];
+                        control.SelectedIndexChanged += new EventHandler(SettingChanged);
+                        tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
+                    }
+                    else
+                    {
+                        var control = new TextBox() { Text = setting[0] };
+                        control.TextChanged += new EventHandler(SettingChanged);
+                        tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
+                    }
+                }
+                if (settings.Values.Count < 4)
+                    tblSettings.RowCount++;
+            }
+        }
+
+        private void SettingChanged(object sender, EventArgs e)
+        {
+            btnSave.Enabled = true;
+            if (app.ScriptSelectionValid)
+                btnApplyScripts.Enabled = true;
+        }
+
+        public void ClearSettingsTable()
+        {
+            tblSettings.Controls.Clear();
+            tblSettings.ColumnCount = 0;
+            tblSettings.RowCount = 0;
+        }
+
+        public string[] GetSettingValues()
+        {
+            if (tblSettings.ColumnCount == 2)
+            {
+                List<string> settingsList = new List<string>();
+                for (int i = 0; i < tblSettings.Controls.Count / Math.Max(1, tblSettings.ColumnCount); i++)
+                    settingsList.Add(tblSettings.GetControlFromPosition(1, i).Text);
+
+                return settingsList.ToArray();
+            }
+            return null;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (selectedScript != -1)
+            {
+                app.SaveScriptSettings(selectedScript);
+                btnSave.Enabled = false;
+            }
+        }
+
+        private void btnDefaults_Click(object sender, EventArgs e)
+        {
+            if (selectedScript != -1)
+            {
+                app.SetDefaultSettingValues(selectedScript);
+                btnSave.Enabled = true;
+                if (app.ScriptSelectionValid)
+                    btnApplyScripts.Enabled = true;
+            }
         }
     }
 }

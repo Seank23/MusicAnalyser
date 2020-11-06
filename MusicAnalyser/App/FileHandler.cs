@@ -1,4 +1,5 @@
-﻿using NAudio.Dsp;
+﻿using MusicAnalyser.App.DSP;
+using NAudio.Dsp;
 using NAudio.MediaFoundation;
 using NAudio.Wave;
 using System;
@@ -9,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.App
 {
     static class FileHandler
     {
@@ -74,18 +75,23 @@ namespace MusicAnalyser
 
         public static string[] ReadFile(string fileName)
         {
-            string[] lines;
-            List<string> list = new List<string>();
-            using (StreamReader file = new StreamReader(fileName))
+            if (File.Exists(fileName))
             {
-                string line;
-                while ((line = file.ReadLine()) != null)
+                string[] lines;
+                List<string> list = new List<string>();
+                using (StreamReader file = new StreamReader(fileName))
                 {
-                    list.Add(line);
+                    string line;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        list.Add(line);
+                    }
                 }
+                lines = list.ToArray();
+                return lines;
             }
-            lines = list.ToArray();
-            return lines;
+            else
+                return null;
         }
 
         public static bool WriteMp3(string filename, WaveFormat format)

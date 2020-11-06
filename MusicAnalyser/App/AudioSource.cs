@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VarispeedDemo.SoundTouch;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.App
 {
     public class AudioSource : IDisposable
     {

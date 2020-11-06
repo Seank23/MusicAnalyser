@@ -5,13 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.App.Analysis
 {
     class Analyser
     {
-        private Form1 ui;
         private Music music;
-        private AppController app;
 
         private static List<Note> aggregateNotes = new List<Note>();
         private static List<Note> notes;
@@ -25,10 +23,8 @@ namespace MusicAnalyser
         private Chord prevChord;
         private string majorKeyRoot;
 
-        public Analyser(Form1 form, AppController appControl)
+        public Analyser()
         {
-            ui = form;
-            app = appControl;
             music = new Music(); 
         }
 
@@ -76,6 +72,32 @@ namespace MusicAnalyser
                 avgError.Add((int)music.NoteError.Average());
         }
 
+        /*
+       * Calculates a color dynamically based on the actualValue in relation to the specified range of values
+       */
+        public Color GetNoteColor(int rangeStart, int rangeEnd, int actualValue)
+        {
+            if (rangeStart >= rangeEnd) return Color.Black;
+
+            actualValue = Math.Min(actualValue, rangeEnd);
+            int max = rangeEnd - rangeStart;
+            int value = actualValue - rangeStart;
+
+            int blue = 0;
+            int green = Math.Min(255 * value / (max / 2), 255);
+            int red = 0;
+            if (value > max / 2)
+            {
+                blue = Math.Min(value - (max / 2), 255);
+                green = 255 - blue;
+                red = 0;
+            }
+            else
+                red = 255 - green;
+
+            return Color.FromArgb((byte)red, (byte)green, (byte)blue);
+        }
+
         private void GetNotePercentages()
         {
             for(int i = 0; i < music.NoteOccurences.Length; i++)
@@ -83,7 +105,7 @@ namespace MusicAnalyser
                 int occurences = music.NoteOccurences[i];
                 double percent = ((double)occurences / (double)music.NoteBuffer.Count) * 100;
                 notePercent[i] = percent;
-                Color noteColor = app.GetNoteColor(0, (int)(10000 / 7), (int)(percent * 100));
+                Color noteColor = GetNoteColor(0, (int)(10000 / 7), (int)(percent * 100));
                 noteColors[i] = noteColor; 
             }
         }
@@ -199,12 +221,10 @@ namespace MusicAnalyser
             currentMode = Music.GetMode(notePercent, keyRoot, minorRoot);
         }
 
-        public int FindChordsNotes()
+        public bool FindChordsNotes()
         {
             if (aggregateNotes.Count == 0)
-                return 0;
-
-            ui.InvokeUI(() => ui.ClearNotesList());
+                return false;
 
             int[,] tempNoteOccurences = new int[12, 2];
             List<Note>[] notesByName = new List<Note>[12];
@@ -290,7 +310,7 @@ namespace MusicAnalyser
                 }
             }
             chordNotes = chordTemp;
-            return 1;
+            return true;
         }
 
         /*

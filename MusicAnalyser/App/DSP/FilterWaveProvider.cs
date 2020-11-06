@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.App.DSP
 {
     class FilterWaveProvider : ISampleProvider, IDisposable
     {

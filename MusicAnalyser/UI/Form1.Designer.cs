@@ -80,9 +80,11 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveRecordingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblMode = new System.Windows.Forms.Label();
@@ -93,8 +95,14 @@
             this.txtLoopTime = new System.Windows.Forms.TextBox();
             this.btnLiveMode = new System.Windows.Forms.Button();
             this.prbLevelMeter = new System.Windows.Forms.ProgressBar();
-            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.flpScripts = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnAddScript = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lblSelMessage = new System.Windows.Forms.Label();
+            this.btnApplyScripts = new System.Windows.Forms.Button();
+            this.tblSettings = new System.Windows.Forms.TableLayoutPanel();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnDefaults = new System.Windows.Forms.Button();
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
@@ -588,7 +596,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1908, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1908, 30);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -608,6 +616,14 @@
             this.openToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.Enabled = false;
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.closeToolStripMenuItem.Text = "Close";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // saveRecordingToolStripMenuItem
             // 
@@ -630,16 +646,24 @@
             // 
             this.playToolStripMenuItem.Enabled = false;
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(123, 26);
             this.playToolStripMenuItem.Text = "Play";
             this.playToolStripMenuItem.Click += new System.EventHandler(this.btnPlay_Click);
+            // 
+            // stopToolStripMenuItem
+            // 
+            this.stopToolStripMenuItem.Enabled = false;
+            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(123, 26);
+            this.stopToolStripMenuItem.Text = "Stop";
+            this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.perferencesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // perferencesToolStripMenuItem
@@ -723,21 +747,96 @@
             this.prbLevelMeter.TabIndex = 28;
             this.prbLevelMeter.Visible = false;
             // 
-            // stopToolStripMenuItem
+            // flpScripts
             // 
-            this.stopToolStripMenuItem.Enabled = false;
-            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.stopToolStripMenuItem.Text = "Stop";
-            this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
+            this.flpScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpScripts.AutoScroll = true;
+            this.flpScripts.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpScripts.Location = new System.Drawing.Point(1528, 137);
+            this.flpScripts.Name = "flpScripts";
+            this.flpScripts.Size = new System.Drawing.Size(255, 152);
+            this.flpScripts.TabIndex = 29;
+            this.flpScripts.WrapContents = false;
             // 
-            // closeToolStripMenuItem
+            // btnAddScript
             // 
-            this.closeToolStripMenuItem.Enabled = false;
-            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
-            this.closeToolStripMenuItem.Text = "Close";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddScript.Location = new System.Drawing.Point(1789, 137);
+            this.btnAddScript.Name = "btnAddScript";
+            this.btnAddScript.Size = new System.Drawing.Size(88, 30);
+            this.btnAddScript.TabIndex = 30;
+            this.btnAddScript.Text = "Add";
+            this.btnAddScript.UseVisualStyleBackColor = true;
+            this.btnAddScript.Click += new System.EventHandler(this.btnAddScript_Click);
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(1636, 86);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(157, 20);
+            this.label6.TabIndex = 31;
+            this.label6.Text = "Processing Chain";
+            // 
+            // lblSelMessage
+            // 
+            this.lblSelMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSelMessage.AutoSize = true;
+            this.lblSelMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSelMessage.ForeColor = System.Drawing.Color.Crimson;
+            this.lblSelMessage.Location = new System.Drawing.Point(1529, 114);
+            this.lblSelMessage.Name = "lblSelMessage";
+            this.lblSelMessage.Size = new System.Drawing.Size(0, 17);
+            this.lblSelMessage.TabIndex = 32;
+            // 
+            // btnApplyScripts
+            // 
+            this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 173);
+            this.btnApplyScripts.Name = "btnApplyScripts";
+            this.btnApplyScripts.Size = new System.Drawing.Size(88, 30);
+            this.btnApplyScripts.TabIndex = 33;
+            this.btnApplyScripts.Text = "Apply";
+            this.btnApplyScripts.UseVisualStyleBackColor = true;
+            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
+            // 
+            // tblSettings
+            // 
+            this.tblSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tblSettings.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tblSettings.ColumnCount = 1;
+            this.tblSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblSettings.Location = new System.Drawing.Point(1528, 296);
+            this.tblSettings.Name = "tblSettings";
+            this.tblSettings.RowCount = 1;
+            this.tblSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblSettings.Size = new System.Drawing.Size(349, 119);
+            this.tblSettings.TabIndex = 34;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Location = new System.Drawing.Point(1789, 258);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(88, 30);
+            this.btnSave.TabIndex = 36;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnDefaults
+            // 
+            this.btnDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDefaults.Enabled = false;
+            this.btnDefaults.Location = new System.Drawing.Point(1789, 222);
+            this.btnDefaults.Name = "btnDefaults";
+            this.btnDefaults.Size = new System.Drawing.Size(88, 30);
+            this.btnDefaults.TabIndex = 37;
+            this.btnDefaults.Text = "Defaults";
+            this.btnDefaults.UseVisualStyleBackColor = true;
+            this.btnDefaults.Click += new System.EventHandler(this.btnDefaults_Click);
             // 
             // cwvViewer
             // 
@@ -765,6 +864,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
+            this.Controls.Add(this.btnDefaults);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.tblSettings);
+            this.Controls.Add(this.btnApplyScripts);
+            this.Controls.Add(this.lblSelMessage);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.btnAddScript);
+            this.Controls.Add(this.flpScripts);
             this.Controls.Add(this.prbLevelMeter);
             this.Controls.Add(this.btnLiveMode);
             this.Controls.Add(this.lblLoopDuration);
@@ -908,6 +1015,14 @@
         private System.Windows.Forms.ToolStripMenuItem saveRecordingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
+        private System.Windows.Forms.FlowLayoutPanel flpScripts;
+        private System.Windows.Forms.Button btnAddScript;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblSelMessage;
+        private System.Windows.Forms.Button btnApplyScripts;
+        private System.Windows.Forms.TableLayoutPanel tblSettings;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnDefaults;
     }
 }
 
