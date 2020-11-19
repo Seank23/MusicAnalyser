@@ -242,7 +242,7 @@ namespace MusicAnalyser
                     fftZoom = 4000;
                     break;
             }
-            spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
+            //spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
         }
 
@@ -251,51 +251,51 @@ namespace MusicAnalyser
             switch (noteName)
             {
                 case "C":
-                    lblC.Text = "C: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblC.Text = "C   -  " + string.Format("{0:0.00}", percent) + "%";
                     lblC.ForeColor = noteColor;
                     return;
                 case "Db":
-                    lblDb.Text = "Db: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblDb.Text = "Db -  " + string.Format("{0:0.00}", percent) + "%";
                     lblDb.ForeColor = noteColor;
                     return;
                 case "D":
-                    lblD.Text = "D: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblD.Text = "D   -  " + string.Format("{0:0.00}", percent) + "%";
                     lblD.ForeColor = noteColor;
                     return;
                 case "Eb":
-                    lblEb.Text = "Eb: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblEb.Text = "Eb -  " + string.Format("{0:0.00}", percent) + "%";
                     lblEb.ForeColor = noteColor;
                     return;
                 case "E":
-                    lblE.Text = "E: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblE.Text = "E   -  " + string.Format("{0:0.00}", percent) + "%";
                     lblE.ForeColor = noteColor;
                     return;
                 case "F":
-                    lblF.Text = "F: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblF.Text = "F   -  " + string.Format("{0:0.00}", percent) + "%";
                     lblF.ForeColor = noteColor;
                     return;
                 case "Gb":
-                    lblGb.Text = "Gb: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblGb.Text = "Gb -  " + string.Format("{0:0.00}", percent) + "%";
                     lblGb.ForeColor = noteColor;
                     return;
                 case "G":
-                    lblG.Text = "G: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblG.Text = "G   -  " + string.Format("{0:0.00}", percent) + "%";
                     lblG.ForeColor = noteColor;
                     return;
                 case "Ab":
-                    lblAb.Text = "Ab: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblAb.Text = "Ab -  " + string.Format("{0:0.00}", percent) + "%";
                     lblAb.ForeColor = noteColor;
                     return;
                 case "A":
-                    lblA.Text = "A: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblA.Text = "A   -  " + string.Format("{0:0.00}", percent) + "%";
                     lblA.ForeColor = noteColor;
                     return;
                 case "Bb":
-                    lblBb.Text = "Bb: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblBb.Text = "Bb -  " + string.Format("{0:0.00}", percent) + "%";
                     lblBb.ForeColor = noteColor;
                     return;
                 case "B":
-                    lblB.Text = "B: " + occurences + " (" + string.Format("{0:0.00}", percent) + "%)";
+                    lblB.Text = "B   -  " + string.Format("{0:0.00}", percent) + "%";
                     lblB.ForeColor = noteColor;
                     return;
             }

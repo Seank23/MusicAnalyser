@@ -59,14 +59,14 @@ namespace MusicAnalyser.App.DSP
                     {
                         if (ScriptManager.ProcessorScripts.ContainsKey(j))
                         {
-                            processors.Add(j, ScriptManager.ProcessorScripts[j]);
+                            processors.Add(i, ScriptManager.ProcessorScripts[j]);
                             break;
                         }
                         else if (ScriptManager.DetectorScripts.ContainsKey(j))
                         {
-                            detectors.Add(j, ScriptManager.DetectorScripts[j]);
+                            detectors.Add(i, ScriptManager.DetectorScripts[j]);
                             if (ScriptManager.DetectorScripts[j].IsPrimary && detectorIndex == 0)
-                                detectorIndex = j;
+                                detectorIndex = i;
                             break;
                         }
                     }

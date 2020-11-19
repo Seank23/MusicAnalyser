@@ -175,6 +175,7 @@
     <Compile Include="App\DSP\Scripts\BasicFFTProcessor.cs" />
     <Compile Include="App\DSP\Scripts\ByMagnitudeDetector.cs" />
     <Compile Include="App\DSP\Scripts\BySlopeDetector.cs" />
+    <Compile Include="App\DSP\Scripts\CQTProcessor.cs" />
     <Compile Include="App\DSP\Scripts\RemoveKickNoiseProcessor.cs" />
     <Compile Include="App\DSP\ScriptManager.cs" />
     <Compile Include="UI\CustomWaveViewer.cs">

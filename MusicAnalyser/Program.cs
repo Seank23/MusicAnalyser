@@ -14,6 +14,10 @@ namespace MusicAnalyser
         [STAThread]
         static void Main()
         {
+            CQTProcessor processor = new CQTProcessor();
+            processor.SampleRate = 8000;
+            processor.InputBuffer = new short[8192];
+            processor.Process();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
