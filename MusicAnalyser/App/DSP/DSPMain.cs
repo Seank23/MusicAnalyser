@@ -18,7 +18,7 @@ namespace MusicAnalyser.App.DSP
 
         private double[] processedData;
         public List<double[]> prevProcessedData = new List<double[]>();
-        private double scale;
+        private object scale;
         public Dictionary<double, double> fftPeaks;
         private int detectorIndex = 0;
 
@@ -73,6 +73,7 @@ namespace MusicAnalyser.App.DSP
                 }
             }
             app.ScriptSelectionApplied = true;
+            prevProcessedData.Clear();
         }
 
         public void RunFrequencyAnalysis()
@@ -97,7 +98,10 @@ namespace MusicAnalyser.App.DSP
                 processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
 
             MaxGain = processedData.Max();
-            app.DrawSpectrum(processedData, scale, processedData.Average(), MaxGain);
+            if (scale.GetType().Name == "Double")
+                app.DrawSpectrum(processedData, (double)scale, processedData.Average(), MaxGain);
+            else
+                app.DrawSpectrum(processedData, 1, 0, MaxGain);
         }
 
         public void RunPitchDetection()

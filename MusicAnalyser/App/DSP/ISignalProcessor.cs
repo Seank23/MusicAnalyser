@@ -9,7 +9,7 @@ namespace MusicAnalyser.App.DSP
         object InputBuffer { get; set; }
         int SampleRate { get; set; }
         object OutputBuffer { get; set; }
-        double OutputScale { get; set; }
+        object OutputScale { get; set; }
 
         void Process();
     }

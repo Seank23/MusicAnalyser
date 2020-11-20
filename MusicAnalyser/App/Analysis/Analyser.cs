@@ -53,6 +53,9 @@ namespace MusicAnalyser.App.Analysis
             music.NoteError = new List<int>();
             notes = new List<Note>();
 
+            if (fftPeaks == null)
+                return;
+
             foreach (double freq in fftPeaks.Keys)
             {
                 string noteName = music.GetNote(freq);

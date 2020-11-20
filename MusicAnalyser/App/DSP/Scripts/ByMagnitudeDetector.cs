@@ -8,7 +8,7 @@ class ByMagnitudeDetector : ISignalDetector
     public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputData { get; set; }
-    public double InputScale { get; set; }
+    public object InputScale { get; set; }
     public object Output { get; set; }
 
     public ByMagnitudeDetector()
@@ -26,17 +26,25 @@ class ByMagnitudeDetector : ISignalDetector
 
     public void Detect()
     {
-        double[] input = (double[])InputData;
+        double[] input = null;
+        double scale = 0;
+        if (InputData.GetType().Name == "Double[]")
+            input = (double[])InputData;
+        if (InputScale.GetType().Name == "Double")
+            scale = (double)InputScale;
+        if (input == null || scale == 0)
+            return;
+
         Dictionary<double, double> output = new Dictionary<double, double>();
         double freq;
         double gainThreshold = input.Average() + int.Parse(Settings["THOLD_FROM_AVG"][0]);
 
         // Iterates through frequency data, storing the frequency and gain of the largest frequency bins 
-        for (int i = (int)(InputScale * int.Parse(Settings["MIN_FREQ"][0])); i < Math.Min(input.Length, (int)(InputScale * int.Parse(Settings["MAX_FREQ"][0]))); i++)
+        for (int i = (int)(scale * int.Parse(Settings["MIN_FREQ"][0])); i < Math.Min(input.Length, (int)(scale * int.Parse(Settings["MAX_FREQ"][0]))); i++)
         {
             if (input[i] > gainThreshold)
             {
-                freq = (i + 1) / InputScale; // Frequency value of bin
+                freq = (i + 1) / scale; // Frequency value of bin
 
                 output.Add(freq, input[i]);
 

@@ -242,7 +242,8 @@ namespace MusicAnalyser
                     fftZoom = 4000;
                     break;
             }
-            //spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
+            if(avgGain < 0)
+                spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
         }
 

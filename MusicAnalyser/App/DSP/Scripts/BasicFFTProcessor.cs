@@ -9,7 +9,7 @@ class BasicFFTProcessor : ISignalProcessor
     public object InputBuffer { get; set; }
     public int SampleRate { get; set; }
     public object OutputBuffer { get; set; }
-    public double OutputScale { get; set; }
+    public object OutputScale { get; set; }
 
     public BasicFFTProcessor()
     {
@@ -21,7 +21,12 @@ class BasicFFTProcessor : ISignalProcessor
 
     public void Process()
     {
-        short[] input = (short[])InputBuffer;
+        short[] input = null;
+        if (InputBuffer.GetType().Name == "Int16[]")
+            input = (short[])InputBuffer;
+        if (input == null)
+            return;
+
         int fftPoints = 2;
         while (fftPoints * 2 <= input.Length) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
             fftPoints *= 2;
