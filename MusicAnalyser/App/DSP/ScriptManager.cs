@@ -79,6 +79,11 @@ namespace MusicAnalyser.App.DSP
                 string[] vals = settingsDict[settingsDict.ElementAt(i).Key];
                 vals[0] = settings[i];
             }
+
+            if (ProcessorScripts.ContainsKey(scriptId))
+                ProcessorScripts[scriptId].OnSettingsChange();
+            else if (DetectorScripts.ContainsKey(scriptId))
+                DetectorScripts[scriptId].OnSettingsChange();
         }
 
         public void SaveScriptSettings(int scriptId)

@@ -242,12 +242,16 @@ namespace MusicAnalyser
                     fftZoom = 4000;
                     break;
             }
-            if(avgGain < 0)
+            if (dataFft.Length < fftZoom)
+                fftZoom = dataFft.Length;
+            if(avgGain >= 0)
+                spFFT.plt.Axis(0, fftZoom, 0, maxGain + 2);
+            else
                 spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
         }
 
-        public void UpdateNoteOccurencesUI(string noteName, int occurences, double percent, Color noteColor)
+        public void UpdateNoteOccurencesUI(string noteName, double percent, Color noteColor)
         {
             switch (noteName)
             {

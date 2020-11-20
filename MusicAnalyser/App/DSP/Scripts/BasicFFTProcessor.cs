@@ -15,9 +15,12 @@ class BasicFFTProcessor : ISignalProcessor
     {
         Settings = new Dictionary<string, string[]>()
         {
-            { "WINDOW", new string[] { "Hamming", "enum", "Window Function", "Rectangle|Hamming|Hann|BlackmannHarris", "" } }
+            { "WINDOW", new string[] { "Hamming", "enum", "Window Function", "Rectangle|Hamming|Hann|BlackmannHarris", "" } },
+            { "OUTPUT_MODE", new string[] { "dB", "enum", "Output Mode", "Magnitude|dB", "" } },
         };
     }
+
+    public void OnSettingsChange() { }
 
     public void Process()
     {
@@ -51,7 +54,10 @@ class BasicFFTProcessor : ISignalProcessor
         {
             double fft = Math.Abs(fftFull[i].X + fftFull[i].Y);
             double fftMirror = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
-            output[i] = 20 * Math.Log10(fft + fftMirror) - 20 * Math.Log10(input.Length); // Estimates gain of FFT bin
+            if(Settings["OUTPUT_MODE"][0] == "dB")
+                output[i] = 20 * Math.Log10(fft + fftMirror) - 20 * Math.Log10(input.Length); // Estimates gain of FFT bin
+            else
+                output[i] = fft + fftMirror;
         }
         OutputBuffer = output;
         OutputScale = (double)fftPoints / SampleRate;

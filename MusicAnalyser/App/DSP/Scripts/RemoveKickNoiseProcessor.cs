@@ -22,6 +22,8 @@ class RemoveKickNoiseProcessor : ISignalProcessor
         };
     }
 
+    public void OnSettingsChange() { }
+
     public void Process()
     {
         Dictionary<double, double> input = null;

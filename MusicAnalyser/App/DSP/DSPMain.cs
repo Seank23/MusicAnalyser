@@ -94,14 +94,15 @@ namespace MusicAnalyser.App.DSP
             }
 
             processedData = (double[])audio;
-            if (!Double.IsInfinity(processedData[0]))
+            if (!Double.IsInfinity(processedData[0]) && !Double.IsNaN(processedData[0]))
                 processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
 
             MaxGain = processedData.Max();
+            double avgGain = processedData.Average();
             if (scale.GetType().Name == "Double")
-                app.DrawSpectrum(processedData, (double)scale, processedData.Average(), MaxGain);
+                app.DrawSpectrum(processedData, (double)scale, avgGain, MaxGain);
             else
-                app.DrawSpectrum(processedData, 1, 0, MaxGain);
+                app.DrawSpectrum(processedData, 1, avgGain, MaxGain);
         }
 
         public void RunPitchDetection()

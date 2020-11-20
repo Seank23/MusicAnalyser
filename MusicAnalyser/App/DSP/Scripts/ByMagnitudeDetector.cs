@@ -24,6 +24,8 @@ class ByMagnitudeDetector : ISignalDetector
         };
     }
 
+    public void OnSettingsChange() { }
+
     public void Detect()
     {
         double[] input = null;

@@ -379,7 +379,7 @@ namespace MusicAnalyser.App
                 for (int i = 0; i < notePercents.Length; i++)
                 {
                     if (noteColors[i] != null)
-                        ui.UpdateNoteOccurencesUI(Music.Scales[i * 7], (int)(notePercents[i] / 100 * Prefs.NOTE_BUFFER_SIZE), notePercents[i], noteColors[i]);
+                        ui.UpdateNoteOccurencesUI(Music.Scales[i * 7], notePercents[i], noteColors[i]);
                 }
             }
 

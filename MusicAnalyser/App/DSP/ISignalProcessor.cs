@@ -11,6 +11,7 @@ namespace MusicAnalyser.App.DSP
         object OutputBuffer { get; set; }
         object OutputScale { get; set; }
 
+        void OnSettingsChange();
         void Process();
     }
 }

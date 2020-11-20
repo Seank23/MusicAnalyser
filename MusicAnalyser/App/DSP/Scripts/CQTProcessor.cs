@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using MusicAnalyser.App.DSP;
@@ -14,18 +15,21 @@ class CQTProcessor : ISignalProcessor
     public object OutputScale { get; set; }
 
     private Matrix<Complex> kernel;
-    private static float minFreq = 98f;
 
     public CQTProcessor()
     {
         Settings = new Dictionary<string, string[]>()
         {
-            { "WINDOW", new string[] { "Hamming", "enum", "Window Function", "Rectangle|Hamming|Hann|BlackmannHarris", "" } },
             { "OCTAVES", new string[] { "5", "int", "Octaves", "1", "10" } },
             { "BINS_PER_OCTAVE", new string[] { "48", "enum", "Bins Per Octave", "12|24|48|96", "" } },
+            { "MIN_FREQ", new string[] { "32.7", "double", "Minimum Frequency (Hz)", "1", "1000" } },
             { "N_WEIGHTING", new string[] { "0.5", "double", "Frequency Weighting Factor", "0", "1" } },
+            { "OUTPUT_MODE", new string[] { "Magnitude", "enum", "Output Mode", "Magnitude|dB", "" } },
         };
     }
+
+    public void OnSettingsChange() { GetSparseKernel(); }
+
     public void Process()
     {
         short[] input = null;
@@ -46,16 +50,7 @@ class CQTProcessor : ISignalProcessor
 
         NAudio.Dsp.Complex[] fftFull = new NAudio.Dsp.Complex[fftPoints];
         for (int i = 0; i < fftPoints; i++)
-        {
-            if (Settings["WINDOW"][0] == "Hamming")
-                fftFull[i].X = (float)(input[i] * NAudio.Dsp.FastFourierTransform.HammingWindow(i, fftPoints));
-            else if (Settings["WINDOW"][0] == "Hann")
-                fftFull[i].X = (float)(input[i] * NAudio.Dsp.FastFourierTransform.HannWindow(i, fftPoints));
-            else if (Settings["WINDOW"][0] == "BlackmannHarris")
-                fftFull[i].X = (float)(input[i] * NAudio.Dsp.FastFourierTransform.BlackmannHarrisWindow(i, fftPoints));
-            else
-                fftFull[i].X = input[i];
-        }
+            fftFull[i].X = (float)(input[i] * NAudio.Dsp.FastFourierTransform.HammingWindow(i, fftPoints));
 
         NAudio.Dsp.FastFourierTransform.FFT(true, (int)Math.Log(kernel.RowCount, 2.0), fftFull);
         Complex[] fftComp = new Complex[fftFull.Length];
@@ -70,8 +65,15 @@ class CQTProcessor : ISignalProcessor
         for (int i = 0; i < mag.Length; i++)
             mag[i] = product[i].Magnitude;
 
+        if (Settings["DISPLAY_MODE"][0] == "dB")
+        {
+            double maxDB = 20 * Math.Log10(mag.Max());
+            for (int i = 0; i < mag.Length; i++)
+                mag[i] = 20 * Math.Log10(product[i].Magnitude) - maxDB;
+        }
+
         OutputBuffer = mag;
-        Func<int, double> scale = i => minFreq * Math.Pow(2, i / int.Parse(Settings["BINS_PER_OCTAVE"][0]));
+        Func<int, double> scale = i => double.Parse(Settings["MIN_FREQ"][0]) * Math.Pow(2, i / int.Parse(Settings["BINS_PER_OCTAVE"][0]));
         OutputScale = scale;
     }
 
@@ -80,6 +82,7 @@ class CQTProcessor : ISignalProcessor
         float threshold = 0.0054f;
         int numOctaves = int.Parse(Settings["OCTAVES"][0]);
         int binsPerOctave = int.Parse(Settings["BINS_PER_OCTAVE"][0]);
+        double minFreq = double.Parse(Settings["MIN_FREQ"][0]);
         int numBins = numOctaves * binsPerOctave;
         double Q = 1 / (Math.Pow(2, 1 / (double)binsPerOctave) - 1);
 

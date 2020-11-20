@@ -20,6 +20,8 @@ class BySlopeDetector : ISignalDetector
         };
     }
 
+    public void OnSettingsChange() { }
+
     public void Detect()
     {
         double[] input = null;
