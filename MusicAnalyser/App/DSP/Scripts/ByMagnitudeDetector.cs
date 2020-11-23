@@ -10,6 +10,7 @@ class ByMagnitudeDetector : ISignalDetector
     public object InputData { get; set; }
     public object InputScale { get; set; }
     public object Output { get; set; }
+    public double[] OutputPosition { get; set; }
 
     public ByMagnitudeDetector()
     {

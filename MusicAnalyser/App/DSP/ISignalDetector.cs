@@ -9,6 +9,7 @@ namespace MusicAnalyser.App.DSP
         object InputData { get; set; }
         object InputScale { get; set; }
         object Output { get; set; }
+        double[] OutputPosition { get; set; }
 
         void OnSettingsChange();
         void Detect();

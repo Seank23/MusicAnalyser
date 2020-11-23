@@ -20,6 +20,7 @@ namespace MusicAnalyser.App.DSP
         public List<double[]> prevProcessedData = new List<double[]>();
         private object scale;
         public Dictionary<double, double> fftPeaks;
+        public double[] positions;
         private int detectorIndex = 0;
 
         public DSPMain(AppController appController)
@@ -123,6 +124,7 @@ namespace MusicAnalyser.App.DSP
                     detectors[i].InputScale = scale;
                     detectors[i].Detect();
                     data = detectors[i].Output;
+                    positions = detectors[i].OutputPosition;
                 }
             }
             fftPeaks = (Dictionary<double, double>)data;

@@ -260,7 +260,7 @@ namespace MusicAnalyser.App
 
                 dsp.RunFrequencyAnalysis();
                 dsp.RunPitchDetection();
-                dsp.Analyser.GetNotes(dsp.fftPeaks, analysisUpdates);
+                dsp.Analyser.GetNotes(dsp.fftPeaks, dsp.positions, analysisUpdates);
                 Task asyncAnalysis = RunAnalysisAsync();
                 DisplayAnalysisUI();
                 ui.RenderSpectrum();
@@ -331,7 +331,7 @@ namespace MusicAnalyser.App
                 for (int i = 0; i < notes.Count; i++)
                 {
                     if (notes[i] != null)
-                        ui.PlotNote(notes[i].Name + notes[i].Octave, notes[i].Frequency, notes[i].Magnitude, noteColors[notes[i].NoteIndex], false);
+                        ui.PlotNote(notes[i].Name + notes[i].Octave, notes[i].Position, notes[i].Magnitude, noteColors[notes[i].NoteIndex], false);
                     else
                         return;
 
@@ -342,7 +342,7 @@ namespace MusicAnalyser.App
                             for (int k = 0; k < chordNotes[j].Count; k++)
                             {
                                 if (notes[i].Name == chordNotes[j][k].Name && notes[i].Octave == chordNotes[j][k].Octave)
-                                    ui.PlotNote("*", notes[i].Frequency, notes[i].Magnitude + 5, noteColors[notes[i].NoteIndex], true);
+                                    ui.PlotNote("*", notes[i].Position, notes[i].Magnitude + Math.Abs(notes[i].Magnitude * 0.1), noteColors[notes[i].NoteIndex], true);
                             }
                         }
                     }
@@ -359,15 +359,15 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + 7.5, Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + 7.5, Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + 7.5, Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + 7.5, Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Blue, false);
 
                         X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }

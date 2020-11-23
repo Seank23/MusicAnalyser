@@ -245,7 +245,7 @@ namespace MusicAnalyser
             if (dataFft.Length < fftZoom)
                 fftZoom = dataFft.Length;
             if(avgGain >= 0)
-                spFFT.plt.Axis(0, fftZoom, 0, maxGain + 2);
+                spFFT.plt.Axis(0, fftZoom, 0, maxGain + Math.Abs(maxGain * 0.1));
             else
                 spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
