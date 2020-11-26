@@ -260,7 +260,7 @@ namespace MusicAnalyser.App
 
                 dsp.RunFrequencyAnalysis();
                 dsp.RunPitchDetection();
-                dsp.Analyser.GetNotes(dsp.fftPeaks, dsp.positions, analysisUpdates);
+                dsp.Analyser.GetNotes(dsp.FreqPeaks, (double[])dsp.GetScriptVal("POSITIONS", "Double[]"), analysisUpdates);
                 Task asyncAnalysis = RunAnalysisAsync();
                 DisplayAnalysisUI();
                 ui.RenderSpectrum();
@@ -460,7 +460,7 @@ namespace MusicAnalyser.App
         public void PitchChange(int value)
         {
             int centDifference = 50 - value;
-            dsp.Analyser.GetMusic().GetPercentChange(centDifference);
+            dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
             dsp.Analyser.GetMusic().ResetNoteCount();
         }
     

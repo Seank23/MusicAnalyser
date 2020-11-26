@@ -10,9 +10,9 @@ class CQTProcessor : ISignalProcessor
     public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
-    public int SampleRate { get; set; }
+    public Dictionary<string, object> InputArgs { get; set; }
     public object OutputBuffer { get; set; }
-    public object OutputScale { get; set; }
+    public Dictionary<string, object> OutputArgs { get; set; }
 
     private Matrix<Complex> kernel;
 
@@ -65,7 +65,7 @@ class CQTProcessor : ISignalProcessor
         for (int i = 0; i < mag.Length; i++)
             mag[i] = product[i].Magnitude;
 
-        if (Settings["DISPLAY_MODE"][0] == "dB")
+        if (Settings["OUTPUT_MODE"][0] == "dB")
         {
             double maxDB = 20 * Math.Log10(mag.Max());
             for (int i = 0; i < mag.Length; i++)
@@ -74,11 +74,18 @@ class CQTProcessor : ISignalProcessor
 
         OutputBuffer = mag;
         Func<int, double> scale = i => double.Parse(Settings["MIN_FREQ"][0]) * Math.Pow(2, (double)i / int.Parse(Settings["BINS_PER_OCTAVE"][0]));
-        OutputScale = scale;
+        OutputArgs.Add("SCALE", scale);
     }
 
     private void GetSparseKernel()
     {
+        int sampleRate = 1;
+        if (InputArgs.ContainsKey("SAMPLE_RATE"))
+        {
+            if (InputArgs["SAMPLE_RATE"].GetType().Name == "Int32")
+                sampleRate = (int)InputArgs["SAMPLE_RATE"];
+        }
+
         float threshold = 0.0054f;
         int numOctaves = int.Parse(Settings["OCTAVES"][0]);
         int binsPerOctave = int.Parse(Settings["BINS_PER_OCTAVE"][0]);
@@ -87,7 +94,7 @@ class CQTProcessor : ISignalProcessor
         double Q = 1 / (Math.Pow(2, 1 / (double)binsPerOctave) - 1);
 
         int fftLen = 1;
-        while (fftLen < Q * SampleRate / minFreq)
+        while (fftLen < Q * sampleRate / minFreq)
             fftLen *= 2;
 
         NAudio.Dsp.Complex[] tempKernel = new NAudio.Dsp.Complex[fftLen];
@@ -95,7 +102,7 @@ class CQTProcessor : ISignalProcessor
 
         for (int k = 0; k < numBins; k++)
         {
-            int N = (int)Math.Ceiling(Q * SampleRate / (minFreq * Math.Pow(2, k / (double)binsPerOctave)));
+            int N = (int)Math.Ceiling(Q * sampleRate / (minFreq * Math.Pow(2, k / (double)binsPerOctave)));
             for (int n = 0; n < N; n++)
             {
                 Complex temp = NAudio.Dsp.FastFourierTransform.HammingWindow(n, N) / (N * (1 + (double.Parse(Settings["N_WEIGHTING"][0]) * N)))

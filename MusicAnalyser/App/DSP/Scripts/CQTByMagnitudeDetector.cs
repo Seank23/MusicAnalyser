@@ -8,9 +8,9 @@ class CQTByMagnitudeDetector : ISignalDetector
     public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputData { get; set; }
-    public object InputScale { get; set; }
+    public Dictionary<string, object> InputArgs { get; set; }
     public object Output { get; set; }
-    public double[] OutputPosition { get; set; }
+    public Dictionary<string, object> OutputArgs { get; set; }
 
     public CQTByMagnitudeDetector()
     {
@@ -28,8 +28,11 @@ class CQTByMagnitudeDetector : ISignalDetector
         Func<int, double> scale = null;
         if (InputData.GetType().Name == "Double[]")
             input = (double[])InputData;
-        if (InputScale.GetType().Name == "Func`2")
-            scale = (Func<int, double>)InputScale;
+        if (InputArgs.ContainsKey("SCALE"))
+        {
+            if (InputArgs["SCALE"].GetType().Name == "Func`2")
+                scale = (Func<int, double>)InputArgs["SCALE"];
+        }
         if (input == null || scale == null)
             return;
 
@@ -53,7 +56,7 @@ class CQTByMagnitudeDetector : ISignalDetector
             } 
         }
         Output = output;
-        OutputPosition = positions.ToArray();
+        OutputArgs.Add("POSITIONS", positions.ToArray());
     }
     
 }

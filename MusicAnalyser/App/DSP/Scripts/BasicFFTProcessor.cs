@@ -7,9 +7,9 @@ class BasicFFTProcessor : ISignalProcessor
     public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
-    public int SampleRate { get; set; }
+    public Dictionary<string, object> InputArgs { get; set; }
     public object OutputBuffer { get; set; }
-    public object OutputScale { get; set; }
+    public Dictionary<string, object> OutputArgs { get; set; }
 
     public BasicFFTProcessor()
     {
@@ -29,6 +29,13 @@ class BasicFFTProcessor : ISignalProcessor
             input = (short[])InputBuffer;
         if (input == null)
             return;
+
+        int sampleRate = 1;
+        if (InputArgs.ContainsKey("SAMPLE_RATE"))
+        {
+            if(InputArgs["SAMPLE_RATE"].GetType().Name == "Int32")
+                sampleRate = (int)InputArgs["SAMPLE_RATE"];
+        }
 
         int fftPoints = 2;
         while (fftPoints * 2 <= input.Length) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
@@ -57,10 +64,11 @@ class BasicFFTProcessor : ISignalProcessor
             if(Settings["OUTPUT_MODE"][0] == "dB")
                 output[i] = 20 * Math.Log10(fft + fftMirror) - 20 * Math.Log10(input.Length); // Estimates gain of FFT bin
             else
-                output[i] = fft + fftMirror;
+                output[i] = (fft + fftMirror) * (0.5 + (i / (fftPoints * 2)));
         }
         OutputBuffer = output;
-        OutputScale = (double)fftPoints / SampleRate;
+        double scale = (double)fftPoints / sampleRate;
+        OutputArgs.Add("SCALE", scale);
     }
 }
 

@@ -485,10 +485,12 @@ namespace MusicAnalyser.App.Analysis
             NoteError.Clear();
         }
 
-        public void GetPercentChange(int value)
+        public void SetTuningPercent(int value)
         {
             percentChange = CentPercent * value;
         }
+
+        public double GetTuningPercent() { return percentChange; }
 
         public void DisposeMusic()
         {

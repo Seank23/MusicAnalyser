@@ -8,9 +8,9 @@ class BySlopeDetector : ISignalDetector
     public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputData { get; set; }
-    public object InputScale { get; set; }
+    public Dictionary<string, object> InputArgs { get; set; }
     public object Output { get; set; }
-    public double[] OutputPosition { get; set; }
+    public Dictionary<string, object> OutputArgs { get; set; }
 
     public BySlopeDetector()
     {
@@ -29,8 +29,11 @@ class BySlopeDetector : ISignalDetector
         double scale = 0;
         if (InputData.GetType().Name == "Double[]")
             input = (double[])InputData;
-        if (InputScale.GetType().Name == "Double")
-            scale = (double)InputScale;
+        if (InputArgs.ContainsKey("SCALE"))
+        {
+            if (InputArgs["SCALE"].GetType().Name == "Double")
+                scale = (double)InputArgs["SCALE"];
+        }
         if (input == null || scale == 0)
             return;
 

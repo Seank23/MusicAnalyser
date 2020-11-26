@@ -11,16 +11,14 @@ namespace MusicAnalyser.App.DSP
         public Analyser Analyser { get; set; }
         public ScriptManager ScriptManager { get; set; }
         public double MaxGain { get; set; }
+        public Dictionary<double, double> FreqPeaks { get; set; }
 
         private AppController app;
         private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
         private Dictionary<int, ISignalDetector> detectors = new Dictionary<int, ISignalDetector>();
-
+        private List<double[]> prevProcessedData = new List<double[]>();
+        private Dictionary<string, object> scriptVals = new Dictionary<string, object>();
         private double[] processedData;
-        public List<double[]> prevProcessedData = new List<double[]>();
-        private object scale;
-        public Dictionary<double, double> fftPeaks;
-        public double[] positions;
         private int detectorIndex = 0;
 
         public DSPMain(AppController appController)
@@ -75,10 +73,13 @@ namespace MusicAnalyser.App.DSP
             }
             app.ScriptSelectionApplied = true;
             prevProcessedData.Clear();
+            scriptVals.Clear();
         }
 
         public void RunFrequencyAnalysis()
         {
+            scriptVals["SAMPLE_RATE"] = app.AudioSource.AudioFFT.WaveFormat.SampleRate;
+            scriptVals["TUNING_PERCENT"] = Analyser.GetMusic().GetTuningPercent();
             object audio = ReadAudioStream();
 
             foreach (int key in processors.Keys)
@@ -86,10 +87,12 @@ namespace MusicAnalyser.App.DSP
                 if (key < detectorIndex)
                 {
                     processors[key].InputBuffer = audio;
-                    processors[key].SampleRate = app.AudioSource.AudioFFT.WaveFormat.SampleRate;
+                    processors[key].InputArgs = scriptVals;
+                    processors[key].OutputArgs = new Dictionary<string, object>();
                     processors[key].Process();
                     audio = processors[key].OutputBuffer;
-                    scale = processors[key].OutputScale;
+                    foreach (var arg in processors[key].OutputArgs)
+                        scriptVals[arg.Key] = arg.Value;
                 }
                 else break;
             }
@@ -100,8 +103,8 @@ namespace MusicAnalyser.App.DSP
 
             MaxGain = processedData.Max();
             double avgGain = processedData.Average();
-            if (scale.GetType().Name == "Double")
-                app.DrawSpectrum(processedData, (double)scale, avgGain, MaxGain);
+            if (scriptVals["SCALE"].GetType().Name == "Double")
+                app.DrawSpectrum(processedData, (double)scriptVals["SCALE"], avgGain, MaxGain);
             else
                 app.DrawSpectrum(processedData, 1, avgGain, MaxGain);
         }
@@ -114,20 +117,25 @@ namespace MusicAnalyser.App.DSP
                 if(processors.ContainsKey(i))
                 {
                     processors[i].InputBuffer = data;
-                    processors[i].SampleRate = app.AudioSource.AudioFFT.WaveFormat.SampleRate;
+                    processors[i].InputArgs = scriptVals;
+                    processors[i].OutputArgs = new Dictionary<string, object>();
                     processors[i].Process();
                     data = processors[i].OutputBuffer;
+                    foreach (var arg in processors[i].OutputArgs)
+                        scriptVals[arg.Key] = arg.Value;
                 }
                 else if(detectors.ContainsKey(i))
                 {
                     detectors[i].InputData = data;
-                    detectors[i].InputScale = scale;
+                    detectors[i].InputArgs = scriptVals;
+                    detectors[i].OutputArgs = new Dictionary<string, object>();
                     detectors[i].Detect();
                     data = detectors[i].Output;
-                    positions = detectors[i].OutputPosition;
+                    foreach (var arg in detectors[i].OutputArgs)
+                        scriptVals[arg.Key] = arg.Value;
                 }
             }
-            fftPeaks = (Dictionary<double, double>)data;
+            FreqPeaks = (Dictionary<double, double>)data;
         }
 
         private short[] ReadAudioStream()
@@ -167,6 +175,16 @@ namespace MusicAnalyser.App.DSP
                 newSignal[i] = smoothedValue;
             }
             return newSignal;
+        }
+
+        public object GetScriptVal(string name, string type)
+        {
+            if(scriptVals.ContainsKey(name))
+            {
+                if (scriptVals[name].GetType().Name == type)
+                    return scriptVals[name];
+            }
+            return null;
         }
     }
 }

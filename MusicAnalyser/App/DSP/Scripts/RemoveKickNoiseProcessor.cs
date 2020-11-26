@@ -8,9 +8,9 @@ class RemoveKickNoiseProcessor : ISignalProcessor
     public bool IsPrimary { get { return false; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
-    public int SampleRate { get; set; }
+    public Dictionary<string, object> InputArgs { get; set; }
     public object OutputBuffer { get; set; }
-    public object OutputScale { get; set; }
+    public Dictionary<string, object> OutputArgs { get; set; }
 
     public RemoveKickNoiseProcessor()
     {
