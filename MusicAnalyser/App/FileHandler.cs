@@ -94,6 +94,39 @@ namespace MusicAnalyser.App
                 return null;
         }
 
+        public static void AppendOrReplace(string fileName, string[] content, string itemName, string separator)
+        {
+            string[] file = ReadFile(fileName);
+            if(file == null)
+                WriteFile(fileName, content);
+            else
+            {
+                if(Array.Exists(file, item => item.Contains(separator + itemName)))
+                {
+                    int start = Array.FindIndex(file, item => item.Contains(separator + itemName));
+                    int end = start;
+                    for(int i = start + 1; i < file.Length; i++)
+                    {
+                        if(file[i].Contains(separator))
+                        {
+                            end = i;
+                            break;
+                        }
+                    }
+                    List<string> newContent = file.ToList();
+                    newContent.RemoveRange(start, end - start);
+                    newContent.AddRange(content);
+                    WriteFile(fileName, newContent.ToArray());
+                }
+                else
+                {
+                    List<string> newContent = file.ToList();
+                    newContent.AddRange(content);
+                    WriteFile(fileName, newContent.ToArray());
+                }
+            }
+        }
+
         public static bool WriteMp3(string filename, WaveFormat format)
         {
             var mediaType = MediaFoundationEncoder.SelectMediaType(AudioSubtypes.MFAudioFormat_MP3, format, 192000);

@@ -17,6 +17,7 @@ class BasicFFTProcessor : ISignalProcessor
         {
             { "WINDOW", new string[] { "Hamming", "enum", "Window Function", "Rectangle|Hamming|Hann|BlackmannHarris", "" } },
             { "OUTPUT_MODE", new string[] { "dB", "enum", "Output Mode", "Magnitude|dB", "" } },
+            { "MAG_LIMIT", new string[] { "10000", "int", "Magnitude Limit", "0", "10000" } },
         };
     }
 
@@ -64,7 +65,13 @@ class BasicFFTProcessor : ISignalProcessor
             if(Settings["OUTPUT_MODE"][0] == "dB")
                 output[i] = 20 * Math.Log10(fft + fftMirror) - 20 * Math.Log10(input.Length); // Estimates gain of FFT bin
             else
-                output[i] = (fft + fftMirror) * (0.5 + (i / (fftPoints * 2)));
+            {
+                if (fft + fftMirror <= int.Parse(Settings["MAG_LIMIT"][0]))
+                    output[i] = (fft + fftMirror) * (0.5 + (i / (fftPoints * 2)));
+                else
+                    output[i] = int.Parse(Settings["MAG_LIMIT"][0]);
+            }
+                
         }
         OutputBuffer = output;
         double scale = (double)fftPoints / sampleRate;

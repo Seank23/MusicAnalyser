@@ -21,14 +21,18 @@ class CQTProcessor : ISignalProcessor
         Settings = new Dictionary<string, string[]>()
         {
             { "OCTAVES", new string[] { "5", "int", "Octaves", "1", "10" } },
-            { "BINS_PER_OCTAVE", new string[] { "48", "enum", "Bins Per Octave", "12|24|48|96", "" } },
+            { "BINS_PER_OCTAVE", new string[] { "48", "enum", "Bins Per Octave", "12|24|48|60|72|84|96", "" } },
             { "MIN_FREQ", new string[] { "32.7", "double", "Minimum Frequency (Hz)", "1", "1000" } },
             { "N_WEIGHTING", new string[] { "0.5", "double", "Frequency Weighting Factor", "0", "1" } },
             { "OUTPUT_MODE", new string[] { "Magnitude", "enum", "Output Mode", "Magnitude|dB", "" } },
         };
     }
 
-    public void OnSettingsChange() { GetSparseKernel(); }
+    public void OnSettingsChange() 
+    { 
+        if(InputBuffer != null || InputArgs != null)
+            GetSparseKernel(); 
+    }
 
     public void Process()
     {

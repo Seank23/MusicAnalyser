@@ -165,6 +165,11 @@ namespace MusicAnalyser.App
             ui.SetScriptSelection(scripts, add);
         }
 
+        public void SetPresetSelectorUI(string[] presets)
+        {
+            ui.SetPresetSelection(presets);
+        }
+
         public void AddScript()
         {
             SetScriptSelectorUI(dsp.ScriptManager.GetAllScriptNames(), true);
@@ -178,6 +183,19 @@ namespace MusicAnalyser.App
         public void ApplyScriptSettings(int scriptIndex, string[] settings)
         {
             dsp.ScriptManager.SetScriptSettings(scriptIndex, settings);
+        }
+
+        public void ApplyPreset(string presetName)
+        {
+            Dictionary<int, int> selectionDict = dsp.ScriptManager.GetPresetSelectionDict(presetName);
+            if(CheckSelectionValidity(selectionDict, out string message))
+            {
+                ApplyScripts(selectionDict);
+                Dictionary<string, string[]> preset = dsp.ScriptManager.Presets[presetName];
+                for (int i = 0; i < selectionDict.Count; i++)
+                    ApplyScriptSettings(selectionDict.Values.ElementAt(i), preset.Values.ElementAt(i));
+                ui.SetAppliedScripts(selectionDict);
+            }
         }
 
         public bool CheckSelectionValidity(Dictionary<int, int> selectionDict, out string message)
@@ -246,6 +264,21 @@ namespace MusicAnalyser.App
         {
             dsp.ScriptManager.SetScriptSettings(scriptIndex, dsp.ScriptManager.SettingDefaults[scriptIndex]);
             ui.DisplayScriptSettings(scriptIndex);
+        }
+
+        public void SavePreset(string name)
+        {
+            int[] scripts = ui.GetSelectionDict().Values.ToArray();
+            Dictionary<string, Dictionary<string, string[]>> presetData = new Dictionary<string, Dictionary<string, string[]>>();
+            for(int i = 0; i < scripts.Length; i++)
+            {
+                string scriptName = dsp.ScriptManager.GetScriptName(scripts[i]);
+                Dictionary<string, string[]> settings = GetScriptSettings(scripts[i]);
+                presetData[scriptName] = settings;
+            }
+            dsp.ScriptManager.SavePreset(name, presetData);
+            dsp.LoadPresets();
+            ApplyPreset(name);
         }
 
         /*

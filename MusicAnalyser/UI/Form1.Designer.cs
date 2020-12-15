@@ -104,6 +104,9 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnDefaults = new System.Windows.Forms.Button();
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.cbPresets = new System.Windows.Forms.ComboBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.btnSavePreset = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -596,7 +599,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1908, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1908, 28);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -607,7 +610,7 @@
             this.closeToolStripMenuItem,
             this.saveRecordingToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
@@ -639,7 +642,7 @@
             this.playToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
+            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
             this.playbackToolStripMenuItem.Text = "Playback";
             // 
             // playToolStripMenuItem
@@ -663,7 +666,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.perferencesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // perferencesToolStripMenuItem
@@ -751,17 +754,18 @@
             // 
             this.flpScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.flpScripts.AutoScroll = true;
+            this.flpScripts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flpScripts.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpScripts.Location = new System.Drawing.Point(1528, 137);
+            this.flpScripts.Location = new System.Drawing.Point(1528, 173);
             this.flpScripts.Name = "flpScripts";
-            this.flpScripts.Size = new System.Drawing.Size(255, 152);
+            this.flpScripts.Size = new System.Drawing.Size(255, 116);
             this.flpScripts.TabIndex = 29;
             this.flpScripts.WrapContents = false;
             // 
             // btnAddScript
             // 
             this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddScript.Location = new System.Drawing.Point(1789, 137);
+            this.btnAddScript.Location = new System.Drawing.Point(1789, 223);
             this.btnAddScript.Name = "btnAddScript";
             this.btnAddScript.Size = new System.Drawing.Size(88, 30);
             this.btnAddScript.TabIndex = 30;
@@ -794,7 +798,7 @@
             // btnApplyScripts
             // 
             this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 173);
+            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 259);
             this.btnApplyScripts.Name = "btnApplyScripts";
             this.btnApplyScripts.Size = new System.Drawing.Size(88, 30);
             this.btnApplyScripts.TabIndex = 33;
@@ -818,7 +822,7 @@
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(1789, 258);
+            this.btnSave.Location = new System.Drawing.Point(1789, 421);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(88, 30);
             this.btnSave.TabIndex = 36;
@@ -830,7 +834,7 @@
             // 
             this.btnDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDefaults.Enabled = false;
-            this.btnDefaults.Location = new System.Drawing.Point(1789, 222);
+            this.btnDefaults.Location = new System.Drawing.Point(1695, 421);
             this.btnDefaults.Name = "btnDefaults";
             this.btnDefaults.Size = new System.Drawing.Size(88, 30);
             this.btnDefaults.TabIndex = 37;
@@ -858,12 +862,44 @@
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
             // 
+            // cbPresets
+            // 
+            this.cbPresets.FormattingEnabled = true;
+            this.cbPresets.Location = new System.Drawing.Point(1596, 141);
+            this.cbPresets.Name = "cbPresets";
+            this.cbPresets.Size = new System.Drawing.Size(187, 24);
+            this.cbPresets.TabIndex = 38;
+            this.cbPresets.SelectedIndexChanged += new System.EventHandler(this.cbPresets_SelectedIndexChanged);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(1541, 144);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(49, 17);
+            this.label21.TabIndex = 39;
+            this.label21.Text = "Preset";
+            // 
+            // btnSavePreset
+            // 
+            this.btnSavePreset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSavePreset.Location = new System.Drawing.Point(1789, 137);
+            this.btnSavePreset.Name = "btnSavePreset";
+            this.btnSavePreset.Size = new System.Drawing.Size(88, 30);
+            this.btnSavePreset.TabIndex = 40;
+            this.btnSavePreset.Text = "Save";
+            this.btnSavePreset.UseVisualStyleBackColor = true;
+            this.btnSavePreset.Click += new System.EventHandler(this.btnSavePreset_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
+            this.Controls.Add(this.btnSavePreset);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.cbPresets);
             this.Controls.Add(this.btnDefaults);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.tblSettings);
@@ -1023,6 +1059,9 @@
         private System.Windows.Forms.TableLayoutPanel tblSettings;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnDefaults;
+        private System.Windows.Forms.ComboBox cbPresets;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Button btnSavePreset;
     }
 }
 

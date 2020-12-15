@@ -481,28 +481,33 @@ namespace MusicAnalyser
             {
                 app.ApplyScripts(GetSelectionDict());
                 app.ApplyScriptSettings(selectedScript, GetSettingValues());
-                lblSelMessage.ForeColor = Color.LimeGreen;
-                lblSelMessage.Text = "Applied!";
-                Task.Factory.StartNew(() =>
-                {
-                    Thread.Sleep(1000);
-                    InvokeUI(() => {
-                        lblSelMessage.Text = "";
-                        lblSelMessage.ForeColor = Color.Crimson;
-                    });
-                });
-                btnApplyScripts.Enabled = false;
-                if(app.Opened)
-                {
-                    btnPlay.Enabled = true;
-                    btnStop.Enabled = true;
-                    stopToolStripMenuItem.Enabled = true;
-                    playToolStripMenuItem.Enabled = true;
-                }
+                ApplySuccessful();
             }
         }
 
-        private Dictionary<int, int> GetSelectionDict()
+        private void ApplySuccessful()
+        {
+            lblSelMessage.ForeColor = Color.LimeGreen;
+            lblSelMessage.Text = "Applied!";
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(1000);
+                InvokeUI(() => {
+                    lblSelMessage.Text = "";
+                    lblSelMessage.ForeColor = Color.Crimson;
+                });
+            });
+            btnApplyScripts.Enabled = false;
+            if (app.Opened)
+            {
+                btnPlay.Enabled = true;
+                btnStop.Enabled = true;
+                stopToolStripMenuItem.Enabled = true;
+                playToolStripMenuItem.Enabled = true;
+            }
+        }
+
+        public Dictionary<int, int> GetSelectionDict()
         {
             Dictionary<int, int> selectionDict = new Dictionary<int, int>();
             for (int i = 0; i < flpScripts.Controls.Count; i++)
@@ -514,6 +519,11 @@ namespace MusicAnalyser
         }
 
         private void btnAddScript_Click(object sender, EventArgs e)
+        {
+            OnAddScript();
+        }
+
+        private void OnAddScript()
         {
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             app.AddScript();
@@ -545,6 +555,24 @@ namespace MusicAnalyser
             }
             foreach (ScriptSelector selector in flpScripts.Controls)
                 AddScriptSelectionItems(selector, scripts);
+        }
+
+        public void SetAppliedScripts(Dictionary<int, int> selectionDict)
+        {
+            flpScripts.Controls.Clear();
+            for(int i = 0; i < selectionDict.Count; i++)
+            {
+                OnAddScript();
+                ScriptSelector selector = (ScriptSelector)flpScripts.Controls[i];
+                selector.DropDown.SelectedIndex = selectionDict[i];
+            }
+            ApplySuccessful();
+        }
+
+        public void SetPresetSelection(string[] presetNames)
+        {
+            cbPresets.Items.Clear();
+            cbPresets.Items.AddRange(presetNames);
         }
 
         public void AddScriptSelectionItems(ScriptSelector selector, Dictionary<int, string> scripts)
@@ -681,6 +709,17 @@ namespace MusicAnalyser
                 if (app.ScriptSelectionValid)
                     btnApplyScripts.Enabled = true;
             }
+        }
+
+        private void btnSavePreset_Click(object sender, EventArgs e)
+        {
+            if (cbPresets.Text != "")
+                app.SavePreset(cbPresets.Text);
+        }
+
+        private void cbPresets_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            app.ApplyPreset(cbPresets.SelectedItem.ToString());
         }
     }
 }

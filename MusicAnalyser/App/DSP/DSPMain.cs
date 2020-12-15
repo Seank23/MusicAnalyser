@@ -27,13 +27,21 @@ namespace MusicAnalyser.App.DSP
             app = appController;
             ScriptManager = new ScriptManager();
             LoadScripts();
+            LoadPresets();
         }
 
         public async void LoadScripts()
         {
             await Task.Factory.StartNew(() => ScriptManager.LoadScripts());
+
             LoadScriptSettings();
             app.SetScriptSelectorUI(ScriptManager.GetAllScriptNames(), false);
+        }
+
+        public void LoadPresets()
+        {
+            ScriptManager.LoadPresets();
+            app.SetPresetSelectorUI(ScriptManager.GetPresetNames());
         }
 
         public void LoadScriptSettings()
@@ -74,6 +82,14 @@ namespace MusicAnalyser.App.DSP
             app.ScriptSelectionApplied = true;
             prevProcessedData.Clear();
             scriptVals.Clear();
+        }
+
+        public void ApplyPreset(string presetName)
+        {
+            var preset = ScriptManager.Presets[presetName];
+            if (preset == null)
+                return;
+
         }
 
         public void RunFrequencyAnalysis()
