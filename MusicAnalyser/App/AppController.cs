@@ -26,18 +26,21 @@ namespace MusicAnalyser.App
         private bool started = false;
         private long startSample = 0;
 
-        public bool LiveMode { get; set; }
+        public int Mode { get; set; }
         public bool IsRecording { get; set; }
         public bool Opened { get; set; }
         public bool ScriptSelectionApplied { get; set; }
         public bool ScriptSelectionValid { get; set; }
+        public int StepMilliseconds { get; set; }
+        public bool StepBack { get; set; }
 
         public AppController(Form1 form)
         {
             ui = form;
             dsp = new DSPMain(this);
             liveRecorder = new LiveInputRecorder(ui);
-            LiveMode = false;
+            Mode = 0;
+            StepMilliseconds = 50;
             LoadPrefs();
             ui.UpdateUI();
         }
@@ -85,8 +88,8 @@ namespace MusicAnalyser.App
                 }
                 else return;
 
-                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false);
                 Opened = true;
+                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false); 
             }
         }
 
@@ -122,6 +125,7 @@ namespace MusicAnalyser.App
                     backgroundThread.Start();
                 }
             }
+            ui.CheckAppState();
         }
 
         public void TriggerStop()
@@ -130,6 +134,7 @@ namespace MusicAnalyser.App
             ui.EnableTimer(false);
             startSample = ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels;
             ui.SetPlayBtnText("Play from " + TimeSpan.FromSeconds((double)ui.cwvViewer.SelectSample / ui.cwvViewer.GetSampleRate()).ToString(@"m\:ss\:fff"));
+            ui.CheckAppState();
         }
 
         /*
@@ -147,6 +152,7 @@ namespace MusicAnalyser.App
             executionTime.Clear();
             ui.ClearUI();
             GC.Collect();
+            ui.CheckAppState();
         }
 
         public void LoopPlayback()
@@ -286,7 +292,7 @@ namespace MusicAnalyser.App
          */
         public async void RunAnalysis()
         {
-            if (ui.Output.PlaybackState == PlaybackState.Playing)
+            if (ui.Output.PlaybackState == PlaybackState.Playing || Mode == 1)
             {
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -327,7 +333,8 @@ namespace MusicAnalyser.App
                     ui.SetTimerInterval(Prefs.MIN_UPDATE_TIME);
                     ui.SetExecTimeText((int)watch.ElapsedMilliseconds);
                 }
-                ui.EnableTimer(true);
+                if(Mode != 1)
+                    ui.EnableTimer(true);
                 analysisUpdates++;
             }
         }
@@ -496,23 +503,35 @@ namespace MusicAnalyser.App
             dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
             dsp.Analyser.GetMusic().ResetNoteCount();
         }
+
+        public void Step(bool backwards)
+        {
+            if (Opened && ui.Output.PlaybackState != PlaybackState.Playing)
+            {
+                Mode = 1;
+                StepBack = backwards;
+                ui.EnableTimer(false);
+                RunAnalysis();
+                ui.SetTimeStamp(AudioSource.AudioStream.CurrentTime);
+            }
+        }
     
         public void EnableLiveMode()
         {
             if(ui.Output != null)
                TriggerClose();
             liveRecorder = new LiveInputRecorder(ui);
-            LiveMode = true;
-            ui.SetupLiveModeUI();
+            Mode = 2;
+            ui.SetUIState();
         }
 
         public void ExitLiveMode()
         {
             if(liveRecorder.Recording)
                 liveRecorder.StopRecording();
-            LiveMode = false;
             IsRecording = false;
-            ui.ClearUI();
+            Mode = 0;
+            ui.SetUIState();
         }
 
         public void TriggerLiveModeStartStop()
@@ -529,12 +548,12 @@ namespace MusicAnalyser.App
             { 
                 liveRecorder.StopRecording();
                 IsRecording = false;
-                LiveMode = false;
+                Opened = true;
+                Mode = 0;
                 AudioSource source;
                 FileHandler.OpenWav(Path.Combine(Path.GetTempPath(), "recording.wav"), out source);
                 AudioSource = source;
                 ui.SetupPlaybackUI(AudioSource.AudioGraph, "", true);
-                Opened = true;
             }
         }
 

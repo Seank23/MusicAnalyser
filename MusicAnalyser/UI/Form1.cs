@@ -9,7 +9,6 @@ using MusicAnalyser.UI;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Scripting.Utils;
 
 namespace MusicAnalyser
 {
@@ -40,14 +39,12 @@ namespace MusicAnalyser
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-            if (!app.Opened)
-            {
+            if(segMode.SelectedIndex == 1)
+                app.Step(true);
+            else if (!app.Opened)
                 app.TriggerOpenFile();
-            }
             else
-            {
                 app.TriggerClose();
-            }
         }
 
         public void SetupPlaybackUI(WaveStream audioGraph, string filename, bool wasRecording)
@@ -56,30 +53,8 @@ namespace MusicAnalyser
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
             cwvViewer.BackColor = SystemColors.Control;
-            btnOpenClose.Text = "Close";
-            btnPlay.Text = "Play";
-            btnLiveMode.Text = "Live Mode";
-            btnOpenClose.Enabled = true;
-            closeToolStripMenuItem.Enabled = true;   
-            openToolStripMenuItem.Enabled = false;
-            barVolume.Enabled = true;
-            barTempo.Enabled = true;
-            barPitch.Enabled = true;
-            lblPlayTime.Text = "Playback Time:";
-            lblSelectTime.Text = "Select Time:";
-            lblLoopDuration.Visible = true;
-            txtSelectTime.Visible = true;
-            txtLoopTime.Visible = true;
-            prbLevelMeter.Visible = false;
-            SetSelectTime(0);
-            SetLoopTime(0);
-            if (app.ScriptSelectionApplied)
-            {
-                btnPlay.Enabled = true;
-                btnStop.Enabled = true;
-                stopToolStripMenuItem.Enabled = true;
-                playToolStripMenuItem.Enabled = true;
-            }
+            segMode.SelectedIndex = 0;
+            SetUIState();
             if (wasRecording)
             {
                 saveRecordingToolStripMenuItem.Enabled = true;
@@ -87,7 +62,133 @@ namespace MusicAnalyser
             }
             else
                 this.Text = "Music Analyser - " + filename;
-                
+        }
+
+        public void SetUIState()
+        {
+            if(segMode.SelectedIndex == 0)
+            {
+                btnOpenClose.Text = "Close";
+                btnPlay.Text = "Play";
+                btnStop.Text = "Stop";
+                btnOpenClose.Enabled = true;
+                btnPlay.Visible = true;
+                numStepVal.Visible = false;
+                lblStep.Visible = false;
+                closeToolStripMenuItem.Enabled = true;
+                openToolStripMenuItem.Enabled = false;
+                barVolume.Enabled = true;
+                barTempo.Enabled = true;
+                barPitch.Enabled = true;
+                lblPlayTime.Text = "Playback Time:";
+                lblSelectTime.Text = "Select Time:";
+                lblLoopDuration.Visible = true;
+                txtSelectTime.Visible = true;
+                txtLoopTime.Visible = true;
+                prbLevelMeter.Visible = false;
+                SetSelectTime(0);
+                SetLoopTime(0);
+                chbFollow.Enabled = true;
+                app.Mode = 0;
+            }
+            else if(segMode.SelectedIndex == 1)
+            {
+                btnOpenClose.Text = "Back";
+                btnStop.Text = "Forward";
+                btnPlay.Enabled = false;
+                btnPlay.Visible = false;
+                numStepVal.Visible = true;
+                lblStep.Visible = true;
+                barVolume.Enabled = false;
+                barTempo.Enabled = false;
+            }
+            else if(segMode.SelectedIndex == 2)
+            {
+                this.Text = "Music Analyser - Record Mode";
+                cwvViewer.BackColor = SystemColors.Control;
+                btnOpenClose.Enabled = false;
+                closeToolStripMenuItem.Enabled = false;
+                stopToolStripMenuItem.Enabled = false;
+                openToolStripMenuItem.Enabled = false;
+                btnStop.Enabled = false;
+                barVolume.Enabled = false;
+                barTempo.Enabled = false;
+                chbFollow.Enabled = false;
+                btnPlay.Enabled = true;
+                btnPlay.Text = "Start Recording";
+                lblPlayTime.Text = "Recording Time:";
+                lblSelectTime.Text = "Recording Level:";
+                lblLoopDuration.Visible = false;
+                txtSelectTime.Visible = false;
+                txtLoopTime.Visible = false;
+                prbLevelMeter.Visible = true;
+                btnOpenClose.Text = "Open";
+                btnStop.Text = "Stop";
+                btnPlay.Visible = true;
+                numStepVal.Visible = false;
+                lblStep.Visible = false;
+            }
+            CheckAppState();
+        }
+
+        public void CheckAppState()
+        {
+            if(segMode.SelectedIndex == 0)
+            {
+                if(app.Opened)
+                {
+                    btnOpenClose.Text = "Close";
+                    btnOpenClose.Enabled = true;
+                    if (app.ScriptSelectionValid)
+                    {
+                        btnPlay.Enabled = true;
+                        btnStop.Enabled = true;
+                        stopToolStripMenuItem.Enabled = true;
+                        playToolStripMenuItem.Enabled = true;
+                    }
+                    else
+                    {
+                        btnPlay.Enabled = false;
+                        btnStop.Enabled = false;
+                        stopToolStripMenuItem.Enabled = false;
+                        playToolStripMenuItem.Enabled = false;
+                    }
+                    if (Output.PlaybackState == PlaybackState.Playing)
+                        segMode.Enabled = false;
+                    else
+                        segMode.Enabled = true;
+                }
+                else
+                {
+                    cwvViewer.BackColor = SystemColors.ControlLight;
+                    btnOpenClose.Text = "Open";
+                    btnOpenClose.Enabled = true;
+                    btnPlay.Enabled = false;
+                    btnStop.Enabled = false;
+                    stopToolStripMenuItem.Enabled = false;
+                    playToolStripMenuItem.Enabled = false;
+                }
+            }
+            else if(segMode.SelectedIndex == 1)
+            {
+                if(app.Opened && app.ScriptSelectionValid)
+                {
+                    btnOpenClose.Enabled = true;
+                    btnStop.Enabled = true;
+                }
+                else
+                {
+                    btnOpenClose.Enabled = false;
+                    btnStop.Enabled = false;
+                }
+            }
+            else if(segMode.SelectedIndex == 2)
+            {
+                if(app.IsRecording)
+                    btnPlay.Text = "Stop Recording";
+                else
+                    btnPlay.Text = "Start Recording";
+            }
         }
 
         public bool SelectFile(out OpenFileDialog dialog)
@@ -103,7 +204,7 @@ namespace MusicAnalyser
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            if (app.LiveMode)
+            if (app.Mode == 2)
                 app.TriggerLiveModeStartStop();
             else
                 app.TriggerPlayPause();
@@ -125,7 +226,6 @@ namespace MusicAnalyser
             txtSelectTime.Text = "";
             txtLoopTime.Text = "";
             SetErrorText("+ 0 Cents");
-            UpdateFFTDrawsUI(0);
             SetExecTimeText(0);
             btnStop.Enabled = false;
             stopToolStripMenuItem.Enabled = false;
@@ -137,7 +237,6 @@ namespace MusicAnalyser
             playToolStripMenuItem.Text = "Play";
             openToolStripMenuItem.Enabled = true;
             btnOpenClose.Text = "Open";
-            btnLiveMode.Text = "Live Mode";
             barTempo.Enabled = false;
             barVolume.Enabled = false;
             barPitch.Enabled = false;
@@ -146,6 +245,7 @@ namespace MusicAnalyser
             barPitch.Value = 50;
             app.PitchChange(barPitch.Value);
             saveRecordingToolStripMenuItem.Enabled = false;
+            segMode.SelectedIndex = 0;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -193,7 +293,7 @@ namespace MusicAnalyser
 
                     if (index == Prefs.UI_DELAY_FACTOR - 1)
                     {
-                        InvokeUI(() => txtPlayTime.Text = source.AudioStream.CurrentTime.ToString(@"mm\:ss\:fff"));
+                        InvokeUI(() => SetTimeStamp(source.AudioStream.CurrentTime));
                         currentSample = source.AudioStream.Position / 8;
 
                         if (currentSample > cwvViewer.LeftSample && currentSample < cwvViewer.RightSample)
@@ -321,29 +421,6 @@ namespace MusicAnalyser
             spFFT.Render();
         }
 
-        public void SetupLiveModeUI()
-        {
-            this.Text = "Music Analyser - Live Mode";
-            cwvViewer.BackColor = SystemColors.Control;
-            btnOpenClose.Enabled = false;
-            closeToolStripMenuItem.Enabled = false;
-            stopToolStripMenuItem.Enabled = false;
-            openToolStripMenuItem.Enabled = false;
-            btnStop.Enabled = false;
-            barVolume.Enabled = false;
-            barTempo.Enabled = false;
-            chbFollow.Enabled = false;
-            btnPlay.Enabled = true;
-            btnLiveMode.Text = "Exit Live Mode";
-            btnPlay.Text = "Start Recording";
-            lblPlayTime.Text = "Recording Time:";
-            lblSelectTime.Text = "Recording Level:";
-            lblLoopDuration.Visible = false;
-            txtSelectTime.Visible = false; 
-            txtLoopTime.Visible = false;
-            prbLevelMeter.Visible = true;
-        }
-
         private void barVolume_Scroll(object sender, EventArgs e)
         {
             app.VolumeChange(barVolume.Value);
@@ -374,7 +451,6 @@ namespace MusicAnalyser
         }
 
         public void EnableTimer(bool enable) { timerFFT.Enabled = enable; }
-        public void UpdateFFTDrawsUI(int draws) { lblFFTDraws.Text = "FFT Updates: " + draws; }
         public void ClearNotesList() { lstChords.Items.Clear(); }
         public void PrintChord(string text) { lstChords.Items.Add(text); }
         public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 16, bold: isBold); }
@@ -387,8 +463,8 @@ namespace MusicAnalyser
         public void SetSelectTime(double seconds) { txtSelectTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetLoopTime(double seconds) { txtLoopTime.Text = TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\:fff"); }
         public void SetPlayBtnText(string text) { btnPlay.Text = text; }
-
         public bool IsShowAllChordsChecked() { return chbAllChords.Checked; }
+        public void SetTimeStamp(TimeSpan time) { txtPlayTime.Text = time.ToString(@"mm\:ss\:fff"); }
         public AppController GetApp() { return app; }
 
         private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -407,20 +483,27 @@ namespace MusicAnalyser
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            app.TriggerStop();
+            if (segMode.SelectedIndex == 1)
+                app.Step(false);
+            else
+                app.TriggerStop();
         }
 
-        private void btnLiveMode_Click(object sender, EventArgs e)
+        private void segMode_IndexChanged(object sender, EventArgs e)
         {
-            if(app.LiveMode)
+            if (app.Opened && segMode.SelectedIndex == 2)
+                segMode.SelectedIndex = 0;
+            else if (app.Mode != 2 && segMode.SelectedIndex == 2)
+                app.EnableLiveMode();
+            else if (app.Mode == 2 && segMode.SelectedIndex != 2)
                 app.ExitLiveMode();
             else
-                app.EnableLiveMode();
+                SetUIState();
         }
 
         public void OnRecordDataAvailable(byte[] data, float maxLevel)
         {
-            this.Text = "Music Analyser - Live Mode - Recording";
+            this.Text = "Music Analyser - Record Mode - Recording";
             cwvViewer.WaveStream = new RawSourceWaveStream(new MemoryStream(data), new WaveFormat(48000, 2));
             cwvViewer.FitToScreen();
             txtPlayTime.Text = TimeSpan.FromSeconds((double)data.Length / (48000 * 2 * 2)).ToString(@"mm\:ss\:fff");
@@ -498,13 +581,7 @@ namespace MusicAnalyser
                 });
             });
             btnApplyScripts.Enabled = false;
-            if (app.Opened)
-            {
-                btnPlay.Enabled = true;
-                btnStop.Enabled = true;
-                stopToolStripMenuItem.Enabled = true;
-                playToolStripMenuItem.Enabled = true;
-            }
+            CheckAppState();
         }
 
         public Dictionary<int, int> GetSelectionDict()
@@ -543,6 +620,7 @@ namespace MusicAnalyser
                 btnApplyScripts.Enabled = false;
                 lblSelMessage.Text = message;
             }
+            CheckAppState();
         }
 
         public void SetScriptSelection(Dictionary<int, string> scripts, bool add)
@@ -720,6 +798,11 @@ namespace MusicAnalyser
         private void cbPresets_SelectedIndexChanged(object sender, EventArgs e)
         {
             app.ApplyPreset(cbPresets.SelectedItem.ToString());
+        }
+
+        private void numStepVal_ValueChanged(object sender, EventArgs e)
+        {
+            app.StepMilliseconds = (int)numStepVal.Value;
         }
     }
 }

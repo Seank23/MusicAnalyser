@@ -161,8 +161,21 @@ namespace MusicAnalyser.App.DSP
 
             bytesBuffer = new byte[Prefs.BUFFERSIZE];
             double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate / (double)app.AudioSource.AudioFFT.WaveFormat.SampleRate;
-            app.AudioSource.AudioFFT.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
+            if (app.Mode == 1)
+            {
+                if(app.StepBack && app.AudioSource.AudioFFT.Position > 0)
+                    app.AudioSource.AudioFFT.Position -= app.AudioSource.AudioFFT.WaveFormat.SampleRate * app.StepMilliseconds / 1000 * app.AudioSource.AudioFFT.WaveFormat.BitsPerSample / 4;
+                else
+                    app.AudioSource.AudioFFT.Position += app.AudioSource.AudioFFT.WaveFormat.SampleRate * app.StepMilliseconds / 1000 * app.AudioSource.AudioFFT.WaveFormat.BitsPerSample / 4;
+
+                app.AudioSource.AudioStream.Position = (long)(app.AudioSource.AudioFFT.Position * posScaleFactor * app.AudioSource.AudioStream.WaveFormat.Channels);
+            }
+            else
+            {
+                app.AudioSource.AudioFFT.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
+            }
             app.AudioSource.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
+            app.AudioSource.AudioFFT.Position -= Prefs.BUFFERSIZE;
             audioBuffer = new short[Prefs.BUFFERSIZE];
             Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
             return audioBuffer;
