@@ -90,7 +90,7 @@ class CQTProcessor : ISignalProcessor
                 sampleRate = (int)InputArgs["SAMPLE_RATE"];
         }
 
-        float threshold = 0.0054f;
+        float threshold = 0.000054f;
         int numOctaves = int.Parse(Settings["OCTAVES"][0]);
         int binsPerOctave = int.Parse(Settings["BINS_PER_OCTAVE"][0]);
         double minFreq = double.Parse(Settings["MIN_FREQ"][0]);

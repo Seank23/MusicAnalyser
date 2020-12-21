@@ -43,15 +43,23 @@ class CQTByMagnitudeDetector : ISignalDetector
             binsPerNote++;
         binsPerNote /= 12;
 
+        int binsToRead = (int)Math.Floor((double)(binsPerNote - 1) / 2);
         Dictionary<double, double> output = new Dictionary<double, double>();
         List<double> positions = new List<double>();
 
         for(int i = 0; i < input.Length; i += binsPerNote)
         {
             double freq = scale(i);
-            if (input[i] > threshold)
+            double avgComponent = 0;
+            for(int j = -binsToRead; j <= binsToRead; j++)
             {
-                output.Add(freq, input[i]);
+                if (i + j >= 0)
+                    avgComponent += input[i + j];
+            }
+            avgComponent /= binsToRead * 2 + 1;
+            if (avgComponent > threshold)
+            {
+                output.Add(freq, avgComponent);
                 positions.Add(i);
             } 
         }

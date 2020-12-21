@@ -416,7 +416,7 @@ namespace MusicAnalyser
         private void SetupFFTPlot()
         {
             spFFT.plt.Title("Frequency Spectrum");
-            spFFT.plt.YLabel("Gain (dB)", fontSize: 12);
+            spFFT.plt.YLabel("Magnitude", fontSize: 12);
             spFFT.plt.XLabel("Frequency (Hz)", fontSize: 12);
             spFFT.Render();
         }

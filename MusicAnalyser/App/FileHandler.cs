@@ -104,7 +104,7 @@ namespace MusicAnalyser.App
                 if(Array.Exists(file, item => item.Contains(separator + itemName)))
                 {
                     int start = Array.FindIndex(file, item => item.Contains(separator + itemName));
-                    int end = start;
+                    int end = file.Length;
                     for(int i = start + 1; i < file.Length; i++)
                     {
                         if(file[i].Contains(separator))
