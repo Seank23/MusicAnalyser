@@ -13,6 +13,7 @@ namespace MusicAnalyser.App.Analysis
         public int NoteIndex { get; set; }
         public double Frequency { get; set; }
         public double Magnitude { get; set; }
+        public double Position { get; set; }
         public int TimeStamp { get; set; }
 
         public object Clone()

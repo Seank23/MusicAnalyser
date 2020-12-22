@@ -13,12 +13,14 @@ namespace MusicAnalyser.App.DSP
         public Dictionary<int, ISignalProcessor> ProcessorScripts { get; set; }
         public Dictionary<int, ISignalDetector> DetectorScripts { get; set; }
         public Dictionary<int, string[]> SettingDefaults { get; set; }
+        public Dictionary<string, Dictionary<string, string[]>> Presets { get; set; }
 
         public ScriptManager()
         {
             ProcessorScripts = new Dictionary<int, ISignalProcessor>();
             DetectorScripts = new Dictionary<int, ISignalDetector>();
             SettingDefaults = new Dictionary<int, string[]>();
+            Presets = new Dictionary<string, Dictionary<string, string[]>>();
         }
 
         public Dictionary<int, string> GetAllScriptNames()
@@ -67,6 +69,33 @@ namespace MusicAnalyser.App.DSP
                 return null;
         }
 
+        public string[] GetPresetNames()
+        {
+            return Presets.Keys.ToArray();
+        }
+
+        public Dictionary<int, int> GetPresetSelectionDict(string presetName)
+        {
+            var preset = Presets[presetName];
+            Dictionary<int, int> selectionDict = new Dictionary<int, int>();
+            for(int i = 0; i < preset.Count; i++)
+            {
+                int scriptVal = -1;
+                foreach(ISignalProcessor processor in ProcessorScripts.Values)
+                {
+                    if (processor.GetType().Name == preset.Keys.ElementAt(i))
+                        scriptVal = ProcessorScripts.FirstOrDefault(x => x.Value == processor).Key;
+                }
+                foreach(ISignalDetector detector in DetectorScripts.Values)
+                {
+                    if (detector.GetType().Name == preset.Keys.ElementAt(i))
+                        scriptVal = DetectorScripts.FirstOrDefault(x => x.Value == detector).Key;
+                }
+                selectionDict.Add(i, scriptVal);
+            }
+            return selectionDict;
+        }
+
         public void SetScriptSettings(int scriptId, string[] settings)
         {
             Dictionary<string, string[]> settingsDict = GetScriptSettings(scriptId);
@@ -79,6 +108,11 @@ namespace MusicAnalyser.App.DSP
                 string[] vals = settingsDict[settingsDict.ElementAt(i).Key];
                 vals[0] = settings[i];
             }
+
+            if (ProcessorScripts.ContainsKey(scriptId))
+                ProcessorScripts[scriptId].OnSettingsChange();
+            else if (DetectorScripts.ContainsKey(scriptId))
+                DetectorScripts[scriptId].OnSettingsChange();
         }
 
         public void SaveScriptSettings(int scriptId)
@@ -116,6 +150,68 @@ namespace MusicAnalyser.App.DSP
             }
         }
 
+        public void SavePreset(string presetName, Dictionary<string, Dictionary<string, string[]>> presetData)
+        {
+            List<string> presetLines = new List<string>();
+            presetLines.Add("{" + presetName + "}");
+            for(int i = 0; i < presetData.Count; i++)
+            {
+                string scriptName = presetData.Keys.ToArray()[i];
+                Dictionary<string, string[]> settings = presetData.Values.ToArray()[i];
+                presetLines.Add("[" + scriptName + "]");
+
+                for (int j = 0; j < settings.Count; j++)
+                    presetLines.Add(settings.ElementAt(j).Key + "=" + settings.ElementAt(j).Value[0]);
+            }
+            FileHandler.AppendOrReplace("Scripts\\presets.ini", presetLines.ToArray(), presetName, "{");
+        }
+
+        public void LoadPresets()
+        {
+            Presets.Clear();
+            string[] loadedFile = FileHandler.ReadFile("Scripts\\presets.ini");
+            if (loadedFile == null)
+                return;
+
+            List<string> file = loadedFile.ToList();
+            Dictionary<string, string[]> preset = null;
+            List<string> script = null;
+            string presetName = "";
+            string scriptName = "";
+            for (int i = 0; i < file.Count; i++)
+            {
+                if(file[i].Contains('{')) // Preset name
+                {
+                    if (scriptName != "")
+                        preset.Add(scriptName, script.ToArray());
+                    if (presetName != "")
+                        Presets.Add(presetName, preset);
+
+                    preset = new Dictionary<string, string[]>();
+                    script = new List<String>();
+                    presetName = file[i].Substring(1, file[i].Length - 2);
+                    scriptName = "";
+                }
+                else if(file[i].Contains('[')) // Script name
+                {
+                    if (scriptName != "")
+                        preset.Add(scriptName, script.ToArray());
+
+                    script = new List<string>();
+                    scriptName = file[i].Substring(1, file[i].Length - 2);
+                }
+                else if(file[i].Contains('=')) // Script setting
+                {
+                    string[] setting = file[i].Split('=');
+                    script.Add(setting[1]);
+                }
+            }
+            if (scriptName != "")
+                preset.Add(scriptName, script.ToArray());
+            if (presetName != "")
+                Presets.Add(presetName, preset);
+        }
+
         public void LoadScripts()
         {
             string[] files = Directory.GetFiles("Scripts");
@@ -141,6 +237,8 @@ namespace MusicAnalyser.App.DSP
                     "System.dll",
                     "System.Core.dll",
                     "NAudio.dll",
+                    "MathNet.Numerics.dll",
+                    "System.Numerics.dll"
                 }
             };
 

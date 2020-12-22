@@ -7,9 +7,11 @@ namespace MusicAnalyser.App.DSP
         bool IsPrimary { get; }
         Dictionary<string, string[]> Settings { get; set; } // FIELD_NAME, { Value, Type, Display Name, Min, Max }
         object InputData { get; set; }
-        double InputScale { get; set; }
+        Dictionary<string, object> InputArgs { get; set; }
         object Output { get; set; }
+        Dictionary<string, object> OutputArgs { get; set; }
 
+        void OnSettingsChange();
         void Detect();
     }
 }

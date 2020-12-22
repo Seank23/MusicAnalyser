@@ -7,21 +7,37 @@ class BasicFFTProcessor : ISignalProcessor
     public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
-    public int SampleRate { get; set; }
+    public Dictionary<string, object> InputArgs { get; set; }
     public object OutputBuffer { get; set; }
-    public double OutputScale { get; set; }
+    public Dictionary<string, object> OutputArgs { get; set; }
 
     public BasicFFTProcessor()
     {
         Settings = new Dictionary<string, string[]>()
         {
-            { "WINDOW", new string[] { "Hamming", "enum", "Window Function", "Rectangle|Hamming|Hann|BlackmannHarris", "" } }
+            { "WINDOW", new string[] { "Hamming", "enum", "Window Function", "Rectangle|Hamming|Hann|BlackmannHarris", "" } },
+            { "OUTPUT_MODE", new string[] { "dB", "enum", "Output Mode", "Magnitude|dB", "" } },
+            { "MAG_LIMIT", new string[] { "10000", "int", "Magnitude Limit", "0", "10000" } },
         };
     }
 
+    public void OnSettingsChange() { }
+
     public void Process()
     {
-        short[] input = (short[])InputBuffer;
+        short[] input = null;
+        if (InputBuffer.GetType().Name == "Int16[]")
+            input = (short[])InputBuffer;
+        if (input == null)
+            return;
+
+        int sampleRate = 1;
+        if (InputArgs.ContainsKey("SAMPLE_RATE"))
+        {
+            if(InputArgs["SAMPLE_RATE"].GetType().Name == "Int32")
+                sampleRate = (int)InputArgs["SAMPLE_RATE"];
+        }
+
         int fftPoints = 2;
         while (fftPoints * 2 <= input.Length) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
             fftPoints *= 2;
@@ -46,10 +62,20 @@ class BasicFFTProcessor : ISignalProcessor
         {
             double fft = Math.Abs(fftFull[i].X + fftFull[i].Y);
             double fftMirror = Math.Abs(fftFull[fftPoints - i - 1].X + fftFull[fftPoints - i - 1].Y);
-            output[i] = 20 * Math.Log10(fft + fftMirror) - 20 * Math.Log10(input.Length); // Estimates gain of FFT bin
+            if(Settings["OUTPUT_MODE"][0] == "dB")
+                output[i] = 20 * Math.Log10(fft + fftMirror) - 20 * Math.Log10(input.Length); // Estimates gain of FFT bin
+            else
+            {
+                if (fft + fftMirror <= int.Parse(Settings["MAG_LIMIT"][0]))
+                    output[i] = (fft + fftMirror) * (0.5 + (i / (fftPoints * 2)));
+                else
+                    output[i] = int.Parse(Settings["MAG_LIMIT"][0]);
+            }
+                
         }
         OutputBuffer = output;
-        OutputScale = (double)fftPoints / SampleRate;
+        double scale = (double)fftPoints / sampleRate;
+        OutputArgs.Add("SCALE", scale);
     }
 }
 

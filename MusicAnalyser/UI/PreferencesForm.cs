@@ -9,7 +9,7 @@ namespace MusicAnalyser
     public partial class PreferencesForm : Form
     {
         private Dictionary<int, string> updateModeDict = new Dictionary<int, string> { { 0, "Dynamic" }, { 1, "Manual" } };
-        private Dictionary<int, string> uiThemeDict = new Dictionary<int, string>() { { 0, "Light" }, { 1, "Dark" } };
+        private Dictionary<int, string> uiThemeDict = new Dictionary<int, string>() { { 0, "Light" } };
 
         private Form1 ui;
 
@@ -28,7 +28,6 @@ namespace MusicAnalyser
             comboMode.Text = updateModeDict[Prefs.UPDATE_MODE];
             numUpdateTime.Value = Prefs.MIN_UPDATE_TIME;
             numSmooth.Value = Prefs.SMOOTH_FACTOR;
-            chbAntiAlias.Checked = Convert.ToBoolean(Prefs.SPECTRUM_AA);
             numChordInterval.Value = Prefs.CHORD_DETECTION_INTERVAL;
             numOccurThd.Value = Prefs.CHORD_NOTE_OCCURENCE_OFFSET;
         }
@@ -41,7 +40,6 @@ namespace MusicAnalyser
             prefsToSave[2] = "UPDATE_MODE=" + DictIndexOf(updateModeDict, comboMode.Text);
             prefsToSave[3] = "MIN_UPDATE_TIME=" + numUpdateTime.Value;
             prefsToSave[7] = "SMOOTH_FACTOR=" + numSmooth.Value;
-            prefsToSave[8] = "SPECTRUM_AA=" + Convert.ToInt32(chbAntiAlias.Checked);
             prefsToSave[13] = "CHORD_DETECTION_INTERVAL=" + numChordInterval.Value;
             prefsToSave[14] = "CHORD_NOTE_OCCURENCE_OFFSET=" + numOccurThd.Value;
             prefsToSave[15] = "CAPTURE_DEVICE=" + comDevices.SelectedIndex; 

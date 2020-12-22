@@ -34,7 +34,6 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.spFFT = new ScottPlot.FormsPlot();
             this.timerFFT = new System.Windows.Forms.Timer(this.components);
-            this.lblFFTDraws = new System.Windows.Forms.Label();
             this.lstChords = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.barVolume = new System.Windows.Forms.TrackBar();
@@ -70,7 +69,6 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.barZoom = new System.Windows.Forms.TrackBar();
-            this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
@@ -93,7 +91,6 @@
             this.txtSelectTime = new System.Windows.Forms.TextBox();
             this.lblLoopDuration = new System.Windows.Forms.Label();
             this.txtLoopTime = new System.Windows.Forms.TextBox();
-            this.btnLiveMode = new System.Windows.Forms.Button();
             this.prbLevelMeter = new System.Windows.Forms.ProgressBar();
             this.flpScripts = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddScript = new System.Windows.Forms.Button();
@@ -103,12 +100,19 @@
             this.tblSettings = new System.Windows.Forms.TableLayoutPanel();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnDefaults = new System.Windows.Forms.Button();
+            this.cbPresets = new System.Windows.Forms.ComboBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.btnSavePreset = new System.Windows.Forms.Button();
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.segMode = new XanderUI.XUISegment();
+            this.numStepVal = new System.Windows.Forms.NumericUpDown();
+            this.lblStep = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barZoom)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numStepVal)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOpenClose
@@ -158,17 +162,6 @@
             // 
             this.timerFFT.Interval = 17;
             this.timerFFT.Tick += new System.EventHandler(this.timerFFT_Tick);
-            // 
-            // lblFFTDraws
-            // 
-            this.lblFFTDraws.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblFFTDraws.AutoSize = true;
-            this.lblFFTDraws.Location = new System.Drawing.Point(47, 473);
-            this.lblFFTDraws.Name = "lblFFTDraws";
-            this.lblFFTDraws.Size = new System.Drawing.Size(106, 17);
-            this.lblFFTDraws.TabIndex = 4;
-            this.lblFFTDraws.Text = "FFT Updates: 0";
             // 
             // lstChords
             // 
@@ -231,11 +224,11 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(301, 36);
+            this.label5.Location = new System.Drawing.Point(362, 39);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(124, 17);
+            this.label5.Size = new System.Drawing.Size(63, 17);
             this.label5.TabIndex = 11;
-            this.label5.Text = "Playback Volume: ";
+            this.label5.Text = "Volume: ";
             // 
             // chbFollow
             // 
@@ -414,7 +407,7 @@
             this.lblExeTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblExeTime.AutoSize = true;
-            this.lblExeTime.Location = new System.Drawing.Point(47, 501);
+            this.lblExeTime.Location = new System.Drawing.Point(47, 473);
             this.lblExeTime.Name = "lblExeTime";
             this.lblExeTime.Size = new System.Drawing.Size(142, 17);
             this.lblExeTime.TabIndex = 4;
@@ -434,11 +427,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(636, 36);
+            this.label7.Location = new System.Drawing.Point(698, 41);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(121, 17);
+            this.label7.Size = new System.Drawing.Size(60, 17);
             this.label7.TabIndex = 11;
-            this.label7.Text = "Playback Tempo: ";
+            this.label7.Text = "Tempo: ";
             // 
             // label8
             // 
@@ -517,25 +510,16 @@
             // barZoom
             // 
             this.barZoom.Location = new System.Drawing.Point(274, 473);
-            this.barZoom.Maximum = 3;
+            this.barZoom.Maximum = 2;
             this.barZoom.Name = "barZoom";
             this.barZoom.Size = new System.Drawing.Size(110, 56);
             this.barZoom.TabIndex = 7;
             this.barZoom.Value = 1;
             // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(359, 512);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(23, 17);
-            this.label15.TabIndex = 8;
-            this.label15.Text = "4k";
-            // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(330, 512);
+            this.label16.Location = new System.Drawing.Point(361, 512);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(23, 17);
             this.label16.TabIndex = 8;
@@ -553,7 +537,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(301, 512);
+            this.label18.Location = new System.Drawing.Point(318, 512);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(23, 17);
             this.label18.TabIndex = 8;
@@ -596,7 +580,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1908, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1908, 28);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -607,7 +591,7 @@
             this.closeToolStripMenuItem,
             this.saveRecordingToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
@@ -639,7 +623,7 @@
             this.playToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
+            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
             this.playbackToolStripMenuItem.Text = "Playback";
             // 
             // playToolStripMenuItem
@@ -663,7 +647,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.perferencesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // perferencesToolStripMenuItem
@@ -729,16 +713,6 @@
             this.txtLoopTime.TabIndex = 25;
             this.txtLoopTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // btnLiveMode
-            // 
-            this.btnLiveMode.Location = new System.Drawing.Point(176, 31);
-            this.btnLiveMode.Name = "btnLiveMode";
-            this.btnLiveMode.Size = new System.Drawing.Size(119, 60);
-            this.btnLiveMode.TabIndex = 27;
-            this.btnLiveMode.Text = "Live Mode";
-            this.btnLiveMode.UseVisualStyleBackColor = true;
-            this.btnLiveMode.Click += new System.EventHandler(this.btnLiveMode_Click);
-            // 
             // prbLevelMeter
             // 
             this.prbLevelMeter.Location = new System.Drawing.Point(1309, 32);
@@ -751,17 +725,18 @@
             // 
             this.flpScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.flpScripts.AutoScroll = true;
+            this.flpScripts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flpScripts.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpScripts.Location = new System.Drawing.Point(1528, 137);
+            this.flpScripts.Location = new System.Drawing.Point(1528, 173);
             this.flpScripts.Name = "flpScripts";
-            this.flpScripts.Size = new System.Drawing.Size(255, 152);
+            this.flpScripts.Size = new System.Drawing.Size(255, 116);
             this.flpScripts.TabIndex = 29;
             this.flpScripts.WrapContents = false;
             // 
             // btnAddScript
             // 
             this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddScript.Location = new System.Drawing.Point(1789, 137);
+            this.btnAddScript.Location = new System.Drawing.Point(1789, 223);
             this.btnAddScript.Name = "btnAddScript";
             this.btnAddScript.Size = new System.Drawing.Size(88, 30);
             this.btnAddScript.TabIndex = 30;
@@ -794,7 +769,7 @@
             // btnApplyScripts
             // 
             this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 173);
+            this.btnApplyScripts.Location = new System.Drawing.Point(1789, 259);
             this.btnApplyScripts.Name = "btnApplyScripts";
             this.btnApplyScripts.Size = new System.Drawing.Size(88, 30);
             this.btnApplyScripts.TabIndex = 33;
@@ -818,7 +793,7 @@
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(1789, 258);
+            this.btnSave.Location = new System.Drawing.Point(1789, 421);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(88, 30);
             this.btnSave.TabIndex = 36;
@@ -830,13 +805,42 @@
             // 
             this.btnDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDefaults.Enabled = false;
-            this.btnDefaults.Location = new System.Drawing.Point(1789, 222);
+            this.btnDefaults.Location = new System.Drawing.Point(1695, 421);
             this.btnDefaults.Name = "btnDefaults";
             this.btnDefaults.Size = new System.Drawing.Size(88, 30);
             this.btnDefaults.TabIndex = 37;
             this.btnDefaults.Text = "Defaults";
             this.btnDefaults.UseVisualStyleBackColor = true;
             this.btnDefaults.Click += new System.EventHandler(this.btnDefaults_Click);
+            // 
+            // cbPresets
+            // 
+            this.cbPresets.FormattingEnabled = true;
+            this.cbPresets.Location = new System.Drawing.Point(1596, 141);
+            this.cbPresets.Name = "cbPresets";
+            this.cbPresets.Size = new System.Drawing.Size(187, 24);
+            this.cbPresets.TabIndex = 38;
+            this.cbPresets.SelectedIndexChanged += new System.EventHandler(this.cbPresets_SelectedIndexChanged);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(1541, 144);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(49, 17);
+            this.label21.TabIndex = 39;
+            this.label21.Text = "Preset";
+            // 
+            // btnSavePreset
+            // 
+            this.btnSavePreset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSavePreset.Location = new System.Drawing.Point(1789, 137);
+            this.btnSavePreset.Name = "btnSavePreset";
+            this.btnSavePreset.Size = new System.Drawing.Size(88, 30);
+            this.btnSavePreset.TabIndex = 40;
+            this.btnSavePreset.Text = "Save";
+            this.btnSavePreset.UseVisualStyleBackColor = true;
+            this.btnSavePreset.Click += new System.EventHandler(this.btnSavePreset_Click);
             // 
             // cwvViewer
             // 
@@ -858,12 +862,69 @@
             this.cwvViewer.TabIndex = 2;
             this.cwvViewer.WaveStream = null;
             // 
+            // segMode
+            // 
+            this.segMode.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.segMode.Items = "Play Mode, Step Mode, Record Mode";
+            this.segMode.Location = new System.Drawing.Point(175, 33);
+            this.segMode.Name = "segMode";
+            this.segMode.SegmentActiveTextColor = System.Drawing.Color.White;
+            this.segMode.SegmentBackColor = System.Drawing.SystemColors.Control;
+            this.segMode.SegmentColor = System.Drawing.Color.White;
+            this.segMode.SegmentInactiveTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+            this.segMode.SegmentStyle = XanderUI.XUISegment.Style.Android;
+            this.segMode.SelectedIndex = 0;
+            this.segMode.Size = new System.Drawing.Size(181, 58);
+            this.segMode.TabIndex = 41;
+            this.segMode.IndexChanged += new System.EventHandler(this.segMode_IndexChanged);
+            // 
+            // numStepVal
+            // 
+            this.numStepVal.Location = new System.Drawing.Point(94, 67);
+            this.numStepVal.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numStepVal.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numStepVal.Name = "numStepVal";
+            this.numStepVal.Size = new System.Drawing.Size(75, 22);
+            this.numStepVal.TabIndex = 42;
+            this.numStepVal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numStepVal.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numStepVal.Visible = false;
+            this.numStepVal.ValueChanged += new System.EventHandler(this.numStepVal_ValueChanged);
+            // 
+            // lblStep
+            // 
+            this.lblStep.AutoSize = true;
+            this.lblStep.Location = new System.Drawing.Point(15, 69);
+            this.lblStep.Name = "lblStep";
+            this.lblStep.Size = new System.Drawing.Size(73, 17);
+            this.lblStep.TabIndex = 43;
+            this.lblStep.Text = "Step (ms):";
+            this.lblStep.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
+            this.Controls.Add(this.lblStep);
+            this.Controls.Add(this.numStepVal);
+            this.Controls.Add(this.segMode);
+            this.Controls.Add(this.btnSavePreset);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.cbPresets);
             this.Controls.Add(this.btnDefaults);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.tblSettings);
@@ -873,7 +934,6 @@
             this.Controls.Add(this.btnAddScript);
             this.Controls.Add(this.flpScripts);
             this.Controls.Add(this.prbLevelMeter);
-            this.Controls.Add(this.btnLiveMode);
             this.Controls.Add(this.lblLoopDuration);
             this.Controls.Add(this.txtLoopTime);
             this.Controls.Add(this.lblSelectTime);
@@ -909,7 +969,6 @@
             this.Controls.Add(this.label17);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.label16);
-            this.Controls.Add(this.label15);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label3);
@@ -922,7 +981,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lstChords);
             this.Controls.Add(this.lblExeTime);
-            this.Controls.Add(this.lblFFTDraws);
             this.Controls.Add(this.spFFT);
             this.Controls.Add(this.cwvViewer);
             this.Controls.Add(this.btnPlay);
@@ -941,6 +999,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.barZoom)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numStepVal)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -953,7 +1012,6 @@
         private System.Windows.Forms.Button btnStop;
         private ScottPlot.FormsPlot spFFT;
         private System.Windows.Forms.Timer timerFFT;
-        private System.Windows.Forms.Label lblFFTDraws;
         private System.Windows.Forms.ListBox lstChords;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar barVolume;
@@ -989,7 +1047,6 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TrackBar barZoom;
-        private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
@@ -1010,7 +1067,6 @@
         internal CustomWaveViewer cwvViewer;
         private System.Windows.Forms.Label lblLoopDuration;
         private System.Windows.Forms.TextBox txtLoopTime;
-        private System.Windows.Forms.Button btnLiveMode;
         private System.Windows.Forms.ProgressBar prbLevelMeter;
         private System.Windows.Forms.ToolStripMenuItem saveRecordingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
@@ -1023,6 +1079,12 @@
         private System.Windows.Forms.TableLayoutPanel tblSettings;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnDefaults;
+        private System.Windows.Forms.ComboBox cbPresets;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Button btnSavePreset;
+        private XanderUI.XUISegment segMode;
+        private System.Windows.Forms.NumericUpDown numStepVal;
+        private System.Windows.Forms.Label lblStep;
     }
 }
 

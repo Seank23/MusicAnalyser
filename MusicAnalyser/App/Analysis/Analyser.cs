@@ -48,11 +48,15 @@ namespace MusicAnalyser.App.Analysis
         /*
          * Identifies valid notes from the peaks in the frequency spectrum and plots them
          */
-        public void GetNotes(Dictionary<double, double> fftPeaks, int timeStamp)
+        public void GetNotes(Dictionary<double, double> fftPeaks, double[] positions, int timeStamp)
         {
             music.NoteError = new List<int>();
             notes = new List<Note>();
 
+            if (fftPeaks == null)
+                return;
+
+            int i = 0;
             foreach (double freq in fftPeaks.Keys)
             {
                 string noteName = music.GetNote(freq);
@@ -60,11 +64,16 @@ namespace MusicAnalyser.App.Analysis
                 if (noteName == "N/A") // Ignore peaks that are not valid notes
                     continue;
 
-                Note myNote = CreateNote(noteName, freq, fftPeaks[freq], timeStamp);
+                Note myNote;
+                if (positions == null || positions.Length == 0)
+                    myNote = CreateNote(noteName, freq, fftPeaks[freq], freq, timeStamp);
+                else
+                    myNote = CreateNote(noteName, freq, fftPeaks[freq], positions[i], timeStamp);
                 aggregateNotes.Add(myNote);
                 notes.Add(myNote);
                 music.CountNote(noteName);
                 BufferNote(myNote.NoteIndex);
+                i++;
             }
             GetNotePercentages();
 
@@ -110,7 +119,7 @@ namespace MusicAnalyser.App.Analysis
             }
         }
 
-        private Note CreateNote(string name, double freq, double gain, int timeStamp)
+        private Note CreateNote(string name, double freq, double gain, double position, int timeStamp)
         {
             Note myNote = new Note();
             myNote.Name = name.Substring(0, name.Length - 1);
@@ -118,6 +127,7 @@ namespace MusicAnalyser.App.Analysis
             myNote.NoteIndex = Music.GetNoteIndex(name);
             myNote.Frequency = freq;
             myNote.Magnitude = gain;
+            myNote.Position = position;
             myNote.TimeStamp = timeStamp;
             return myNote;
         }

@@ -26,18 +26,21 @@ namespace MusicAnalyser.App
         private bool started = false;
         private long startSample = 0;
 
-        public bool LiveMode { get; set; }
+        public int Mode { get; set; }
         public bool IsRecording { get; set; }
         public bool Opened { get; set; }
         public bool ScriptSelectionApplied { get; set; }
         public bool ScriptSelectionValid { get; set; }
+        public int StepMilliseconds { get; set; }
+        public bool StepBack { get; set; }
 
         public AppController(Form1 form)
         {
             ui = form;
             dsp = new DSPMain(this);
             liveRecorder = new LiveInputRecorder(ui);
-            LiveMode = false;
+            Mode = 0;
+            StepMilliseconds = 50;
             LoadPrefs();
             ui.UpdateUI();
         }
@@ -85,8 +88,8 @@ namespace MusicAnalyser.App
                 }
                 else return;
 
-                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false);
                 Opened = true;
+                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false); 
             }
         }
 
@@ -122,6 +125,7 @@ namespace MusicAnalyser.App
                     backgroundThread.Start();
                 }
             }
+            ui.CheckAppState();
         }
 
         public void TriggerStop()
@@ -130,6 +134,7 @@ namespace MusicAnalyser.App
             ui.EnableTimer(false);
             startSample = ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels;
             ui.SetPlayBtnText("Play from " + TimeSpan.FromSeconds((double)ui.cwvViewer.SelectSample / ui.cwvViewer.GetSampleRate()).ToString(@"m\:ss\:fff"));
+            ui.CheckAppState();
         }
 
         /*
@@ -147,6 +152,7 @@ namespace MusicAnalyser.App
             executionTime.Clear();
             ui.ClearUI();
             GC.Collect();
+            ui.CheckAppState();
         }
 
         public void LoopPlayback()
@@ -165,6 +171,11 @@ namespace MusicAnalyser.App
             ui.SetScriptSelection(scripts, add);
         }
 
+        public void SetPresetSelectorUI(string[] presets)
+        {
+            ui.SetPresetSelection(presets);
+        }
+
         public void AddScript()
         {
             SetScriptSelectorUI(dsp.ScriptManager.GetAllScriptNames(), true);
@@ -178,6 +189,21 @@ namespace MusicAnalyser.App
         public void ApplyScriptSettings(int scriptIndex, string[] settings)
         {
             dsp.ScriptManager.SetScriptSettings(scriptIndex, settings);
+        }
+
+        public void ApplyPreset(string presetName)
+        {
+            Dictionary<int, int> selectionDict = dsp.ScriptManager.GetPresetSelectionDict(presetName);
+            if(CheckSelectionValidity(selectionDict, out string message))
+            {
+                ApplyScripts(selectionDict);
+                Dictionary<string, string[]> preset = dsp.ScriptManager.Presets[presetName];
+                for (int i = 0; i < selectionDict.Count; i++)
+                    ApplyScriptSettings(selectionDict.Values.ElementAt(i), preset.Values.ElementAt(i));
+                ui.SetAppliedScripts(selectionDict);
+            }
+            else
+                MessageBox.Show("Error: Preset could not be applied.");
         }
 
         public bool CheckSelectionValidity(Dictionary<int, int> selectionDict, out string message)
@@ -248,19 +274,39 @@ namespace MusicAnalyser.App
             ui.DisplayScriptSettings(scriptIndex);
         }
 
+        public void SavePreset(string name)
+        {
+            if (CheckSelectionValidity(ui.GetSelectionDict(), out string message))
+            {
+                int[] scripts = ui.GetSelectionDict().Values.ToArray();
+                Dictionary<string, Dictionary<string, string[]>> presetData = new Dictionary<string, Dictionary<string, string[]>>();
+                for (int i = 0; i < scripts.Length; i++)
+                {
+                    string scriptName = dsp.ScriptManager.GetScriptName(scripts[i]);
+                    Dictionary<string, string[]> settings = GetScriptSettings(scripts[i]);
+                    presetData[scriptName] = settings;
+                }
+                dsp.ScriptManager.SavePreset(name, presetData);
+                dsp.LoadPresets();
+                ApplyPreset(name);
+            }
+            else
+                MessageBox.Show("Error: Preset could not be saved, script selection is invalid.");
+        }
+
         /*
          * Master method for performing analysis
          */
         public async void RunAnalysis()
         {
-            if (ui.Output.PlaybackState == PlaybackState.Playing)
+            if (ui.Output.PlaybackState == PlaybackState.Playing || Mode == 1)
             {
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
                 dsp.RunFrequencyAnalysis();
                 dsp.RunPitchDetection();
-                dsp.Analyser.GetNotes(dsp.fftPeaks, analysisUpdates);
+                dsp.Analyser.GetNotes(dsp.FreqPeaks, (double[])dsp.GetScriptVal("POSITIONS", "Double[]"), analysisUpdates);
                 Task asyncAnalysis = RunAnalysisAsync();
                 DisplayAnalysisUI();
                 ui.RenderSpectrum();
@@ -294,7 +340,8 @@ namespace MusicAnalyser.App
                     ui.SetTimerInterval(Prefs.MIN_UPDATE_TIME);
                     ui.SetExecTimeText((int)watch.ElapsedMilliseconds);
                 }
-                ui.EnableTimer(true);
+                if(Mode != 1)
+                    ui.EnableTimer(true);
                 analysisUpdates++;
             }
         }
@@ -331,7 +378,7 @@ namespace MusicAnalyser.App
                 for (int i = 0; i < notes.Count; i++)
                 {
                     if (notes[i] != null)
-                        ui.PlotNote(notes[i].Name + notes[i].Octave, notes[i].Frequency, notes[i].Magnitude, noteColors[notes[i].NoteIndex], false);
+                        ui.PlotNote(notes[i].Name + notes[i].Octave, notes[i].Position, notes[i].Magnitude, noteColors[notes[i].NoteIndex], false);
                     else
                         return;
 
@@ -342,7 +389,7 @@ namespace MusicAnalyser.App
                             for (int k = 0; k < chordNotes[j].Count; k++)
                             {
                                 if (notes[i].Name == chordNotes[j][k].Name && notes[i].Octave == chordNotes[j][k].Octave)
-                                    ui.PlotNote("*", notes[i].Frequency, notes[i].Magnitude + 5, noteColors[notes[i].NoteIndex], true);
+                                    ui.PlotNote("*", notes[i].Position, notes[i].Magnitude + Math.Abs(notes[i].Magnitude * 0.1), noteColors[notes[i].NoteIndex], true);
                             }
                         }
                     }
@@ -359,15 +406,15 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + 7.5, Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + 7.5, Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + 7.5, Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + 7.5, Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Blue, false);
 
                         X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }
@@ -379,7 +426,7 @@ namespace MusicAnalyser.App
                 for (int i = 0; i < notePercents.Length; i++)
                 {
                     if (noteColors[i] != null)
-                        ui.UpdateNoteOccurencesUI(Music.Scales[i * 7], (int)(notePercents[i] / 100 * Prefs.NOTE_BUFFER_SIZE), notePercents[i], noteColors[i]);
+                        ui.UpdateNoteOccurencesUI(Music.Scales[i * 7], notePercents[i], noteColors[i]);
                 }
             }
 
@@ -460,8 +507,20 @@ namespace MusicAnalyser.App
         public void PitchChange(int value)
         {
             int centDifference = 50 - value;
-            dsp.Analyser.GetMusic().GetPercentChange(centDifference);
+            dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
             dsp.Analyser.GetMusic().ResetNoteCount();
+        }
+
+        public void Step(bool backwards)
+        {
+            if (Opened && ui.Output.PlaybackState != PlaybackState.Playing)
+            {
+                Mode = 1;
+                StepBack = backwards;
+                ui.EnableTimer(false);
+                RunAnalysis();
+                ui.SetTimeStamp(AudioSource.AudioStream.CurrentTime);
+            }
         }
     
         public void EnableLiveMode()
@@ -469,17 +528,17 @@ namespace MusicAnalyser.App
             if(ui.Output != null)
                TriggerClose();
             liveRecorder = new LiveInputRecorder(ui);
-            LiveMode = true;
-            ui.SetupLiveModeUI();
+            Mode = 2;
+            ui.SetUIState();
         }
 
         public void ExitLiveMode()
         {
             if(liveRecorder.Recording)
                 liveRecorder.StopRecording();
-            LiveMode = false;
             IsRecording = false;
-            ui.ClearUI();
+            Mode = 0;
+            ui.SetUIState();
         }
 
         public void TriggerLiveModeStartStop()
@@ -496,12 +555,12 @@ namespace MusicAnalyser.App
             { 
                 liveRecorder.StopRecording();
                 IsRecording = false;
-                LiveMode = false;
+                Opened = true;
+                Mode = 0;
                 AudioSource source;
                 FileHandler.OpenWav(Path.Combine(Path.GetTempPath(), "recording.wav"), out source);
                 AudioSource = source;
                 ui.SetupPlaybackUI(AudioSource.AudioGraph, "", true);
-                Opened = true;
             }
         }
 

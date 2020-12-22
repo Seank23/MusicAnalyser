@@ -8,8 +8,9 @@ class BySlopeDetector : ISignalDetector
     public bool IsPrimary { get { return true; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputData { get; set; }
-    public double InputScale { get; set; }
+    public Dictionary<string, object> InputArgs { get; set; }
     public object Output { get; set; }
+    public Dictionary<string, object> OutputArgs { get; set; }
 
     public BySlopeDetector()
     {
@@ -20,21 +21,34 @@ class BySlopeDetector : ISignalDetector
         };
     }
 
+    public void OnSettingsChange() { }
+
     public void Detect()
     {
-        double[] input = (double[])InputData;
+        double[] input = null;
+        double scale = 0;
+        if (InputData.GetType().Name == "Double[]")
+            input = (double[])InputData;
+        if (InputArgs.ContainsKey("SCALE"))
+        {
+            if (InputArgs["SCALE"].GetType().Name == "Double")
+                scale = (double)InputArgs["SCALE"];
+        }
+        if (input == null || scale == 0)
+            return;
+
         Dictionary<double, double> output = new Dictionary<double, double>();
-        double[] derivative = GetSlope(input);
+        double[] derivative = GetSlope(input, scale);
         double gainThreshold = input.Average() + 25;
 
-        for (int i = (int)(InputScale * int.Parse(Settings["MIN_FREQ"][0])); i < Math.Min(input.Length, (int)(InputScale * int.Parse(Settings["MAX_FREQ"][0]))); i++)
+        for (int i = (int)(scale * int.Parse(Settings["MIN_FREQ"][0])); i < Math.Min(input.Length, (int)(scale * int.Parse(Settings["MAX_FREQ"][0]))); i++)
         {
             if (input[i] < gainThreshold)
                 continue;
 
             if (derivative[i] > 0 && derivative[i + 1] < 0)
             {
-                double freq = (i + 1) / InputScale;
+                double freq = (i + 1) / scale;
                 double avgGainChange = (derivative[i] + derivative[i - 1] + derivative[i - 2]) / 3;
                 if (avgGainChange > 3)
                     output.Add(freq, input[i]);
@@ -44,13 +58,13 @@ class BySlopeDetector : ISignalDetector
         Output = output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); // Order: Gain - high to low
     }
 
-    private double[] GetSlope(double[] source)
+    private double[] GetSlope(double[] source, double scale)
     {
         double[] derivative = new double[source.Length];
         derivative[0] = 0;
         for (int i = 1; i < source.Length - 1; i++)
         {
-            double deltaX = ((i + 2) / InputScale) - (i / InputScale);
+            double deltaX = ((i + 2) / scale) - (i / scale);
             derivative[i] = (source[i + 1] - source[i - 1]) / deltaX; // P[i] = y[i + 1] - y[i - 1] / x[i + 1] - x[i - 1]
         }
         derivative[source.Length - 1] = 0;

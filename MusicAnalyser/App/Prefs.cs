@@ -7,7 +7,7 @@ namespace MusicAnalyser.App
     {
         public static Dictionary<string, string> DefaultsDict = new Dictionary<string, string>
         {
-            { "UI_THEME", "0" }, { "FOLLOW_SECS", "10" }, { "UPDATE_MODE", "0" }, { "MIN_UPDATE_TIME", "10" }, { "SMOOTH_FACTOR", "4" }, { "SPECTRUM_AA", "1"},
+            { "UI_THEME", "0" }, { "FOLLOW_SECS", "10" }, { "UPDATE_MODE", "0" }, { "MIN_UPDATE_TIME", "10" }, { "SMOOTH_FACTOR", "4" },
             { "CHORD_DETECTION_INTERVAL", "10"}, {"CHORD_NOTE_OCCURENCE_OFFSET", "8"}, {"CAPTURE_DEVICE", "0"}
         };
 
@@ -20,7 +20,6 @@ namespace MusicAnalyser.App
         public static int AVG_EXECUTIONS = 10;
         public static int MIN_UPDATE_TIME = 10;
         public static int UPDATE_MODE = 0;
-        public static int SPECTRUM_AA = 1;
         public static int UI_THEME = 0;
         public static float MODAL_ROOT_DIFF = 2.0f;
         public static int CHORD_DETECTION_INTERVAL = 10;
@@ -47,9 +46,6 @@ namespace MusicAnalyser.App
                         break;
                     case "SMOOTH_FACTOR":
                         SMOOTH_FACTOR = Convert.ToInt32(prefsLoaded[key]);
-                        break;
-                    case "SPECTRUM_AA":
-                        SPECTRUM_AA = Convert.ToInt32(prefsLoaded[key]);
                         break;
                     case "CHORD_DETECTION_INTERVAL":
                         CHORD_DETECTION_INTERVAL = Convert.ToInt32(prefsLoaded[key]);

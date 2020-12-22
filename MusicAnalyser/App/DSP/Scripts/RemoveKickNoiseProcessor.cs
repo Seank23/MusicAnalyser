@@ -8,9 +8,9 @@ class RemoveKickNoiseProcessor : ISignalProcessor
     public bool IsPrimary { get { return false; } }
     public Dictionary<string, string[]> Settings { get; set; }
     public object InputBuffer { get; set; }
-    public int SampleRate { get; set; }
+    public Dictionary<string, object> InputArgs { get; set; }
     public object OutputBuffer { get; set; }
-    public double OutputScale { get; set; }
+    public Dictionary<string, object> OutputArgs { get; set; }
 
     public RemoveKickNoiseProcessor()
     {
@@ -22,9 +22,16 @@ class RemoveKickNoiseProcessor : ISignalProcessor
         };
     }
 
+    public void OnSettingsChange() { }
+
     public void Process()
     {
-        Dictionary<double, double> input = (Dictionary<double, double>)InputBuffer;
+        Dictionary<double, double> input = null;
+        if (InputBuffer.GetType().Name == "Dictionary`2")
+            input = (Dictionary<double, double>)InputBuffer;
+        if (input == null)
+            return;
+
         List<double> discardFreqs = new List<double>();
         double prevFreq = 0;
         input = input.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value); // Order: Frequency - low to high
