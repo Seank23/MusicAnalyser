@@ -114,7 +114,7 @@ namespace MusicAnalyser.App.DSP
             }
 
             processedData = (double[])audio;
-            if (!Double.IsInfinity(processedData[0]) && !Double.IsNaN(processedData[0]))
+            if (!Double.IsInfinity(processedData[0]) && !Double.IsNaN(processedData[0]) && app.Mode != 1)
                 processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
 
             MaxGain = processedData.Max();

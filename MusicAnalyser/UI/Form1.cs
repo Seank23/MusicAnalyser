@@ -475,10 +475,7 @@ namespace MusicAnalyser
 
         public void UpdateUI()
         {
-            if (Prefs.SPECTRUM_AA == 1)
-                spFFT.plt.AntiAlias(true);
-            else if (Prefs.SPECTRUM_AA == 0)
-                spFFT.plt.AntiAlias(false);
+
         }
 
         private void btnStop_Click(object sender, EventArgs e)

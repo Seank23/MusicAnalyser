@@ -202,6 +202,8 @@ namespace MusicAnalyser.App
                     ApplyScriptSettings(selectionDict.Values.ElementAt(i), preset.Values.ElementAt(i));
                 ui.SetAppliedScripts(selectionDict);
             }
+            else
+                MessageBox.Show("Error: Preset could not be applied.");
         }
 
         public bool CheckSelectionValidity(Dictionary<int, int> selectionDict, out string message)
@@ -274,17 +276,22 @@ namespace MusicAnalyser.App
 
         public void SavePreset(string name)
         {
-            int[] scripts = ui.GetSelectionDict().Values.ToArray();
-            Dictionary<string, Dictionary<string, string[]>> presetData = new Dictionary<string, Dictionary<string, string[]>>();
-            for(int i = 0; i < scripts.Length; i++)
+            if (CheckSelectionValidity(ui.GetSelectionDict(), out string message))
             {
-                string scriptName = dsp.ScriptManager.GetScriptName(scripts[i]);
-                Dictionary<string, string[]> settings = GetScriptSettings(scripts[i]);
-                presetData[scriptName] = settings;
+                int[] scripts = ui.GetSelectionDict().Values.ToArray();
+                Dictionary<string, Dictionary<string, string[]>> presetData = new Dictionary<string, Dictionary<string, string[]>>();
+                for (int i = 0; i < scripts.Length; i++)
+                {
+                    string scriptName = dsp.ScriptManager.GetScriptName(scripts[i]);
+                    Dictionary<string, string[]> settings = GetScriptSettings(scripts[i]);
+                    presetData[scriptName] = settings;
+                }
+                dsp.ScriptManager.SavePreset(name, presetData);
+                dsp.LoadPresets();
+                ApplyPreset(name);
             }
-            dsp.ScriptManager.SavePreset(name, presetData);
-            dsp.LoadPresets();
-            ApplyPreset(name);
+            else
+                MessageBox.Show("Error: Preset could not be saved, script selection is invalid.");
         }
 
         /*
