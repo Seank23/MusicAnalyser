@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*
+ * Music Analyser - Secondary Processor Script - RemoveKickNoise
+ * Auther: Sean King
+ * Culls detected peaks which may have been caused by low frequency noise (eg. kick drum)
+ * Properties:
+ * InputBuffer: type Dictionary<double, double>
+ * OutputBuffer: type Dictionary<double, double>
+ * InputArgs: None
+ * OutputArgs: None
+ * Settings:
+ * - CUTOFF_FREQ: Maximum frequency (Hz) considered for processing - type double (0 - 1000)
+ * - MAX_FREQ_CHANGE: Considers peaks for culling if they are within this percentage difference - type double (0 - 50)
+ * - SIMILAR_GAIN_THRESHOLD: Threshold within which adjacent peaks are considered similar in magnitude - type double (0 - 50)
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MusicAnalyser.App.DSP;
@@ -45,7 +59,7 @@ class RemoveKickNoiseProcessor : ISignalProcessor
                 prevFreq = freq;
                 continue;
             }
-            if ((freq - prevFreq) <= freq / 100 * (2.5 * double.Parse(Settings["MAX_FREQ_CHANGE"][0]))) // Checking for consecutive, closely packed peaks - noise
+            if ((freq - prevFreq) <= freq / 100 * double.Parse(Settings["MAX_FREQ_CHANGE"][0])) // Checking for consecutive, closely packed peaks - noise
             {
                 if (Math.Abs(input[freq] - input[prevFreq]) <= double.Parse(Settings["SIMILAR_GAIN_THRESHOLD"][0]))
                 {

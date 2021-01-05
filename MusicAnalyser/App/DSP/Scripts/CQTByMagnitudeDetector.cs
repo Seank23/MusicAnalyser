@@ -1,4 +1,16 @@
-﻿using MusicAnalyser.App.DSP;
+﻿/*
+ * Music Analyser - Primary Detector Script - CQTByMagnitude
+ * Author: Sean King
+ * Peak detection algorithm optimised for a CQT spectrum, finds peaks by largest magnitude.
+ * Properties:
+ * InputData: type double[]
+ * Output: type Dictionary<double, double>
+ * InputArgs: SCALE - Non-linear scale function to map each frequency bin to a frequency value - type Func<int, double>
+ * OutputArgs: POSITIONS - The frequency bin position of each peak - type double[]
+ * Settings:
+ * - THRESHOLD_FACTOR: Threshold above which point is considered a peak, relative to max magnitude-average magnitude - type double (0 - 1)
+ */
+using MusicAnalyser.App.DSP;
 using System;
 using System.Collections.Generic;
 using System.Linq;

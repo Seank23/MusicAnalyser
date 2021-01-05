@@ -1,4 +1,20 @@
-﻿using System;
+﻿/*
+ * Music Analyser - Primary Processor Script - BasicFFT
+ * Author: Sean King
+ * Simple Fast Fourier Transform (FFT) implementation using NAudio.
+ * Based on FFT implementation by Scott Harden:
+ * https://github.com/swharden/Csharp-Data-Visualization/tree/master/projects/17-07-16_microphone
+ * Properties:
+ * InputBuffer: type short[]
+ * OutputBuffer: type double[]
+ * InputArgs: SAMPLE_RATE - sample rate (Hz) of the input signal - type int
+ * OutputArgs: SCALE - ratio between FFT resolution and sample rate - type double
+ * Settings:
+ * - WINDOW: Specifies the window function used - type enum (values: Rectangle, Hamming, Hann, BlackmannHarris)
+ * - OUTPUT_MODE: Specifies how the output magnitude should be scaled - type enum (values: Magnitude, dB)
+ * - MAG_LIMIT: Sets the maximum output magnitude value - type int (0 - 10000)
+ */
+using System;
 using System.Collections.Generic;
 using MusicAnalyser.App.DSP;
 
