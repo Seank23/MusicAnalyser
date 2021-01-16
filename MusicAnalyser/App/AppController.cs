@@ -89,7 +89,7 @@ namespace MusicAnalyser.App
                 else return;
 
                 Opened = true;
-                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false); 
+                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false);
             }
         }
 
@@ -104,7 +104,7 @@ namespace MusicAnalyser.App
                 return;
             }
 
-            ui.Output.Init(AudioSource.SpeedControl); // Using SpeedControl SampleProvider to allow tempo changes
+            ui.Output.Init(AudioSource.FilteredSource); // Using SpeedControl SampleProvider to allow tempo changes
 
             if (ui.Output.PlaybackState == PlaybackState.Playing) // Pause audio
             {
@@ -509,6 +509,12 @@ namespace MusicAnalyser.App
             int centDifference = 50 - value;
             dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
             dsp.Analyser.GetMusic().ResetNoteCount();
+        }
+
+        public void SetFilter(float lowPassFreq, float lowPassQ, float highPassFreq, float highPassQ)
+        {
+            if(AudioSource != null)
+                AudioSource.FilteredSource.SetFilter(lowPassFreq, lowPassQ, highPassFreq, highPassQ);
         }
 
         public void Step(bool backwards)

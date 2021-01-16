@@ -688,11 +688,12 @@ namespace MusicAnalyser
             {
                 btnDefaults.Enabled = true;
                 tblSettings.ColumnCount = 2;
-                tblSettings.ColumnStyles[0] = new ColumnStyle(SizeType.Absolute, 220);
+                tblSettings.ColumnStyles[0] = new ColumnStyle(SizeType.AutoSize);
                 foreach (string[] setting in settings.Values)
                 {
                     tblSettings.RowCount++;
-                    tblSettings.Controls.Add(new Label() { Text = setting[2], MaximumSize = new Size(220, 0), AutoSize = true }, 0, tblSettings.RowCount - 1);
+                    tblSettings.Controls.Add(new Label() { Text = setting[2], MinimumSize = new Size(tblSettings.Size.Width / 2, 0),
+                        MaximumSize = new Size(tblSettings.Size.Width / 4 * 3, 0), AutoSize = true }, 0, tblSettings.RowCount - 1);
                     if (setting[1] == "int")
                     {
                         var control = new NumericUpDown()
@@ -700,7 +701,7 @@ namespace MusicAnalyser
                             Minimum = int.Parse(setting[3]),
                             Maximum = int.Parse(setting[4]),
                             Value = int.Parse(setting[0]),
-                            Size = new Size(100, 20)
+                            Size = new Size(100, 20),
                         };
                         control.ValueChanged += new EventHandler(SettingChanged);
                         tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);

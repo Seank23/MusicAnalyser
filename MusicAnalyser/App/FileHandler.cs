@@ -50,10 +50,7 @@ namespace MusicAnalyser.App
 
             using (var resampledReader = new AudioFileReader(outFile))
             {
-                var lowPass = BiQuadFilter.LowPassFilter(sampleRate, sampleRate / 4, 1);
-                var highPass = BiQuadFilter.HighPassFilter(sampleRate, 80, 1);
-
-                using (var filter = new FilterWaveProvider(resampledReader, lowPass, highPass))
+                using (var filter = new FilterWaveProvider(resampledReader, sampleRate / 4, 1, 80, 1))
                 {
                     outFile = Path.Combine(Path.GetTempPath(), "resample_and_filtered.wav");
                     WaveFileWriter.CreateWaveFile16(outFile, filter);

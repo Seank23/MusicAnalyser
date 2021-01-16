@@ -1,24 +1,26 @@
 ﻿using NAudio.Dsp;
 using NAudio.Wave;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MusicAnalyser.App.DSP
 {
-    class FilterWaveProvider : ISampleProvider, IDisposable
+    public class FilterWaveProvider : ISampleProvider, IDisposable
     {
         ISampleProvider sourceProvider;
         private BiQuadFilter lowPass;
         private BiQuadFilter highPass;
 
-        public FilterWaveProvider(ISampleProvider sourceProvider, BiQuadFilter lowPass, BiQuadFilter highPass)
+        public FilterWaveProvider(ISampleProvider sourceProvider, float lowPassFreq = 20000, float lowPassQ = 1, float highPassFreq = 20, float highPassQ = 1)
         {
             this.sourceProvider = sourceProvider;
-            this.lowPass = lowPass;
-            this.highPass = highPass;
+            lowPass = BiQuadFilter.LowPassFilter(WaveFormat.SampleRate, lowPassFreq, lowPassQ);
+            highPass = BiQuadFilter.HighPassFilter(WaveFormat.SampleRate, highPassFreq, highPassQ);
+        }
+
+        public void SetFilter(float lowPassFreq, float lowPassQ, float highPassFreq, float highPassQ)
+        {
+            lowPass.SetLowPassFilter(WaveFormat.SampleRate, lowPassFreq, lowPassQ);
+            highPass.SetHighPassFilter(WaveFormat.SampleRate, highPassFreq, highPassQ);
         }
 
         public WaveFormat WaveFormat { get { return sourceProvider.WaveFormat; } }
@@ -27,6 +29,7 @@ namespace MusicAnalyser.App.DSP
         {
             sourceProvider = null;
             lowPass = null;
+            highPass = null;
         }
 
         public int Read(float[] buffer, int offset, int count)

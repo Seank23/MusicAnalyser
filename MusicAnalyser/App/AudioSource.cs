@@ -1,10 +1,7 @@
-﻿using NAudio.Wave;
+﻿using MusicAnalyser.App.DSP;
+using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VarispeedDemo.SoundTouch;
 
 namespace MusicAnalyser.App
@@ -16,6 +13,7 @@ namespace MusicAnalyser.App
         private WaveStream audioGraph;
         private WaveChannel32 audioStream;
         public VarispeedSampleProvider SpeedControl { set; get; }
+        public FilterWaveProvider FilteredSource { get; set; }
 
         public WaveStream Audio
         {
@@ -25,6 +23,7 @@ namespace MusicAnalyser.App
                 audio = value;
                 audioStream = new WaveChannel32(value);
                 SpeedControl = new VarispeedSampleProvider(new WaveToSampleProvider(audioStream), 10, new SoundTouchProfile(true, false));
+                FilteredSource = new FilterWaveProvider(SpeedControl);
             }
         }
 
@@ -48,6 +47,8 @@ namespace MusicAnalyser.App
 
         public void Dispose()
         {
+            FilteredSource.Dispose();
+            FilteredSource = null;
             SpeedControl.Dispose();
             SpeedControl = null;
             audio.Dispose();
