@@ -511,10 +511,33 @@ namespace MusicAnalyser.App
             dsp.Analyser.GetMusic().ResetNoteCount();
         }
 
-        public void SetFilter(float lowPassFreq, float lowPassQ, float highPassFreq, float highPassQ)
+        public void SetFilter(float lowPassFreq, float highPassFreq, float centreFreq, float centreQ, float gain)
         {
-            if(AudioSource != null)
-                AudioSource.FilteredSource.SetFilter(lowPassFreq, lowPassQ, highPassFreq, highPassQ);
+            if (AudioSource != null)
+            {
+                AudioSource.FilteredSource.SetBandFilter(lowPassFreq, 1, highPassFreq, 1);
+                AudioSource.FilteredSource.SetPeakFilter(centreFreq, centreQ, gain);
+            }
+        }
+
+        public void GetFilterRange(double x, double y)
+        {
+            double lowFreq = 20000;
+            double highFreq = 20;
+            double centreFreq = x;
+            if(dsp.GetScriptVal("SCALE", "Func`2") != null)
+            {
+                Func<int, double> scale = (Func<int, double>)dsp.GetScriptVal("SCALE", "Func`2");
+                centreFreq = scale((int)x);
+            }
+            if (y > 0.7)
+            {
+                highFreq = 20 + (centreFreq - 2.8 * (centreFreq / 100) - 20) * y;
+                lowFreq = centreFreq + centreFreq - highFreq;
+            }
+            SetFilter((float)lowFreq, (float)highFreq, (float)centreFreq, (float)(16 * y), (float)(40 * y));
+            string note = dsp.Analyser.GetMusic().GetNote(centreFreq);
+            ui.SetFilterText(note, centreFreq);
         }
 
         public void Step(bool backwards)

@@ -19,6 +19,7 @@ namespace MusicAnalyser
         private AppController app;
 
         private int selectedScript;
+        private Point filterDragPoint;
 
         public Form1()
         {
@@ -27,6 +28,7 @@ namespace MusicAnalyser
             SetupFFTPlot();
             barVolume.Value = 10;
             SetModeText("");
+            btnFilterDrag.Draggable(true);
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             OnSelectorChange();
@@ -139,6 +141,7 @@ namespace MusicAnalyser
                 {
                     btnOpenClose.Text = "Close";
                     btnOpenClose.Enabled = true;
+                    chbFilter.Enabled = true;
                     if (app.ScriptSelectionValid)
                     {
                         btnPlay.Enabled = true;
@@ -167,11 +170,13 @@ namespace MusicAnalyser
                     btnStop.Enabled = false;
                     stopToolStripMenuItem.Enabled = false;
                     playToolStripMenuItem.Enabled = false;
+                    chbFilter.Enabled = false;
                 }
             }
             else if(segMode.SelectedIndex == 1)
             {
-                if(app.Opened && app.ScriptSelectionValid)
+                chbFilter.Enabled = false;
+                if (app.Opened && app.ScriptSelectionValid)
                 {
                     btnOpenClose.Enabled = true;
                     btnStop.Enabled = true;
@@ -184,7 +189,8 @@ namespace MusicAnalyser
             }
             else if(segMode.SelectedIndex == 2)
             {
-                if(app.IsRecording)
+                chbFilter.Enabled = false;
+                if (app.IsRecording)
                     btnPlay.Text = "Stop Recording";
                 else
                     btnPlay.Text = "Start Recording";
@@ -802,5 +808,42 @@ namespace MusicAnalyser
         {
             app.StepMilliseconds = (int)numStepVal.Value;
         }
+
+        private void btnFilterDrag_Move(object sender, EventArgs e)
+        {
+            if(btnFilterDrag.Location.X > spFFT.Location.X + 50 && btnFilterDrag.Location.X < spFFT.Location.X + spFFT.Width - 40
+                && btnFilterDrag.Location.Y > spFFT.Location.Y + 20 && btnFilterDrag.Location.Y < spFFT.Location.Y + spFFT.Height - 60)
+            {
+                lblFilterFreq.Location = new Point(btnFilterDrag.Location.X + 35, btnFilterDrag.Location.Y + 5);
+                double xCoord = spFFT.plt.CoordinateFromPixelX(btnFilterDrag.Location.X);
+                double yPercent = (double)Math.Abs(btnFilterDrag.Location.Y - (spFFT.Location.Y + spFFT.Height - 60)) / (spFFT.Height - 80);
+                app.GetFilterRange(xCoord, yPercent);
+            }
+            else
+            {
+                btnFilterDrag.Location = filterDragPoint;
+            }
+            filterDragPoint = btnFilterDrag.Location;
+        }
+
+        private void chbFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            if(chbFilter.Checked)
+            {
+                btnFilterDrag.Enabled = true;
+                btnFilterDrag.Visible = true;
+                lblFilterFreq.Visible = true;
+                btnFilterDrag_Move(null, null);
+            }
+            else
+            {
+                btnFilterDrag.Enabled = false;
+                btnFilterDrag.Visible = false;
+                lblFilterFreq.Visible = false;
+                app.SetFilter(20000, 20, 10000, 1, 1);
+            }
+        }
+
+        public void SetFilterText(string note, double freq) { lblFilterFreq.Text = note + "\n" + Math.Round(freq, 1) + " Hz"; }
     }
 }

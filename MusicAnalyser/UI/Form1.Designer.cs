@@ -103,10 +103,13 @@
             this.cbPresets = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
             this.btnSavePreset = new System.Windows.Forms.Button();
-            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             this.segMode = new XanderUI.XUISegment();
             this.numStepVal = new System.Windows.Forms.NumericUpDown();
             this.lblStep = new System.Windows.Forms.Label();
+            this.btnFilterDrag = new MusicAnalyser.UI.RoundButton();
+            this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
+            this.chbFilter = new System.Windows.Forms.CheckBox();
+            this.lblFilterFreq = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
@@ -844,26 +847,6 @@
             this.btnSavePreset.UseVisualStyleBackColor = true;
             this.btnSavePreset.Click += new System.EventHandler(this.btnSavePreset_Click);
             // 
-            // cwvViewer
-            // 
-            this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cwvViewer.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.cwvViewer.BytesPerSample = 0;
-            this.cwvViewer.LeftSample = ((long)(0));
-            this.cwvViewer.Location = new System.Drawing.Point(32, 114);
-            this.cwvViewer.LoopEndSample = ((long)(0));
-            this.cwvViewer.Name = "cwvViewer";
-            this.cwvViewer.PenColor = System.Drawing.Color.DodgerBlue;
-            this.cwvViewer.PenWidth = 1F;
-            this.cwvViewer.RightSample = ((long)(0));
-            this.cwvViewer.SamplesPerPixel = 128;
-            this.cwvViewer.SelectSample = ((long)(0));
-            this.cwvViewer.Size = new System.Drawing.Size(1490, 301);
-            this.cwvViewer.StartPosition = ((long)(0));
-            this.cwvViewer.TabIndex = 2;
-            this.cwvViewer.WaveStream = null;
-            // 
             // segMode
             // 
             this.segMode.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -915,12 +898,72 @@
             this.lblStep.Text = "Step (ms):";
             this.lblStep.Visible = false;
             // 
+            // btnFilterDrag
+            // 
+            this.btnFilterDrag.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnFilterDrag.Enabled = false;
+            this.btnFilterDrag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFilterDrag.Location = new System.Drawing.Point(728, 647);
+            this.btnFilterDrag.Name = "btnFilterDrag";
+            this.btnFilterDrag.Size = new System.Drawing.Size(30, 30);
+            this.btnFilterDrag.TabIndex = 44;
+            this.btnFilterDrag.TabStop = false;
+            this.btnFilterDrag.UseVisualStyleBackColor = false;
+            this.btnFilterDrag.Visible = false;
+            this.btnFilterDrag.Move += new System.EventHandler(this.btnFilterDrag_Move);
+            // 
+            // cwvViewer
+            // 
+            this.cwvViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cwvViewer.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.cwvViewer.BytesPerSample = 0;
+            this.cwvViewer.LeftSample = ((long)(0));
+            this.cwvViewer.Location = new System.Drawing.Point(32, 114);
+            this.cwvViewer.LoopEndSample = ((long)(0));
+            this.cwvViewer.Name = "cwvViewer";
+            this.cwvViewer.PenColor = System.Drawing.Color.DodgerBlue;
+            this.cwvViewer.PenWidth = 1F;
+            this.cwvViewer.RightSample = ((long)(0));
+            this.cwvViewer.SamplesPerPixel = 128;
+            this.cwvViewer.SelectSample = ((long)(0));
+            this.cwvViewer.Size = new System.Drawing.Size(1490, 301);
+            this.cwvViewer.StartPosition = ((long)(0));
+            this.cwvViewer.TabIndex = 2;
+            this.cwvViewer.WaveStream = null;
+            // 
+            // chbFilter
+            // 
+            this.chbFilter.AutoSize = true;
+            this.chbFilter.Location = new System.Drawing.Point(861, 472);
+            this.chbFilter.Name = "chbFilter";
+            this.chbFilter.Size = new System.Drawing.Size(154, 21);
+            this.chbFilter.TabIndex = 45;
+            this.chbFilter.Text = "Note Highlight Filter";
+            this.chbFilter.UseVisualStyleBackColor = true;
+            this.chbFilter.CheckedChanged += new System.EventHandler(this.chbFilter_CheckedChanged);
+            // 
+            // lblFilterFreq
+            // 
+            this.lblFilterFreq.AutoSize = true;
+            this.lblFilterFreq.Font = new System.Drawing.Font("Century Gothic", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFilterFreq.ForeColor = System.Drawing.Color.Gray;
+            this.lblFilterFreq.Location = new System.Drawing.Point(764, 654);
+            this.lblFilterFreq.Name = "lblFilterFreq";
+            this.lblFilterFreq.Size = new System.Drawing.Size(53, 19);
+            this.lblFilterFreq.TabIndex = 46;
+            this.lblFilterFreq.Text = "440 Hz";
+            this.lblFilterFreq.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1908, 945);
+            this.Controls.Add(this.lblFilterFreq);
+            this.Controls.Add(this.chbFilter);
+            this.Controls.Add(this.btnFilterDrag);
             this.Controls.Add(this.lblStep);
             this.Controls.Add(this.numStepVal);
             this.Controls.Add(this.segMode);
@@ -1087,6 +1130,9 @@
         private XanderUI.XUISegment segMode;
         private System.Windows.Forms.NumericUpDown numStepVal;
         private System.Windows.Forms.Label lblStep;
+        private MusicAnalyser.UI.RoundButton btnFilterDrag;
+        private System.Windows.Forms.CheckBox chbFilter;
+        private System.Windows.Forms.Label lblFilterFreq;
     }
 }
 
