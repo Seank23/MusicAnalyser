@@ -37,8 +37,10 @@
             // 
             this.cbScript.FormattingEnabled = true;
             this.cbScript.Location = new System.Drawing.Point(63, 3);
+            this.cbScript.MaximumSize = new System.Drawing.Size(150, 0);
+            this.cbScript.MinimumSize = new System.Drawing.Size(100, 0);
             this.cbScript.Name = "cbScript";
-            this.cbScript.Size = new System.Drawing.Size(121, 24);
+            this.cbScript.Size = new System.Drawing.Size(150, 24);
             this.cbScript.TabIndex = 0;
             this.cbScript.SelectedIndexChanged += new System.EventHandler(this.cbScript_SelectedIndexChanged);
             this.cbScript.Click += new System.EventHandler(this.cbScript_Click);
@@ -46,16 +48,17 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 6);
+            this.label1.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 17);
+            this.label1.Size = new System.Drawing.Size(60, 19);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Script 1:";
+            this.label1.Text = "Script 1";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // btnRemove
             // 
-            this.btnRemove.Location = new System.Drawing.Point(190, 4);
+            this.btnRemove.Location = new System.Drawing.Point(219, 4);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(30, 23);
             this.btnRemove.TabIndex = 2;
@@ -68,11 +71,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbScript);
             this.Name = "ScriptSelector";
-            this.Size = new System.Drawing.Size(224, 32);
+            this.Size = new System.Drawing.Size(256, 32);
             this.ResumeLayout(false);
             this.PerformLayout();
 

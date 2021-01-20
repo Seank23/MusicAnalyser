@@ -406,15 +406,15 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Blue, false);
 
                         X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }
@@ -515,8 +515,11 @@ namespace MusicAnalyser.App
         {
             if (AudioSource != null)
             {
-                AudioSource.FilteredSource.SetBandFilter(lowPassFreq, 1, highPassFreq, 1);
-                AudioSource.FilteredSource.SetPeakFilter(centreFreq, centreQ, gain);
+                if (AudioSource.FilteredSource != null)
+                {
+                    AudioSource.FilteredSource.SetBandFilter(lowPassFreq, 1, highPassFreq, 1);
+                    AudioSource.FilteredSource.SetPeakFilter(centreFreq, centreQ, gain);
+                }
             }
         }
 
@@ -532,7 +535,7 @@ namespace MusicAnalyser.App
             }
             if (y > 0.7)
             {
-                highFreq = 20 + (centreFreq - 2.8 * (centreFreq / 100) - 20) * y;
+                highFreq = 20 + (centreFreq - 2.8 * (centreFreq / 100) - 20) * Math.Pow(y, 6);
                 lowFreq = centreFreq + centreFreq - highFreq;
             }
             SetFilter((float)lowFreq, (float)highFreq, (float)centreFreq, (float)(16 * y), (float)(40 * y));

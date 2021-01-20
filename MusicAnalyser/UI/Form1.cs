@@ -218,6 +218,7 @@ namespace MusicAnalyser
 
         public void ClearUI()
         {
+            chbFilter.Checked = false;
             this.Text = "Music Analyser";
             lstChords.Items.Clear();
             spFFT.plt.Clear();
@@ -421,9 +422,9 @@ namespace MusicAnalyser
 
         private void SetupFFTPlot()
         {
-            spFFT.plt.Title("Frequency Spectrum");
-            spFFT.plt.YLabel("Magnitude", fontSize: 12);
-            spFFT.plt.XLabel("Frequency (Hz)", fontSize: 12);
+            spFFT.plt.Title("Frequency Spectrum", fontName: "Open Sans");
+            spFFT.plt.YLabel("Magnitude", fontName: "Open Sans", fontSize: 12);
+            spFFT.plt.XLabel("Frequency (Hz)", fontName: "Open Sans", fontSize: 12);
             spFFT.Render();
         }
 
@@ -459,7 +460,7 @@ namespace MusicAnalyser
         public void EnableTimer(bool enable) { timerFFT.Enabled = enable; }
         public void ClearNotesList() { lstChords.Items.Clear(); }
         public void PrintChord(string text) { lstChords.Items.Add(text); }
-        public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontSize: 16, bold: isBold); }
+        public void PlotNote(string name, double freq, double gain, Color color, bool isBold) { spFFT.plt.PlotText(name, freq, gain, color, fontName: "Open Sans", fontSize: 16, bold: isBold); }
         public void SetKeyText(string text) { lblKey.Text = text; }
         public void SetModeText(string text) { lblMode.Text = text; }
         public void SetErrorText(string text) { lblError.Text = text; }
@@ -605,7 +606,7 @@ namespace MusicAnalyser
 
         private void OnAddScript()
         {
-            flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
+            flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count});
             app.AddScript();
             OnSelectorChange();
         }
