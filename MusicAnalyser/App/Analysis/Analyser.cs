@@ -153,75 +153,20 @@ namespace MusicAnalyser.App.Analysis
         {
             double[] percents = new double[notePercent.Length];
             Array.Copy(notePercent, percents, percents.Length);
+            Dictionary<int, double> noteDict = new Dictionary<int, double>();
             string[] dominantNotes = new string[7];
-            double largestPercent;
-            int largestIndex;
 
-            // Finds the 7 most common notes based on the percentage of the total notes identified that note occupies
-            for (int i = 0; i < dominantNotes.Length; i++)
-            {
-                largestPercent = percents[0];
-                largestIndex = 0;
-                for (int j = 1; j < percents.Length; j++)
-                {
-                    if (percents[j] > largestPercent)
-                    {
-                        largestPercent = percents[j];
-                        largestIndex = j;
-                    }
-                }
-                dominantNotes[i] = Music.GetNoteName(largestIndex);
-                percents[largestIndex] = 0;
-            }
+            // Gets key probabilities from 7 most common notes
+            for (int i = 0; i < percents.Length; i++)
+                noteDict.Add(i, percents[i]);
 
-            int[] keyProbability = Music.FindScaleProbability(dominantNotes);
+            noteDict = noteDict.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+            noteDict = noteDict.Take(dominantNotes.Length).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-            largestIndex = 0;
-            bool confident = false;
-            List<int> possibleKeys = new List<int>();
+            double[] keyPercents = Music.FindTotalScalePercentages(noteDict);
+            var maxPercent = keyPercents.Select((n, i) => (Number: n, Index: i)).Max();
 
-            // Based on the key probablities, decides the most likely key signature at current time
-            for (int i = 0; i < keyProbability.Length; i++)
-            {
-                if (keyProbability[i] == 7) // If the 7 most common notes are present in a single key signature, then that is the most likely key signature
-                {
-                    largestIndex = i;
-                    possibleKeys.Clear();
-                    confident = true;
-                    break;
-                }
-                else if (keyProbability[i] == 6) // If 6 of the most common notes are present in a key signature, then that is a possible key
-                {
-                    possibleKeys.Add(i);
-                }
-            }
-            if (possibleKeys.Count > 0)
-            {
-                List<double> lowNotes = new List<double>();
-                // Finds most likely of possible keys by checking the missing note in each, if it is more common than the missing notes in other possible keys then that is the most likely key
-                foreach (int keyIndex in possibleKeys)
-                {
-                    string[] scale = new string[7];
-                    Array.Copy(Music.Scales, keyIndex * 7, scale, 0, scale.Length);
-                    double lowest = notePercent[Music.GetNoteIndex(scale[0] + "0")];
-                    for (int i = 1; i < scale.Length; i++)
-                    {
-                        double percentage = notePercent[Music.GetNoteIndex(scale[i] + "0")];
-                        if (percentage < lowest)
-                            lowest = percentage;
-                    }
-                    lowNotes.Add(lowest);
-                }
-                int highOfLowIndex = lowNotes.IndexOf(lowNotes.Max());
-                largestIndex = possibleKeys[highOfLowIndex];
-            }
-            else if (!confident) // There is no discernable key
-            {
-                currentKey = "N/A";
-                majorKeyRoot = "N/A";
-                return;
-            }
-            string keyRoot = Music.GetNoteName(largestIndex);
+            string keyRoot = Music.GetNoteName(maxPercent.Index);
             if (music.IsMinor(keyRoot, out string minorRoot)) // Checks if key is most likely the relative minor of original prediction
                 currentKey = minorRoot + " Minor";
             else

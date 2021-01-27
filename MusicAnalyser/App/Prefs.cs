@@ -21,7 +21,7 @@ namespace MusicAnalyser.App
         public static int MIN_UPDATE_TIME = 10;
         public static int UPDATE_MODE = 0;
         public static int UI_THEME = 0;
-        public static float MODAL_ROOT_DIFF = 2.0f;
+        public static float MODAL_ROOT_DIFF = 4.0f;
         public static int CHORD_DETECTION_INTERVAL = 10;
         public static int CHORD_NOTE_OCCURENCE_OFFSET = 8;
         public static int CAPTURE_DEVICE = 0;

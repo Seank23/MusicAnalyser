@@ -350,9 +350,9 @@ namespace MusicAnalyser.App
         {
             return Task.Factory.StartNew(() =>
             {
-                dsp.Analyser.FindKey();
                 if (analysisUpdates % Prefs.CHORD_DETECTION_INTERVAL == 0)
                 {
+                    dsp.Analyser.FindKey();
                     ui.InvokeUI(() => ui.ClearNotesList());
                     if (dsp.Analyser.FindChordsNotes())
                     {
