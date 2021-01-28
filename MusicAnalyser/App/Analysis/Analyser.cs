@@ -154,14 +154,9 @@ namespace MusicAnalyser.App.Analysis
             double[] percents = new double[notePercent.Length];
             Array.Copy(notePercent, percents, percents.Length);
             Dictionary<int, double> noteDict = new Dictionary<int, double>();
-            string[] dominantNotes = new string[7];
 
-            // Gets key probabilities from 7 most common notes
             for (int i = 0; i < percents.Length; i++)
                 noteDict.Add(i, percents[i]);
-
-            noteDict = noteDict.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-            noteDict = noteDict.Take(dominantNotes.Length).ToDictionary(pair => pair.Key, pair => pair.Value);
 
             double[] keyPercents = Music.FindTotalScalePercentages(noteDict);
             var maxPercent = keyPercents.Select((n, i) => (Number: n, Index: i)).Max();
