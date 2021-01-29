@@ -29,6 +29,7 @@ namespace MusicAnalyser
             barVolume.Value = 10;
             SetModeText("");
             btnFilterDrag.Draggable(true);
+            btnFilterDrag.Location = new Point(spFFT.Location.X + spFFT.Width / 2, spFFT.Location.Y + spFFT.Height / 2);
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             OnSelectorChange();
