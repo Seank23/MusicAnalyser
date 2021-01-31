@@ -80,6 +80,9 @@ class PitchByMagnitudeDetector : ISignalDetector
             while (clusterSize / scale <= noteFreqs[i] / 100 * double.Parse(Settings["FREQ_TOLERANCE"][0]))
                 clusterSize++;
 
+            if (inputIndex + clusterSize > input.Length)
+                break;
+
             double avgMag = 0;
             double maxVal = 0, maxIndex = 0;
             for (int j = -clusterSize; j < clusterSize; j++)

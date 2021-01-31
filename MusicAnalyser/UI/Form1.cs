@@ -28,8 +28,8 @@ namespace MusicAnalyser
             SetupFFTPlot();
             barVolume.Value = 10;
             SetModeText("");
-            btnFilterDrag.Draggable(true);
             btnFilterDrag.Location = new Point(spFFT.Location.X + spFFT.Width / 2, spFFT.Location.Y + spFFT.Height / 2);
+            btnFilterDrag.Draggable(true);
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             OnSelectorChange();
@@ -816,10 +816,13 @@ namespace MusicAnalyser
             if(btnFilterDrag.Location.X > spFFT.Location.X + 50 && btnFilterDrag.Location.X < spFFT.Location.X + spFFT.Width - 40
                 && btnFilterDrag.Location.Y > spFFT.Location.Y + 20 && btnFilterDrag.Location.Y < spFFT.Location.Y + spFFT.Height - 60)
             {
-                lblFilterFreq.Location = new Point(btnFilterDrag.Location.X + 35, btnFilterDrag.Location.Y + 5);
-                double xCoord = spFFT.plt.CoordinateFromPixelX(btnFilterDrag.Location.X);
-                double yPercent = (double)Math.Abs(btnFilterDrag.Location.Y - (spFFT.Location.Y + spFFT.Height - 60)) / (spFFT.Height - 80);
-                app.GetFilterRange(xCoord, yPercent);
+                if (Output != null)
+                {
+                    lblFilterFreq.Location = new Point(btnFilterDrag.Location.X + 35, btnFilterDrag.Location.Y + 5);
+                    double xCoord = spFFT.plt.CoordinateFromPixelX(btnFilterDrag.Location.X);
+                    double yPercent = (double)Math.Abs(btnFilterDrag.Location.Y - (spFFT.Location.Y + spFFT.Height - 60)) / (spFFT.Height - 80);
+                    app.GetFilterRange(xCoord, yPercent);
+                }
             }
             else
             {

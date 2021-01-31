@@ -59,7 +59,7 @@ class RemoveKickNoiseProcessor : ISignalProcessor
                 prevFreq = freq;
                 continue;
             }
-            if ((freq - prevFreq) <= freq / 100 * double.Parse(Settings["MAX_FREQ_CHANGE"][0])) // Checking for consecutive, closely packed peaks - noise
+            if ((freq - prevFreq) <= freq / 100 * (2.5 * double.Parse(Settings["MAX_FREQ_CHANGE"][0]))) // Checking for consecutive, closely packed peaks - noise
             {
                 if (Math.Abs(input[freq] - input[prevFreq]) <= double.Parse(Settings["SIMILAR_GAIN_THRESHOLD"][0]))
                 {
