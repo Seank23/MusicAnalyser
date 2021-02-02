@@ -98,11 +98,14 @@ namespace MusicAnalyser.App
          */
         public void TriggerPlayPause()
         {
-            if (ui.Output == null)
+            if (ui.Output == null || !Opened)
             {
                 Console.WriteLine("Error: No output provider exists");
                 return;
             }
+
+            if (!ScriptSelectionApplied)
+                return;
 
             ui.Output.Init(AudioSource.FilteredSource); // Using SpeedControl SampleProvider to allow tempo changes
 

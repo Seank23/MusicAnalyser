@@ -533,7 +533,7 @@ namespace MusicAnalyser
                     if (Output != null)
                         app.TriggerPlayPause();
                     break;
-                case Keys.Back:
+                case Keys.F2:
                     if (Output != null)
                         app.TriggerStop();
                     break;
@@ -541,10 +541,10 @@ namespace MusicAnalyser
                     if (Output != null)
                         app.TriggerClose();
                     break;
-                case Keys.O:
+                case Keys.F1:
                     app.TriggerOpenFile();
                     break;
-                case Keys.Tab:
+                case Keys.ShiftKey:
                     if (Output != null)
                         cwvViewer.FitToScreen();
                     break;
