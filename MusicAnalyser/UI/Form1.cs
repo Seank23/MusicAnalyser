@@ -28,6 +28,11 @@ namespace MusicAnalyser
             SetupFFTPlot();
             barVolume.Value = 10;
             SetModeText("");
+            flpScripts.AutoScroll = false;
+            flpScripts.HorizontalScroll.Enabled = false;
+            flpScripts.HorizontalScroll.Visible = false;
+            flpScripts.HorizontalScroll.Maximum = 0;
+            flpScripts.AutoScroll = true;
             btnFilterDrag.Location = new Point(spFFT.Location.X + spFFT.Width / 2, spFFT.Location.Y + spFFT.Height / 2);
             btnFilterDrag.Draggable(true);
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
@@ -683,6 +688,7 @@ namespace MusicAnalyser
             tblSettings.AutoScroll = false;
             tblSettings.VerticalScroll.Visible = false;
             tblSettings.AutoScroll = true;
+            int scrollWidth = 10;
 
             Dictionary<string, string[]> settings = app.GetScriptSettings(scriptIndex);
 
@@ -700,8 +706,8 @@ namespace MusicAnalyser
                 foreach (string[] setting in settings.Values)
                 {
                     tblSettings.RowCount++;
-                    tblSettings.Controls.Add(new Label() { Text = setting[2], MinimumSize = new Size(tblSettings.Size.Width / 2, 0),
-                        MaximumSize = new Size(tblSettings.Size.Width / 4 * 3, 0), AutoSize = true }, 0, tblSettings.RowCount - 1);
+                    tblSettings.Controls.Add(new Label() { Text = setting[2], MinimumSize = new Size(tblSettings.Size.Width / 2 - scrollWidth, 0),
+                        MaximumSize = new Size((int)(tblSettings.Size.Width / 1.75) - scrollWidth, 0), AutoSize = true }, 0, tblSettings.RowCount - 1);
                     if (setting[1] == "int")
                     {
                         var control = new NumericUpDown()
@@ -709,7 +715,7 @@ namespace MusicAnalyser
                             Minimum = int.Parse(setting[3]),
                             Maximum = int.Parse(setting[4]),
                             Value = int.Parse(setting[0]),
-                            Size = new Size(100, 20),
+                            Size = new Size(95, 20),
                         };
                         control.ValueChanged += new EventHandler(SettingChanged);
                         tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
@@ -722,7 +728,7 @@ namespace MusicAnalyser
                             Maximum = (decimal)double.Parse(setting[4]),
                             Value = (decimal)double.Parse(setting[0]),
                             DecimalPlaces = 2,
-                            Size = new Size(100, 20)
+                            Size = new Size(95, 20)
                         };
                         control.ValueChanged += new EventHandler(SettingChanged);
                         tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
@@ -730,6 +736,7 @@ namespace MusicAnalyser
                     else if(setting[1] == "enum")
                     {
                         var control = new ComboBox();
+                        control.Size = new Size(95, 20);
                         string[] options = setting[3].Split('|');
                         control.Items.AddRange(options);
                         control.SelectedItem = setting[0];
@@ -739,6 +746,7 @@ namespace MusicAnalyser
                     else
                     {
                         var control = new TextBox() { Text = setting[0] };
+                        control.Size = new Size(95, 20);
                         control.TextChanged += new EventHandler(SettingChanged);
                         tblSettings.Controls.Add(control, 1, tblSettings.RowCount - 1);
                     }

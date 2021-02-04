@@ -37,11 +37,11 @@
             // 
             this.cbScript.FormattingEnabled = true;
             this.cbScript.Location = new System.Drawing.Point(47, 2);
-            this.cbScript.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbScript.Margin = new System.Windows.Forms.Padding(2);
             this.cbScript.MaximumSize = new System.Drawing.Size(114, 0);
             this.cbScript.MinimumSize = new System.Drawing.Size(50, 0);
             this.cbScript.Name = "cbScript";
-            this.cbScript.Size = new System.Drawing.Size(114, 21);
+            this.cbScript.Size = new System.Drawing.Size(96, 21);
             this.cbScript.TabIndex = 0;
             this.cbScript.SelectedIndexChanged += new System.EventHandler(this.cbScript_SelectedIndexChanged);
             this.cbScript.Click += new System.EventHandler(this.cbScript_Click);
@@ -60,8 +60,8 @@
             // 
             // btnRemove
             // 
-            this.btnRemove.Location = new System.Drawing.Point(164, 3);
-            this.btnRemove.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRemove.Location = new System.Drawing.Point(147, 4);
+            this.btnRemove.Margin = new System.Windows.Forms.Padding(2);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(22, 19);
             this.btnRemove.TabIndex = 2;
@@ -78,9 +78,9 @@
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbScript);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ScriptSelector";
-            this.Size = new System.Drawing.Size(188, 25);
+            this.Size = new System.Drawing.Size(172, 25);
             this.ResumeLayout(false);
             this.PerformLayout();
 
