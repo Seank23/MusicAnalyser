@@ -89,7 +89,7 @@ namespace MusicAnalyser.App
                 else return;
 
                 Opened = true;
-                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false); 
+                ui.SetupPlaybackUI(source.AudioGraph, open.FileName, false);
             }
         }
 
@@ -98,13 +98,16 @@ namespace MusicAnalyser.App
          */
         public void TriggerPlayPause()
         {
-            if (ui.Output == null)
+            if (ui.Output == null || !Opened)
             {
                 Console.WriteLine("Error: No output provider exists");
                 return;
             }
 
-            ui.Output.Init(AudioSource.SpeedControl); // Using SpeedControl SampleProvider to allow tempo changes
+            if (!ScriptSelectionApplied)
+                return;
+
+            ui.Output.Init(AudioSource.FilteredSource); // Using SpeedControl SampleProvider to allow tempo changes
 
             if (ui.Output.PlaybackState == PlaybackState.Playing) // Pause audio
             {
@@ -350,9 +353,9 @@ namespace MusicAnalyser.App
         {
             return Task.Factory.StartNew(() =>
             {
-                dsp.Analyser.FindKey();
                 if (analysisUpdates % Prefs.CHORD_DETECTION_INTERVAL == 0)
                 {
+                    dsp.Analyser.FindKey();
                     ui.InvokeUI(() => ui.ClearNotesList());
                     if (dsp.Analyser.FindChordsNotes())
                     {
@@ -406,15 +409,15 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.075), Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Blue, false);
 
                         X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }
@@ -509,6 +512,38 @@ namespace MusicAnalyser.App
             int centDifference = 50 - value;
             dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
             dsp.Analyser.GetMusic().ResetNoteCount();
+        }
+
+        public void SetFilter(float lowPassFreq, float highPassFreq, float centreFreq, float centreQ, float gain)
+        {
+            if (AudioSource != null)
+            {
+                if (AudioSource.FilteredSource != null)
+                {
+                    AudioSource.FilteredSource.SetBandFilter(lowPassFreq, 1, highPassFreq, 1);
+                    AudioSource.FilteredSource.SetPeakFilter(centreFreq, centreQ, gain);
+                }
+            }
+        }
+
+        public void GetFilterRange(double x, double y)
+        {
+            double lowFreq = 20000;
+            double highFreq = 20;
+            double centreFreq = x;
+            if(dsp.GetScriptVal("SCALE", "Func`2") != null)
+            {
+                Func<int, double> scale = (Func<int, double>)dsp.GetScriptVal("SCALE", "Func`2");
+                centreFreq = scale((int)x);
+            }
+            if (y > 0.7)
+            {
+                highFreq = 20 + (centreFreq - 2.8 * (centreFreq / 100) - 20) * Math.Pow(y, 6);
+                lowFreq = centreFreq + centreFreq - highFreq;
+            }
+            SetFilter((float)lowFreq, (float)highFreq, (float)centreFreq, (float)(16 * y), (float)(40 * y));
+            string note = dsp.Analyser.GetMusic().GetNote(centreFreq);
+            ui.SetFilterText(note, centreFreq);
         }
 
         public void Step(bool backwards)

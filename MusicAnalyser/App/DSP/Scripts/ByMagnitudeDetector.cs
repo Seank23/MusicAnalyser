@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+ * Music Analyser - Primary Detector Script - ByMagnitude
+ * Author: Sean King
+ * Performs generic peak detection by finding the points in the signal with the largest magnitude.
+ * Searches through the input signal adding peak values to a rolling buffer, resolves clusters of points to a single value (largest in cluster).
+ * Properties:
+ * InputData: type double[]
+ * Output: type Dictionary<double, double>
+ * InputArgs: SCALE - ratio between number of input values and sample rate - type double
+ * OutputArgs: None
+ * Settings:
+ * - MIN_FREQ: Frequency (Hz) to start analysis at - type int (0 - 20000)
+ * - MAX_FREQ: Frequency (Hz) to end analysis at - type int (0 - 20000)
+ * - THOLD_FROM_AVG: Threshold above average magnitude for value to be considered a peak - type int (-50 - 50)
+ * - PEAK_BUFFER: Size of the rolling peak buffer - type int (0 - 500)
+ * - MAX_GAIN_CHANGE: Magnitude difference above which adjacent peaks will be culled - type double (0 - 50)
+ * - MAX_FREQ_CHANGE: Percent frequency margin within which peaks are considered in a cluster - type double (0 - 50)
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MusicAnalyser.App.DSP;
@@ -21,7 +39,7 @@ class ByMagnitudeDetector : ISignalDetector
             { "THOLD_FROM_AVG", new string[] { "25", "int", "Gain Threshold (from Avg) (dB)", "-50", "50" } },
             { "PEAK_BUFFER", new string[] { "90", "int", "Spectrum Peak Buffer Size", "0", "500" } },
             { "MAX_GAIN_CHANGE", new string[] { "8", "double", "Max Gain Change (dB)", "0", "50" } },
-            { "MAX_FREQ_CHANGE", new string[] { "2.8", "double", "Max Frequency Change (Hz)", "0", "50" } },
+            { "MAX_FREQ_CHANGE", new string[] { "2.8", "double", "Max Frequency Change %", "0", "50" } },
         };
     }
 

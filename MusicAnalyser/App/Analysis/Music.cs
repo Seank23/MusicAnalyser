@@ -178,16 +178,27 @@ namespace MusicAnalyser.App.Analysis
             {
                 string[] scale = new string[7];
                 Array.Copy(Scales, i, scale, 0, scale.Length);
-
-                for (int j = 0; j < notes.Length; j++)
-                {
-                    if(Array.Exists(scale, element => element == notes[j]))
-                    {
-                        scaleProbs[GetNoteIndex(scale[0] + "0")]++;
-                    }
-                }
+                string[] commonNotes = scale.Intersect(notes).ToArray();
+                scaleProbs[i / 7] = commonNotes.Length;
             }
             return scaleProbs;
+        }
+
+        public static double[] FindTotalScalePercentages(Dictionary<int, double> notePercents)
+        {
+            double[] scalePercents = new double[12];
+            for (int i = 0; i < Scales.Length; i += 7)
+            {
+                string[] scale = new string[7];
+                Array.Copy(Scales, i, scale, 0, scale.Length);
+                for (int j = 0; j < scale.Length; j++)
+                {
+                    int scaleIndex = GetNoteIndex(scale[j] + "0");
+                    if (notePercents.ContainsKey(scaleIndex))
+                        scalePercents[i / 7] += notePercents[scaleIndex];
+                }
+            }
+            return scalePercents;
         }
 
         public bool IsMinor(string root, out string minorRoot)
@@ -249,9 +260,9 @@ namespace MusicAnalyser.App.Analysis
             return "";
         }
 
-        public static string GetChordQuality(List<int> intervals)
+        public static string GetChordQuality(List<int> intervals, out int fifthOmitted)
         {
-            int fifthOmitted = 0;
+            fifthOmitted = 0;
             while (fifthOmitted <= 1)
             {
                 if (intervals.Contains(4) && intervals.Contains(7)) // Major chords

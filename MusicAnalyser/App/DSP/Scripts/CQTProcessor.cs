@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+ * Music Analyser - Primary Processor Script - CQT
+ * Author: Sean King
+ * Constant-Q Transform (CQT) implementation with optimised kernel calculation, set up for 12 tone equal temperment analysis.
+ * Based on the efficient CQT algorithm by Benjamin Blankertz:
+ * http://doc.ml.tu-berlin.de/bbci/material/publications/Bla_constQ.pdf
+ * Properties:
+ * InputBuffer: type short[]
+ * OutputBuffer: type double[]
+ * InputArgs: SAMPLE_RATE - sample rate (Hz) of the input signal - type int
+ * OutputArgs: SCALE - Non-linear scale function to map each frequency bin to a frequency value - type Func<int, double>
+ * Settings:
+ * - OCTAVES: Number of octaves to analyse  - type int (1 - 10)
+ * - BINS_PER_OCTAVE: Number of frequency bins per octave - type enum (values: 12, 24, 36, 48, 60, 72, 84, 96)
+ * - MIN_FREQ: Starting frequency (Hz), for analysis in standard tuning use appropriate note frequency (eg. C1 = 32.7 Hz) - type double (1 - 1000)
+ * - N_WEIGHTING: Frequency weighting factor, lower values emphasise the magnitude of low frequencies and vice versa - type double (0 - 1)
+ * - OUTPUT_MODE: Specifies how the output magnitude should be scaled - type enum (values: Magnitude, dB)
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -21,7 +39,7 @@ class CQTProcessor : ISignalProcessor
         Settings = new Dictionary<string, string[]>()
         {
             { "OCTAVES", new string[] { "5", "int", "Octaves", "1", "10" } },
-            { "BINS_PER_OCTAVE", new string[] { "48", "enum", "Bins Per Octave", "12|24|48|60|72|84|96", "" } },
+            { "BINS_PER_OCTAVE", new string[] { "48", "enum", "Bins Per Octave", "12|24|36|48|60|72|84|96", "" } },
             { "MIN_FREQ", new string[] { "32.7", "double", "Minimum Frequency (Hz)", "1", "1000" } },
             { "N_WEIGHTING", new string[] { "0.5", "double", "Frequency Weighting Factor", "0", "1" } },
             { "OUTPUT_MODE", new string[] { "Magnitude", "enum", "Output Mode", "Magnitude|dB", "" } },

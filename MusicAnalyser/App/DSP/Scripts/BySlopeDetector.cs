@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*
+ * Music Analyser - Primary Detector Script - BySlope (WIP)
+ * Author: Sean King
+ * Performs generic peak detection by finding the points in the signal with the steepest slope.
+ * Properties:
+ * InputData: type double[]
+ * Output: type Dictionary<double, double>
+ * InputArgs: SCALE - ratio between number of input values and sample rate - type double
+ * OutputArgs: None
+ * Settings:
+ * - MIN_FREQ: Frequency (Hz) to start analysis at - type int (0 - 20000)
+ * - MAX_FREQ: Frequency (Hz) to end analysis at - type int (0 - 20000)
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MusicAnalyser.App.DSP;
