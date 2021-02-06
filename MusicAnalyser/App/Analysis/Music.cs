@@ -260,9 +260,9 @@ namespace MusicAnalyser.App.Analysis
             return "";
         }
 
-        public static string GetChordQuality(List<int> intervals)
+        public static string GetChordQuality(List<int> intervals, out int fifthOmitted)
         {
-            int fifthOmitted = 0;
+            fifthOmitted = 0;
             while (fifthOmitted <= 1)
             {
                 if (intervals.Contains(4) && intervals.Contains(7)) // Major chords
