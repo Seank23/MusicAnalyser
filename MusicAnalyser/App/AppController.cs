@@ -308,6 +308,7 @@ namespace MusicAnalyser.App
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
                 dsp.RunFrequencyAnalysis();
+                dsp.FrequencyAnalysisToSpectrum();
                 dsp.RunPitchDetection();
                 dsp.Analyser.GetNotes(dsp.FreqPeaks, (double[])dsp.GetScriptVal("POSITIONS", "Double[]"), analysisUpdates);
                 Task asyncAnalysis = RunAnalysisAsync();
@@ -608,6 +609,7 @@ namespace MusicAnalyser.App
         public void DisposeAudio()
         {
             started = false;
+            dsp.SpectrogramData.Clear();
             if (ui.Output != null)
             {
                 ui.Output.Stop();

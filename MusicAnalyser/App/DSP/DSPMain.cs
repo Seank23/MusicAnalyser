@@ -12,6 +12,7 @@ namespace MusicAnalyser.App.DSP
         public ScriptManager ScriptManager { get; set; }
         public double MaxGain { get; set; }
         public Dictionary<double, double> FreqPeaks { get; set; }
+        public Dictionary<double, byte[]> SpectrogramData { get; }
 
         private AppController app;
         private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
@@ -20,12 +21,14 @@ namespace MusicAnalyser.App.DSP
         private Dictionary<string, object> scriptVals = new Dictionary<string, object>();
         private double[] processedData;
         private int detectorIndex = 0;
+        private double largestTimestamp = -1;
 
         public DSPMain(AppController appController)
         {
             Analyser = new Analyser();
             app = appController;
             ScriptManager = new ScriptManager();
+            SpectrogramData = new Dictionary<double, byte[]>();
             LoadScripts();
             LoadPresets();
         }
@@ -117,6 +120,21 @@ namespace MusicAnalyser.App.DSP
             if (!Double.IsInfinity(processedData[0]) && !Double.IsNaN(processedData[0]) && app.Mode != 1)
                 processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
 
+            // Adds each spectrum frame and associated timestamp to SpectrogramData
+            double curAudioPos = app.AudioSource.AudioFFT.CurrentTime.TotalMilliseconds;
+            if (curAudioPos >= largestTimestamp)
+            {
+                if (curAudioPos - largestTimestamp >= 1000 / 30)
+                {
+                    byte[] specData = SpectrogramQuantiser(processedData);
+                    SpectrogramData[curAudioPos] = specData;
+                    largestTimestamp = curAudioPos;
+                }
+            }
+        }
+
+        public void FrequencyAnalysisToSpectrum()
+        {
             MaxGain = processedData.Max();
             double avgGain = processedData.Average();
             if (scriptVals["SCALE"].GetType().Name == "Double")
@@ -184,7 +202,7 @@ namespace MusicAnalyser.App.DSP
         /*
          * Performs smoothing on frequency domain data by averaging several frames
          */
-        public double[] SmoothSignal(double[] signal, int smoothDepth)
+        private double[] SmoothSignal(double[] signal, int smoothDepth)
         {
             double[] newSignal = new double[signal.Length];
             Array.Copy(signal, newSignal, signal.Length);
@@ -204,6 +222,26 @@ namespace MusicAnalyser.App.DSP
                 newSignal[i] = smoothedValue;
             }
             return newSignal;
+        }
+
+        private byte[] SpectrogramQuantiser(double[] data)
+        {
+            byte[] output = new byte[data.Length];
+
+            if (GetScriptVal("QUANT_BIT_DEPTH", "Double") != null)
+            {
+                if ((double)GetScriptVal("QUANT_BIT_DEPTH", "Double") == 8.0)
+                {
+                    for (int i = 0; i < data.Length; i++)
+                        output[i] = (byte)data[i];
+                    return output;
+                }
+            }
+
+            double bandSize = data.Max() / 256;
+            for (int i = 0; i < data.Length; i++)
+                output[i] = (byte)Math.Floor(data[i] / bandSize);
+            return output;
         }
 
         public object GetScriptVal(string name, string type)
