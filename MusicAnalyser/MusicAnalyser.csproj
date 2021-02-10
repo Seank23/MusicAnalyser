@@ -190,6 +190,8 @@
     <Compile Include="App\DSP\ScriptManager.cs" />
     <Compile Include="App\DSP\Scripts\SpectrumFilterProcessor.cs" />
     <Compile Include="App\DSP\Scripts\SpectrumQuantiserProcessor.cs" />
+    <Compile Include="App\DSP\SpectrogramFrame.cs" />
+    <Compile Include="App\DSP\SpectrogramHandler.cs" />
     <Compile Include="UI\CustomWaveViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

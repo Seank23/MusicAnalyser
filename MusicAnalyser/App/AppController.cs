@@ -377,6 +377,10 @@ namespace MusicAnalyser.App
             string key = dsp.Analyser.GetCurrentKey();
             string mode = dsp.Analyser.GetCurrentMode();
 
+            // Adds analysis annotations to spectrogram frame if present
+            if(dsp.CurTimestamp != 0)
+                dsp.Spectrogram.AddAnalysis(dsp.CurTimestamp, notes.ToArray(), chords.ToArray(), key);
+
             if (notes != null)
             {
                 for (int i = 0; i < notes.Count; i++)
@@ -609,7 +613,7 @@ namespace MusicAnalyser.App
         public void DisposeAudio()
         {
             started = false;
-            dsp.SpectrogramData.Clear();
+            dsp.Dispose();
             if (ui.Output != null)
             {
                 ui.Output.Stop();

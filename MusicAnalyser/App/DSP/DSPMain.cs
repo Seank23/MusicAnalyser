@@ -1,6 +1,7 @@
 ﻿using MusicAnalyser.App.Analysis;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,9 +11,10 @@ namespace MusicAnalyser.App.DSP
     {
         public Analyser Analyser { get; set; }
         public ScriptManager ScriptManager { get; set; }
+        public SpectrogramHandler Spectrogram { get; set; }
         public double MaxGain { get; set; }
         public Dictionary<double, double> FreqPeaks { get; set; }
-        public Dictionary<double, byte[]> SpectrogramData { get; }
+        public double CurTimestamp { get; set; }
 
         private AppController app;
         private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
@@ -28,7 +30,7 @@ namespace MusicAnalyser.App.DSP
             Analyser = new Analyser();
             app = appController;
             ScriptManager = new ScriptManager();
-            SpectrogramData = new Dictionary<double, byte[]>();
+            Spectrogram = new SpectrogramHandler();
             LoadScripts();
             LoadPresets();
         }
@@ -120,17 +122,22 @@ namespace MusicAnalyser.App.DSP
             if (!Double.IsInfinity(processedData[0]) && !Double.IsNaN(processedData[0]) && app.Mode != 1)
                 processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
 
-            // Adds each spectrum frame and associated timestamp to SpectrogramData
+            // Creates a spectrogram frame at specified update rate and initialises with spectrum data and timestamp
             double curAudioPos = app.AudioSource.AudioFFT.CurrentTime.TotalMilliseconds;
-            if (curAudioPos >= largestTimestamp)
+            if (Prefs.STORE_SPEC_DATA && curAudioPos >= largestTimestamp)
             {
-                if (curAudioPos - largestTimestamp >= 1000 / 30)
+                if (Spectrogram.Frames.Count / (curAudioPos / 1000) <= Prefs.SPEC_UPDATE_RATE)
                 {
                     byte[] specData = SpectrogramQuantiser(processedData);
-                    SpectrogramData[curAudioPos] = specData;
+                    Spectrogram.CreateFrame(curAudioPos, specData);
+                    CurTimestamp = curAudioPos;
                     largestTimestamp = curAudioPos;
                 }
+                else
+                    CurTimestamp = 0;
             }
+            else
+                CurTimestamp = 0;
         }
 
         public void FrequencyAnalysisToSpectrum()
@@ -252,6 +259,13 @@ namespace MusicAnalyser.App.DSP
                     return scriptVals[name];
             }
             return null;
+        }
+
+        public void Dispose()
+        {
+            largestTimestamp = -1;
+            CurTimestamp = -1;
+            Spectrogram.Dispose();
         }
     }
 }
