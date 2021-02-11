@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MusicAnalyser.App.Analysis
 {
-    class Chord
+    public class Chord
     {
         public string Name { get; set; }
         public string Root { get; set; }

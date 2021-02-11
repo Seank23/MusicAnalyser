@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MusicAnalyser.App.DSP
 {
-    class SpectrogramFrame
+    public class SpectrogramFrame
     {
         public double Timestamp { get; set; }
         public byte[] SpectrumData { get; set; }

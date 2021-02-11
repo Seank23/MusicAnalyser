@@ -158,6 +158,7 @@
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -233,6 +234,12 @@
     </Compile>
     <Compile Include="UI\ScriptSelector.Designer.cs">
       <DependentUpon>ScriptSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SpectrogramViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\SpectrogramViewer.Designer.cs">
+      <DependentUpon>SpectrogramViewer.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="UI\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

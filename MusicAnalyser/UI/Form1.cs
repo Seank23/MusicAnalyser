@@ -858,5 +858,31 @@ namespace MusicAnalyser
         }
 
         public void SetFilterText(string note, double freq) { lblFilterFreq.Text = note + "\n" + Math.Round(freq, 1) + " Hz"; }
+
+        private void btnViewSpec_Click(object sender, EventArgs e)
+        {
+            if (!specViewer.Enabled)
+            {
+                pnlMusic.Location = new Point(pnlMusic.Location.X, pnlMusic.Location.Y + 450);
+                pnlSpectrumControls.Location = new Point(pnlSpectrumControls.Location.X, pnlSpectrumControls.Location.Y + 450);
+                spFFT.Location = new Point(spFFT.Location.X, spFFT.Location.Y + 450);
+                specViewer.Enabled = true;
+                specViewer.Visible = true;
+                specViewer.BringToFront();
+                specViewer.MySpectrogramFrames = app.GetSpectrogramFrames();
+                btnViewSpec.Text = "Hide Spectrogram";
+            }
+            else
+            {
+                pnlMusic.Location = new Point(pnlMusic.Location.X, pnlMusic.Location.Y - 450);
+                pnlSpectrumControls.Location = new Point(pnlSpectrumControls.Location.X, pnlSpectrumControls.Location.Y - 450);
+                spFFT.Location = new Point(spFFT.Location.X, spFFT.Location.Y - 450);
+                specViewer.Visible = false;
+                specViewer.Enabled = false;
+                specViewer.SendToBack();
+                specViewer.MySpectrogramFrames = null;
+                btnViewSpec.Text = "View Spectrogram";
+            }
+        }
     }
 }

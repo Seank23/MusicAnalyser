@@ -610,6 +610,8 @@ namespace MusicAnalyser.App
                 MessageBox.Show("Error: Recording could not be saved");
         }
 
+        public List<SpectrogramFrame> GetSpectrogramFrames() { return dsp.Spectrogram.Frames; }
+
         public void DisposeAudio()
         {
             started = false;
