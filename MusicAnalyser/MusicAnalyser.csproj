@@ -260,6 +260,9 @@
     <EmbeddedResource Include="UI\ScriptSelector.resx">
       <DependentUpon>ScriptSelector.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\SpectrogramViewer.resx">
+      <DependentUpon>SpectrogramViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

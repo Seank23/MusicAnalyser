@@ -20,6 +20,8 @@ namespace MusicAnalyser
 
         private int selectedScript;
         private Point filterDragPoint;
+        private Point musicPanelLocation, controlPanelLocation, spectrumLocation;
+
 
         public Form1()
         {
@@ -33,7 +35,9 @@ namespace MusicAnalyser
             flpScripts.HorizontalScroll.Visible = false;
             flpScripts.HorizontalScroll.Maximum = 0;
             flpScripts.AutoScroll = true;
-            btnFilterDrag.Location = new Point(spFFT.Location.X + spFFT.Width / 2, spFFT.Location.Y + spFFT.Height / 2);
+            musicPanelLocation = pnlMusic.Location;
+            controlPanelLocation = pnlSpectrumControls.Location;
+            spectrumLocation = spFFT.Location;
             btnFilterDrag.Draggable(true);
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
@@ -166,6 +170,11 @@ namespace MusicAnalyser
                         segMode.Enabled = false;
                     else
                         segMode.Enabled = true;
+                    if (Output.PlaybackState == PlaybackState.Paused || Output.PlaybackState == PlaybackState.Stopped && app.IsStarted())
+                        btnViewSpec.Enabled = true;
+                    else
+                        btnViewSpec.Enabled = false;
+                        
                 }
                 else
                 {
@@ -843,6 +852,7 @@ namespace MusicAnalyser
         {
             if(chbFilter.Checked)
             {
+                btnFilterDrag.Location = new Point(spFFT.Location.X + spFFT.Width / 2, spFFT.Location.Y + spFFT.Height / 2);
                 btnFilterDrag.Enabled = true;
                 btnFilterDrag.Visible = true;
                 lblFilterFreq.Visible = true;
@@ -859,30 +869,55 @@ namespace MusicAnalyser
 
         public void SetFilterText(string note, double freq) { lblFilterFreq.Text = note + "\n" + Math.Round(freq, 1) + " Hz"; }
 
+        public async void LoadSpectrogram()
+        {
+            specViewer.MySpectrogramFrames = app.GetSpectrogramFrames();
+            await Task.Run(() => specViewer.GenerateSpectrogramImage());
+            ResizeSpectrogramUI(true);
+            cwvViewer.Enabled = false;
+            cwvViewer.Visible = false;
+            specViewer.Enabled = true;
+            specViewer.Visible = true;
+            specViewer.BringToFront();
+            btnViewSpec.Text = "Hide Spectrogram";
+        }
+
+        private void ResizeSpectrogramUI(bool show)
+        {
+            int scale = 1;
+            if (!show)
+                scale = 0;
+
+            specViewer.Size = new Size(specViewer.Width, specViewer.Width / 3);
+            pnlMusic.Location = new Point(pnlMusic.Location.X, musicPanelLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
+            pnlSpectrumControls.Location = new Point(pnlSpectrumControls.Location.X, controlPanelLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
+            spFFT.Location = new Point(spFFT.Location.X, spectrumLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
+        }
+
         private void btnViewSpec_Click(object sender, EventArgs e)
         {
             if (!specViewer.Enabled)
             {
-                pnlMusic.Location = new Point(pnlMusic.Location.X, pnlMusic.Location.Y + 450);
-                pnlSpectrumControls.Location = new Point(pnlSpectrumControls.Location.X, pnlSpectrumControls.Location.Y + 450);
-                spFFT.Location = new Point(spFFT.Location.X, spFFT.Location.Y + 450);
-                specViewer.Enabled = true;
-                specViewer.Visible = true;
-                specViewer.BringToFront();
-                specViewer.MySpectrogramFrames = app.GetSpectrogramFrames();
-                btnViewSpec.Text = "Hide Spectrogram";
+                LoadSpectrogram();
             }
             else
             {
-                pnlMusic.Location = new Point(pnlMusic.Location.X, pnlMusic.Location.Y - 450);
-                pnlSpectrumControls.Location = new Point(pnlSpectrumControls.Location.X, pnlSpectrumControls.Location.Y - 450);
-                spFFT.Location = new Point(spFFT.Location.X, spFFT.Location.Y - 450);
                 specViewer.Visible = false;
                 specViewer.Enabled = false;
+                cwvViewer.Enabled = true;
+                cwvViewer.Visible = true;
                 specViewer.SendToBack();
+                ResizeSpectrogramUI(false);
                 specViewer.MySpectrogramFrames = null;
+                specViewer.Reset();
                 btnViewSpec.Text = "View Spectrogram";
             }
+        }
+
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            if (specViewer.Enabled)
+                ResizeSpectrogramUI(true);
         }
     }
 }

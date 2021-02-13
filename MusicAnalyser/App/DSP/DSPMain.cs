@@ -128,6 +128,9 @@ namespace MusicAnalyser.App.DSP
             {
                 if (Spectrogram.Frames.Count / (curAudioPos / 1000) <= Prefs.SPEC_UPDATE_RATE)
                 {
+                    //double[] sqrData = new double[processedData.Length];
+                    //for (int i = 0; i < sqrData.Length; i++)
+                    //    sqrData[i] = Math.Pow(processedData[i], 2);
                     byte[] specData = SpectrogramQuantiser(processedData);
                     Spectrogram.CreateFrame(curAudioPos, specData);
                     CurTimestamp = curAudioPos;

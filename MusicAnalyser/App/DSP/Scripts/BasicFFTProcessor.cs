@@ -33,6 +33,7 @@ class BasicFFTProcessor : ISignalProcessor
         {
             { "WINDOW", new string[] { "Hamming", "enum", "Window Function", "Rectangle|Hamming|Hann|BlackmannHarris", "" } },
             { "OUTPUT_MODE", new string[] { "dB", "enum", "Output Mode", "Magnitude|dB", "" } },
+            { "SQUARE", new string[] { "No", "enum", "Square Output", "Yes|No", "" } },
             { "MAG_LIMIT", new string[] { "10000", "int", "Magnitude Limit", "0", "10000" } },
         };
     }
@@ -87,7 +88,8 @@ class BasicFFTProcessor : ISignalProcessor
                 else
                     output[i] = int.Parse(Settings["MAG_LIMIT"][0]);
             }
-                
+            if (Settings["SQUARE"][0] == "Yes")
+                output[i] = Math.Pow(output[i], 2) / 100; 
         }
         OutputBuffer = output;
         double scale = (double)fftPoints / sampleRate;

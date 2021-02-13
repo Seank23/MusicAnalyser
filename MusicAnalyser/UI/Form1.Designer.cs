@@ -62,21 +62,10 @@
             this.lblLoopDuration = new System.Windows.Forms.Label();
             this.txtLoopTime = new System.Windows.Forms.TextBox();
             this.prbLevelMeter = new System.Windows.Forms.ProgressBar();
-            this.btnAddScript = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.lblSelMessage = new System.Windows.Forms.Label();
-            this.btnApplyScripts = new System.Windows.Forms.Button();
-            this.tblSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnDefaults = new System.Windows.Forms.Button();
-            this.cbPresets = new System.Windows.Forms.ComboBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.btnSavePreset = new System.Windows.Forms.Button();
             this.segMode = new XanderUI.XUISegment();
             this.numStepVal = new System.Windows.Forms.NumericUpDown();
             this.lblStep = new System.Windows.Forms.Label();
             this.lblFilterFreq = new System.Windows.Forms.Label();
-            this.flpScripts = new System.Windows.Forms.TableLayoutPanel();
             this.btnFilterDrag = new MusicAnalyser.UI.RoundButton();
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
             this.specViewer = new MusicAnalyser.UI.SpectrogramViewer();
@@ -114,6 +103,18 @@
             this.barZoom = new System.Windows.Forms.TrackBar();
             this.label20 = new System.Windows.Forms.Label();
             this.lblExeTime = new System.Windows.Forms.Label();
+            this.pnlScripts = new System.Windows.Forms.Panel();
+            this.flpScripts = new System.Windows.Forms.TableLayoutPanel();
+            this.btnSavePreset = new System.Windows.Forms.Button();
+            this.label21 = new System.Windows.Forms.Label();
+            this.cbPresets = new System.Windows.Forms.ComboBox();
+            this.btnDefaults = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.tblSettings = new System.Windows.Forms.TableLayoutPanel();
+            this.btnApplyScripts = new System.Windows.Forms.Button();
+            this.lblSelMessage = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.btnAddScript = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -122,6 +123,7 @@
             this.pnlSpectrumControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barZoom)).BeginInit();
+            this.pnlScripts.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOpenClose
@@ -167,7 +169,7 @@
             this.spFFT.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.spFFT.BackColor = System.Drawing.SystemColors.Control;
-            this.spFFT.Location = new System.Drawing.Point(13, 533);
+            this.spFFT.Location = new System.Drawing.Point(12, 510);
             this.spFFT.Margin = new System.Windows.Forms.Padding(5);
             this.spFFT.Name = "spFFT";
             this.spFFT.Size = new System.Drawing.Size(1433, 369);
@@ -449,132 +451,6 @@
             this.prbLevelMeter.TabIndex = 28;
             this.prbLevelMeter.Visible = false;
             // 
-            // btnAddScript
-            // 
-            this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddScript.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddScript.Location = new System.Drawing.Point(1713, 223);
-            this.btnAddScript.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnAddScript.Name = "btnAddScript";
-            this.btnAddScript.Size = new System.Drawing.Size(88, 30);
-            this.btnAddScript.TabIndex = 30;
-            this.btnAddScript.Text = "Add";
-            this.btnAddScript.UseVisualStyleBackColor = true;
-            this.btnAddScript.Click += new System.EventHandler(this.btnAddScript_Click);
-            // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Open Sans Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(1560, 86);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(148, 23);
-            this.label6.TabIndex = 31;
-            this.label6.Text = "Processing Chain";
-            // 
-            // lblSelMessage
-            // 
-            this.lblSelMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSelMessage.AutoSize = true;
-            this.lblSelMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSelMessage.ForeColor = System.Drawing.Color.Crimson;
-            this.lblSelMessage.Location = new System.Drawing.Point(1453, 114);
-            this.lblSelMessage.Name = "lblSelMessage";
-            this.lblSelMessage.Size = new System.Drawing.Size(0, 17);
-            this.lblSelMessage.TabIndex = 32;
-            // 
-            // btnApplyScripts
-            // 
-            this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApplyScripts.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnApplyScripts.Location = new System.Drawing.Point(1713, 258);
-            this.btnApplyScripts.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnApplyScripts.Name = "btnApplyScripts";
-            this.btnApplyScripts.Size = new System.Drawing.Size(88, 30);
-            this.btnApplyScripts.TabIndex = 33;
-            this.btnApplyScripts.Text = "Apply";
-            this.btnApplyScripts.UseVisualStyleBackColor = true;
-            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
-            // 
-            // tblSettings
-            // 
-            this.tblSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tblSettings.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tblSettings.ColumnCount = 1;
-            this.tblSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblSettings.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tblSettings.Location = new System.Drawing.Point(1452, 295);
-            this.tblSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tblSettings.Name = "tblSettings";
-            this.tblSettings.RowCount = 1;
-            this.tblSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tblSettings.Size = new System.Drawing.Size(349, 119);
-            this.tblSettings.TabIndex = 34;
-            // 
-            // btnSave
-            // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.Location = new System.Drawing.Point(1713, 421);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(88, 30);
-            this.btnSave.TabIndex = 36;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // btnDefaults
-            // 
-            this.btnDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDefaults.Enabled = false;
-            this.btnDefaults.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDefaults.Location = new System.Drawing.Point(1618, 421);
-            this.btnDefaults.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnDefaults.Name = "btnDefaults";
-            this.btnDefaults.Size = new System.Drawing.Size(88, 30);
-            this.btnDefaults.TabIndex = 37;
-            this.btnDefaults.Text = "Defaults";
-            this.btnDefaults.UseVisualStyleBackColor = true;
-            this.btnDefaults.Click += new System.EventHandler(this.btnDefaults_Click);
-            // 
-            // cbPresets
-            // 
-            this.cbPresets.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbPresets.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbPresets.FormattingEnabled = true;
-            this.cbPresets.Location = new System.Drawing.Point(1520, 142);
-            this.cbPresets.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbPresets.Name = "cbPresets";
-            this.cbPresets.Size = new System.Drawing.Size(187, 26);
-            this.cbPresets.TabIndex = 38;
-            this.cbPresets.SelectedIndexChanged += new System.EventHandler(this.cbPresets_SelectedIndexChanged);
-            // 
-            // label21
-            // 
-            this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(1465, 144);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(51, 19);
-            this.label21.TabIndex = 39;
-            this.label21.Text = "Preset";
-            // 
-            // btnSavePreset
-            // 
-            this.btnSavePreset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSavePreset.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSavePreset.Location = new System.Drawing.Point(1713, 137);
-            this.btnSavePreset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnSavePreset.Name = "btnSavePreset";
-            this.btnSavePreset.Size = new System.Drawing.Size(88, 30);
-            this.btnSavePreset.TabIndex = 40;
-            this.btnSavePreset.Text = "Save";
-            this.btnSavePreset.UseVisualStyleBackColor = true;
-            this.btnSavePreset.Click += new System.EventHandler(this.btnSavePreset_Click);
-            // 
             // segMode
             // 
             this.segMode.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -642,22 +518,6 @@
             this.lblFilterFreq.TabIndex = 46;
             this.lblFilterFreq.Text = "440 Hz";
             this.lblFilterFreq.Visible = false;
-            // 
-            // flpScripts
-            // 
-            this.flpScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.flpScripts.AutoScroll = true;
-            this.flpScripts.AutoScrollMinSize = new System.Drawing.Size(0, 5);
-            this.flpScripts.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.flpScripts.ColumnCount = 1;
-            this.flpScripts.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.flpScripts.Location = new System.Drawing.Point(1452, 172);
-            this.flpScripts.Margin = new System.Windows.Forms.Padding(4);
-            this.flpScripts.Name = "flpScripts";
-            this.flpScripts.RowCount = 1;
-            this.flpScripts.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.flpScripts.Size = new System.Drawing.Size(255, 118);
-            this.flpScripts.TabIndex = 47;
             // 
             // btnFilterDrag
             // 
@@ -728,7 +588,7 @@
             this.pnlMusic.Controls.Add(this.chbAllChords);
             this.pnlMusic.Controls.Add(this.label1);
             this.pnlMusic.Controls.Add(this.lstChords);
-            this.pnlMusic.Location = new System.Drawing.Point(1469, 585);
+            this.pnlMusic.Location = new System.Drawing.Point(1469, 569);
             this.pnlMusic.Name = "pnlMusic";
             this.pnlMusic.Size = new System.Drawing.Size(322, 279);
             this.pnlMusic.TabIndex = 50;
@@ -947,6 +807,7 @@
             // 
             // btnViewSpec
             // 
+            this.btnViewSpec.Enabled = false;
             this.btnViewSpec.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnViewSpec.Location = new System.Drawing.Point(1021, 8);
             this.btnViewSpec.Name = "btnViewSpec";
@@ -1103,6 +964,167 @@
             this.lblExeTime.TabIndex = 50;
             this.lblExeTime.Text = "Execution Time: 0 ms";
             // 
+            // pnlScripts
+            // 
+            this.pnlScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlScripts.Controls.Add(this.flpScripts);
+            this.pnlScripts.Controls.Add(this.btnSavePreset);
+            this.pnlScripts.Controls.Add(this.label21);
+            this.pnlScripts.Controls.Add(this.cbPresets);
+            this.pnlScripts.Controls.Add(this.btnDefaults);
+            this.pnlScripts.Controls.Add(this.btnSave);
+            this.pnlScripts.Controls.Add(this.tblSettings);
+            this.pnlScripts.Controls.Add(this.btnApplyScripts);
+            this.pnlScripts.Controls.Add(this.lblSelMessage);
+            this.pnlScripts.Controls.Add(this.label6);
+            this.pnlScripts.Controls.Add(this.btnAddScript);
+            this.pnlScripts.Location = new System.Drawing.Point(1451, 84);
+            this.pnlScripts.Name = "pnlScripts";
+            this.pnlScripts.Size = new System.Drawing.Size(369, 365);
+            this.pnlScripts.TabIndex = 52;
+            // 
+            // flpScripts
+            // 
+            this.flpScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpScripts.AutoScroll = true;
+            this.flpScripts.AutoScrollMinSize = new System.Drawing.Size(0, 5);
+            this.flpScripts.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.flpScripts.ColumnCount = 1;
+            this.flpScripts.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.flpScripts.Location = new System.Drawing.Point(10, 86);
+            this.flpScripts.Margin = new System.Windows.Forms.Padding(4);
+            this.flpScripts.Name = "flpScripts";
+            this.flpScripts.RowCount = 1;
+            this.flpScripts.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.flpScripts.Size = new System.Drawing.Size(255, 118);
+            this.flpScripts.TabIndex = 58;
+            // 
+            // btnSavePreset
+            // 
+            this.btnSavePreset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSavePreset.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSavePreset.Location = new System.Drawing.Point(271, 51);
+            this.btnSavePreset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnSavePreset.Name = "btnSavePreset";
+            this.btnSavePreset.Size = new System.Drawing.Size(88, 30);
+            this.btnSavePreset.TabIndex = 57;
+            this.btnSavePreset.Text = "Save";
+            this.btnSavePreset.UseVisualStyleBackColor = true;
+            this.btnSavePreset.Click += new System.EventHandler(this.btnSavePreset_Click);
+            // 
+            // label21
+            // 
+            this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(23, 58);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(51, 19);
+            this.label21.TabIndex = 56;
+            this.label21.Text = "Preset";
+            // 
+            // cbPresets
+            // 
+            this.cbPresets.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbPresets.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbPresets.FormattingEnabled = true;
+            this.cbPresets.Location = new System.Drawing.Point(78, 56);
+            this.cbPresets.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cbPresets.Name = "cbPresets";
+            this.cbPresets.Size = new System.Drawing.Size(187, 26);
+            this.cbPresets.TabIndex = 55;
+            this.cbPresets.SelectedIndexChanged += new System.EventHandler(this.cbPresets_SelectedIndexChanged);
+            // 
+            // btnDefaults
+            // 
+            this.btnDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDefaults.Enabled = false;
+            this.btnDefaults.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDefaults.Location = new System.Drawing.Point(176, 335);
+            this.btnDefaults.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDefaults.Name = "btnDefaults";
+            this.btnDefaults.Size = new System.Drawing.Size(88, 30);
+            this.btnDefaults.TabIndex = 54;
+            this.btnDefaults.Text = "Defaults";
+            this.btnDefaults.UseVisualStyleBackColor = true;
+            this.btnDefaults.Click += new System.EventHandler(this.btnDefaults_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.Location = new System.Drawing.Point(271, 335);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(88, 30);
+            this.btnSave.TabIndex = 53;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // tblSettings
+            // 
+            this.tblSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tblSettings.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tblSettings.ColumnCount = 1;
+            this.tblSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblSettings.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tblSettings.Location = new System.Drawing.Point(10, 209);
+            this.tblSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tblSettings.Name = "tblSettings";
+            this.tblSettings.RowCount = 1;
+            this.tblSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblSettings.Size = new System.Drawing.Size(349, 119);
+            this.tblSettings.TabIndex = 52;
+            // 
+            // btnApplyScripts
+            // 
+            this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnApplyScripts.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnApplyScripts.Location = new System.Drawing.Point(271, 172);
+            this.btnApplyScripts.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnApplyScripts.Name = "btnApplyScripts";
+            this.btnApplyScripts.Size = new System.Drawing.Size(88, 30);
+            this.btnApplyScripts.TabIndex = 51;
+            this.btnApplyScripts.Text = "Apply";
+            this.btnApplyScripts.UseVisualStyleBackColor = true;
+            this.btnApplyScripts.Click += new System.EventHandler(this.btnApplyScripts_Click);
+            // 
+            // lblSelMessage
+            // 
+            this.lblSelMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSelMessage.AutoSize = true;
+            this.lblSelMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSelMessage.ForeColor = System.Drawing.Color.Crimson;
+            this.lblSelMessage.Location = new System.Drawing.Point(11, 28);
+            this.lblSelMessage.Name = "lblSelMessage";
+            this.lblSelMessage.Size = new System.Drawing.Size(0, 17);
+            this.lblSelMessage.TabIndex = 50;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Open Sans Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(118, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(148, 23);
+            this.label6.TabIndex = 49;
+            this.label6.Text = "Processing Chain";
+            // 
+            // btnAddScript
+            // 
+            this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddScript.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddScript.Location = new System.Drawing.Point(271, 137);
+            this.btnAddScript.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAddScript.Name = "btnAddScript";
+            this.btnAddScript.Size = new System.Drawing.Size(88, 30);
+            this.btnAddScript.TabIndex = 48;
+            this.btnAddScript.Text = "Add";
+            this.btnAddScript.UseVisualStyleBackColor = true;
+            this.btnAddScript.Click += new System.EventHandler(this.btnAddScript_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1112,22 +1134,11 @@
             this.ClientSize = new System.Drawing.Size(1832, 903);
             this.Controls.Add(this.pnlSpectrumControls);
             this.Controls.Add(this.pnlMusic);
-            this.Controls.Add(this.flpScripts);
             this.Controls.Add(this.lblFilterFreq);
             this.Controls.Add(this.btnFilterDrag);
             this.Controls.Add(this.lblStep);
             this.Controls.Add(this.numStepVal);
             this.Controls.Add(this.segMode);
-            this.Controls.Add(this.btnSavePreset);
-            this.Controls.Add(this.label21);
-            this.Controls.Add(this.cbPresets);
-            this.Controls.Add(this.btnDefaults);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.tblSettings);
-            this.Controls.Add(this.btnApplyScripts);
-            this.Controls.Add(this.lblSelMessage);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.btnAddScript);
             this.Controls.Add(this.prbLevelMeter);
             this.Controls.Add(this.lblLoopDuration);
             this.Controls.Add(this.txtLoopTime);
@@ -1153,12 +1164,14 @@
             this.Controls.Add(this.btnOpenClose);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.specViewer);
+            this.Controls.Add(this.pnlScripts);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "Music Analyser";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).EndInit();
@@ -1171,6 +1184,8 @@
             this.pnlSpectrumControls.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barZoom)).EndInit();
+            this.pnlScripts.ResumeLayout(false);
+            this.pnlScripts.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1212,22 +1227,11 @@
         private System.Windows.Forms.ToolStripMenuItem saveRecordingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
-        private System.Windows.Forms.Button btnAddScript;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label lblSelMessage;
-        private System.Windows.Forms.Button btnApplyScripts;
-        private System.Windows.Forms.TableLayoutPanel tblSettings;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Button btnDefaults;
-        private System.Windows.Forms.ComboBox cbPresets;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Button btnSavePreset;
         private XanderUI.XUISegment segMode;
         private System.Windows.Forms.NumericUpDown numStepVal;
         private System.Windows.Forms.Label lblStep;
         private MusicAnalyser.UI.RoundButton btnFilterDrag;
         private System.Windows.Forms.Label lblFilterFreq;
-        private System.Windows.Forms.TableLayoutPanel flpScripts;
         private UI.SpectrogramViewer specViewer;
         private System.Windows.Forms.Panel pnlMusic;
         private System.Windows.Forms.Label lblMode;
@@ -1263,6 +1267,18 @@
         private System.Windows.Forms.TrackBar barZoom;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label lblExeTime;
+        private System.Windows.Forms.Panel pnlScripts;
+        private System.Windows.Forms.TableLayoutPanel flpScripts;
+        private System.Windows.Forms.Button btnSavePreset;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.ComboBox cbPresets;
+        private System.Windows.Forms.Button btnDefaults;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.TableLayoutPanel tblSettings;
+        private System.Windows.Forms.Button btnApplyScripts;
+        private System.Windows.Forms.Label lblSelMessage;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button btnAddScript;
     }
 }
 
