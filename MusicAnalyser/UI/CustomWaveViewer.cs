@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
 using NAudio.Wave;
+using MusicAnalyser.UI;
 
 namespace MusicAnalyser
 {
@@ -33,7 +34,7 @@ namespace MusicAnalyser
         public long RightSample { get; set; }
         public long SelectSample { get; set; }
         public long LoopEndSample { get; set; }
-        public OverlayPanel Overlay { get; }
+        public WaveViewerOverlay Overlay { get; }
 
         public int GetBytesPerSample() { return bytesPerSample; }
         public int GetSampleRate() { return sampleRate; }
@@ -246,7 +247,7 @@ namespace MusicAnalyser
             this.PenColor = Color.DodgerBlue;
             this.PenWidth = 1;
 
-            Overlay = new OverlayPanel(this);
+            Overlay = new WaveViewerOverlay(this);
             Overlay.Dock = DockStyle.Fill;
             Overlay.BackColor = Color.Transparent;
             Overlay.BringToFront();

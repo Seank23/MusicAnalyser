@@ -193,6 +193,9 @@
     <Compile Include="App\DSP\Scripts\SpectrumQuantiserProcessor.cs" />
     <Compile Include="App\DSP\SpectrogramFrame.cs" />
     <Compile Include="App\DSP\SpectrogramHandler.cs" />
+    <Compile Include="UI\SpectrogramOverlay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UI\CustomWaveViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -207,7 +210,7 @@
     <Compile Include="App\LiveInputRecorder.cs" />
     <Compile Include="App\Analysis\Music.cs" />
     <Compile Include="App\Analysis\Note.cs" />
-    <Compile Include="UI\OverlayPanel.cs">
+    <Compile Include="UI\WaveViewerOverlay.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="App\Prefs.cs" />
@@ -259,6 +262,9 @@
     </Compile>
     <EmbeddedResource Include="UI\ScriptSelector.resx">
       <DependentUpon>ScriptSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SpectrogramOverlay.resx">
+      <DependentUpon>SpectrogramOverlay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SpectrogramViewer.resx">
       <DependentUpon>SpectrogramViewer.cs</DependentUpon>

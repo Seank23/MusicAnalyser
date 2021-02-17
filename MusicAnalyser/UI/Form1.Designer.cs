@@ -68,7 +68,7 @@
             this.lblFilterFreq = new System.Windows.Forms.Label();
             this.btnFilterDrag = new MusicAnalyser.UI.RoundButton();
             this.cwvViewer = new MusicAnalyser.CustomWaveViewer();
-            this.specViewer = new MusicAnalyser.UI.SpectrogramViewer();
+            this.specViewer = new MusicAnalyser.UI.SpectrogramViewer(this);
             this.pnlMusic = new System.Windows.Forms.Panel();
             this.lblMode = new System.Windows.Forms.Label();
             this.lblKey = new System.Windows.Forms.Label();

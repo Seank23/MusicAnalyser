@@ -36,9 +36,8 @@ namespace MusicAnalyser.UI
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "SpectrogramViewer";
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SpectrogramViewer_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SpectrogramViewer_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SpectrogramViewer_MouseUp);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SpectrogramViewer_KeyDown);
+            this.Resize += new System.EventHandler(this.SpectrogramViewer_Resize);
             this.ResumeLayout(false);
 
         }

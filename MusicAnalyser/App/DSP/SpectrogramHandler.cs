@@ -17,7 +17,6 @@ namespace MusicAnalyser.App.DSP
         public void CreateFrame(double timestamp, byte[] data)
         {
             Frames.Add(new SpectrogramFrame(timestamp, data));
-            Console.WriteLine(Frames.Count);
         }
 
         public void AddAnalysis(double timestamp, Note[] notes, Chord[] chords, string key)

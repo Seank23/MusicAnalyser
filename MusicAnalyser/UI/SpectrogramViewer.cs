@@ -14,18 +14,30 @@ namespace MusicAnalyser.UI
 {
     public partial class SpectrogramViewer : UserControl
     {
+        public static readonly int PADDING = 25; 
         public List<SpectrogramFrame> MySpectrogramFrames { get; set; }
+        public SpectrogramOverlay Overlay { get; }
+
         private Bitmap spectrogramImage;
         private float binsPerPixel;
         private float framesPerPixel;
         private RectangleF projectionRect;
+        private RectangleF prevProjectionRect;
         private Point prevPanLocation;
 
-        public SpectrogramViewer()
+        public SpectrogramViewer(Form1 frm)
         {
             InitializeComponent();
             this.DoubleBuffered = true;
             this.MouseWheel += SpectrogramViewer_MouseWheel;
+            this.Parent = frm;
+            this.Parent.KeyDown += new KeyEventHandler(SpectrogramViewer_KeyDown);
+            prevProjectionRect = new RectangleF();
+
+            Overlay = new SpectrogramOverlay(this);
+            Overlay.Dock = DockStyle.Fill;
+            Overlay.BackColor = Color.Transparent;
+            Overlay.BringToFront();
         }
 
         public void GenerateSpectrogramImage()
@@ -48,6 +60,17 @@ namespace MusicAnalyser.UI
             }
         }
 
+        public double[] GetTimeEndsInView()
+        {
+            if (MySpectrogramFrames == null)
+                return null;
+
+            int startIndex = (int)Math.Max(Math.Min(Math.Floor(projectionRect.X), MySpectrogramFrames.Count - 1), 0);
+            int endIndex = (int)Math.Max(Math.Min(Math.Floor(projectionRect.X + projectionRect.Width), MySpectrogramFrames.Count - 1), 0);
+            
+            return new double[] { MySpectrogramFrames[startIndex].Timestamp, MySpectrogramFrames[endIndex].Timestamp };
+        }
+
         private void Zoom(bool zoomOut)
         {
             RectangleF prevProjection = projectionRect;
@@ -55,15 +78,17 @@ namespace MusicAnalyser.UI
             projectionRect.Height /= 1.1f;
             if (zoomOut)
             {
-                projectionRect.Width /= 0.7f;
-                projectionRect.Height /= 0.7f;
+                projectionRect.Width /= 0.8f;
+                projectionRect.Height /= 0.8f;
             }
             if (projectionRect.Width > spectrogramImage.Width)
             {
                 projectionRect.Width = spectrogramImage.Width;
                 projectionRect.Height = spectrogramImage.Height;
             }
-            PointF newCorner = new PointF(projectionRect.Location.X + (prevProjection.Width - projectionRect.Width) / 2, projectionRect.Location.Y + (prevProjection.Height - projectionRect.Height) / 2);
+            float cornerX = Math.Max(Math.Min(projectionRect.Location.X + (prevProjection.Width - projectionRect.Width) / 2, spectrogramImage.Width - projectionRect.Width), 0);
+            float cornerY = Math.Max(Math.Min(projectionRect.Location.Y + (prevProjection.Height - projectionRect.Height) / 2, spectrogramImage.Height - projectionRect.Height), 0);
+            PointF newCorner = new PointF(cornerX, cornerY);
             projectionRect.Location = newCorner;
             Refresh();
         }
@@ -88,10 +113,16 @@ namespace MusicAnalyser.UI
 
             binsPerPixel = (float)spectrogramImage.Height / this.Height;
             framesPerPixel = (float)spectrogramImage.Width / this.Width;
-            e.Graphics.DrawImage(spectrogramImage, new Rectangle(0, 0, this.Width, this.Height), projectionRect, GraphicsUnit.Pixel);
+            e.Graphics.DrawImage(spectrogramImage, new Rectangle(PADDING, 0, this.Width, this.Height - PADDING), projectionRect, GraphicsUnit.Pixel);
+            if (projectionRect != prevProjectionRect)
+            {
+                Overlay.DrawTimestamps();
+                prevProjectionRect = projectionRect;
+            }
+            base.OnPaint(e);
         }
 
-        private void SpectrogramViewer_MouseDown(object sender, MouseEventArgs e)
+        public void InteractDown(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -104,16 +135,16 @@ namespace MusicAnalyser.UI
             }
         }
 
-        private void SpectrogramViewer_MouseMove(object sender, MouseEventArgs e)
+        public void InteractMove(MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 Pan((e.Location.X - prevPanLocation.X) * framesPerPixel, (e.Location.Y - prevPanLocation.Y) * binsPerPixel);
                 prevPanLocation = e.Location;
             }
         }
 
-        private void SpectrogramViewer_MouseUp(object sender, MouseEventArgs e)
+        public void InteractUp(MouseEventArgs e)
         {
 
         }
@@ -126,35 +157,36 @@ namespace MusicAnalyser.UI
                 Zoom(true);
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (keyData == Keys.Add || keyData == Keys.Subtract || keyData == Keys.Left || keyData == Keys.Right || keyData == Keys.Up || keyData == Keys.Down)
-            {
-                if (keyData == Keys.Add)
-                    Zoom(false);
-                else if (keyData == Keys.Subtract)
-                    Zoom(true);
-                else if (keyData == Keys.Left)
-                    Pan(30f, 0);
-                else if (keyData == Keys.Right)
-                    Pan(-30f, 0);
-                else if (keyData == Keys.Up)
-                    Pan(0, 30f);
-                else if (keyData == Keys.Down)
-                    Pan(0, -30f);
-                return true;
-            }
-            else
-            {
-                return base.ProcessCmdKey(ref msg, keyData);
-            }
-        }
-
         public void Reset()
         {
             MySpectrogramFrames = null;
             spectrogramImage = null;
             Refresh();
+        }
+
+        private void SpectrogramViewer_Resize(object sender, EventArgs e)
+        {
+            Overlay.DrawTimestamps();
+            Refresh();
+        }
+
+        private void SpectrogramViewer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (MySpectrogramFrames == null)
+                return;
+
+            if (e.KeyCode == Keys.Add)
+                Zoom(false);
+            else if (e.KeyCode == Keys.Subtract)
+                Zoom(true);
+            else if (e.KeyCode == Keys.Left)
+                Pan(30f, 0);
+            else if (e.KeyCode == Keys.Right)
+                Pan(-30f, 0);
+            else if (e.KeyCode == Keys.Up)
+                Pan(0, 30f);
+            else if (e.KeyCode == Keys.Down)
+                Pan(0, -30f);
         }
     }
 }

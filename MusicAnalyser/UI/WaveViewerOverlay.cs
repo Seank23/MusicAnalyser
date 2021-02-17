@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.UI
 {
-    public class OverlayPanel : Panel
+    public class WaveViewerOverlay : Panel
     {
         private CustomWaveViewer parent;
         private Rectangle posIndicator;
@@ -18,7 +16,7 @@ namespace MusicAnalyser
         private Rectangle timeBar;
         private List<Rectangle> ticks;
 
-        public OverlayPanel(CustomWaveViewer p)
+        public WaveViewerOverlay(CustomWaveViewer p)
         {
             DoubleBuffered = true;
             parent = p;
