@@ -33,10 +33,15 @@
             this.btnDefaults = new System.Windows.Forms.Button();
             this.tabControlPrefs = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
+            this.chbStoreSpecData = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.comDevices = new System.Windows.Forms.ComboBox();
+            this.numSpecUpdates = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
             this.numFollowSecs = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.comboTheme = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -53,20 +58,19 @@
             this.numSmooth = new System.Windows.Forms.NumericUpDown();
             this.numUpdateTime = new System.Windows.Forms.NumericUpDown();
             this.comboMode = new System.Windows.Forms.ComboBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.chbStoreSpecData = new System.Windows.Forms.CheckBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.numSpecUpdates = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.numSpecMaxFreq = new System.Windows.Forms.NumericUpDown();
             this.tabControlPrefs.SuspendLayout();
             this.tabGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpecUpdates)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numFollowSecs)).BeginInit();
             this.tabAnalysis.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numOccurThd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChordInterval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSmooth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpdateTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpecUpdates)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpecMaxFreq)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSave
@@ -114,10 +118,13 @@
             this.tabGeneral.Controls.Add(this.chbStoreSpecData);
             this.tabGeneral.Controls.Add(this.label24);
             this.tabGeneral.Controls.Add(this.comDevices);
+            this.tabGeneral.Controls.Add(this.numSpecMaxFreq);
             this.tabGeneral.Controls.Add(this.numSpecUpdates);
+            this.tabGeneral.Controls.Add(this.label15);
             this.tabGeneral.Controls.Add(this.label13);
             this.tabGeneral.Controls.Add(this.numFollowSecs);
             this.tabGeneral.Controls.Add(this.label2);
+            this.tabGeneral.Controls.Add(this.label14);
             this.tabGeneral.Controls.Add(this.label12);
             this.tabGeneral.Controls.Add(this.label11);
             this.tabGeneral.Controls.Add(this.label1);
@@ -130,6 +137,16 @@
             this.tabGeneral.TabIndex = 0;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
+            // 
+            // chbStoreSpecData
+            // 
+            this.chbStoreSpecData.AutoSize = true;
+            this.chbStoreSpecData.Location = new System.Drawing.Point(209, 115);
+            this.chbStoreSpecData.Name = "chbStoreSpecData";
+            this.chbStoreSpecData.Size = new System.Drawing.Size(18, 17);
+            this.chbStoreSpecData.TabIndex = 8;
+            this.chbStoreSpecData.UseVisualStyleBackColor = true;
+            this.chbStoreSpecData.CheckedChanged += new System.EventHandler(this.chbStoreSpecData_CheckedChanged);
             // 
             // label24
             // 
@@ -147,6 +164,33 @@
             this.comDevices.Name = "comDevices";
             this.comDevices.Size = new System.Drawing.Size(273, 24);
             this.comDevices.TabIndex = 6;
+            // 
+            // numSpecUpdates
+            // 
+            this.numSpecUpdates.Enabled = false;
+            this.numSpecUpdates.Location = new System.Drawing.Point(209, 140);
+            this.numSpecUpdates.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numSpecUpdates.Name = "numSpecUpdates";
+            this.numSpecUpdates.Size = new System.Drawing.Size(61, 22);
+            this.numSpecUpdates.TabIndex = 5;
+            this.numSpecUpdates.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(276, 142);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(25, 17);
+            this.label13.TabIndex = 3;
+            this.label13.Text = "Hz";
             // 
             // numFollowSecs
             // 
@@ -168,6 +212,24 @@
             this.label2.Size = new System.Drawing.Size(61, 17);
             this.label2.TabIndex = 3;
             this.label2.Text = "seconds";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(26, 142);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(177, 17);
+            this.label12.TabIndex = 4;
+            this.label12.Text = "Spectrogram Update Rate:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(26, 114);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(165, 17);
+            this.label11.TabIndex = 4;
+            this.label11.Text = "Store Spectrogram Data:";
             // 
             // label1
             // 
@@ -332,57 +394,47 @@
             this.comboMode.Size = new System.Drawing.Size(92, 24);
             this.comboMode.TabIndex = 6;
             // 
-            // label11
+            // label14
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(26, 114);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(165, 17);
-            this.label11.TabIndex = 4;
-            this.label11.Text = "Store Spectrogram Data:";
+            this.label14.Location = new System.Drawing.Point(26, 168);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(177, 34);
+            this.label14.TabIndex = 4;
+            this.label14.Text = "Spectrogram Maximum Frequency:";
             // 
-            // chbStoreSpecData
+            // label15
             // 
-            this.chbStoreSpecData.AutoSize = true;
-            this.chbStoreSpecData.Location = new System.Drawing.Point(209, 115);
-            this.chbStoreSpecData.Name = "chbStoreSpecData";
-            this.chbStoreSpecData.Size = new System.Drawing.Size(18, 17);
-            this.chbStoreSpecData.TabIndex = 8;
-            this.chbStoreSpecData.UseVisualStyleBackColor = true;
-            this.chbStoreSpecData.CheckedChanged += new System.EventHandler(this.chbStoreSpecData_CheckedChanged);
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(276, 182);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(25, 17);
+            this.label15.TabIndex = 3;
+            this.label15.Text = "Hz";
             // 
-            // label12
+            // numSpecMaxFreq
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(26, 142);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(177, 17);
-            this.label12.TabIndex = 4;
-            this.label12.Text = "Spectrogram Update Rate:";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(276, 142);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(25, 17);
-            this.label13.TabIndex = 3;
-            this.label13.Text = "Hz";
-            // 
-            // numSpecUpdates
-            // 
-            this.numSpecUpdates.Enabled = false;
-            this.numSpecUpdates.Location = new System.Drawing.Point(209, 140);
-            this.numSpecUpdates.Minimum = new decimal(new int[] {
-            1,
+            this.numSpecMaxFreq.Enabled = false;
+            this.numSpecMaxFreq.Increment = new decimal(new int[] {
+            50,
             0,
             0,
             0});
-            this.numSpecUpdates.Name = "numSpecUpdates";
-            this.numSpecUpdates.Size = new System.Drawing.Size(61, 22);
-            this.numSpecUpdates.TabIndex = 5;
-            this.numSpecUpdates.Value = new decimal(new int[] {
-            1,
+            this.numSpecMaxFreq.Location = new System.Drawing.Point(209, 180);
+            this.numSpecMaxFreq.Maximum = new decimal(new int[] {
+            4000,
+            0,
+            0,
+            0});
+            this.numSpecMaxFreq.Minimum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numSpecMaxFreq.Name = "numSpecMaxFreq";
+            this.numSpecMaxFreq.Size = new System.Drawing.Size(61, 22);
+            this.numSpecMaxFreq.TabIndex = 5;
+            this.numSpecMaxFreq.Value = new decimal(new int[] {
+            500,
             0,
             0,
             0});
@@ -401,6 +453,7 @@
             this.tabControlPrefs.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpecUpdates)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numFollowSecs)).EndInit();
             this.tabAnalysis.ResumeLayout(false);
             this.tabAnalysis.PerformLayout();
@@ -408,7 +461,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numChordInterval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSmooth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpdateTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpecUpdates)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpecMaxFreq)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -445,5 +498,8 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numSpecMaxFreq;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
     }
 }

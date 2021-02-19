@@ -68,7 +68,7 @@ class HPSDownsamplerProcessor : ISignalProcessor
             productSpectrum[i] = 1;
             for (int j = 0; j < spectrums.Count; j++)
                 productSpectrum[i] *= spectrums[j][i];
-            productSpectrum[i] = Math.Pow(productSpectrum[i], 1.0 / double.Parse(Settings["MAG_SCALE"][0]));
+            productSpectrum[i] = Math.Max(Math.Pow(productSpectrum[i], 1.0 / double.Parse(Settings["MAG_SCALE"][0])) - double.Parse(Settings["FLOOR"][0]), 0);
         }
         if (int.Parse(Settings["INTERP"][0]) > 1)
             OutputBuffer = Interpolate(productSpectrum, int.Parse(Settings["INTERP"][0]));

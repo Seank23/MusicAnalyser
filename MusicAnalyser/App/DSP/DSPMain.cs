@@ -122,16 +122,28 @@ namespace MusicAnalyser.App.DSP
             if (!Double.IsInfinity(processedData[0]) && !Double.IsNaN(processedData[0]) && app.Mode != 1)
                 processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
 
-            // Creates a spectrogram frame at specified update rate and initialises with spectrum data and timestamp
+            HandleSpectrogram();
+        }
+
+        // Creates a spectrogram frame at specified update rate and initialises with spectrum data and timestamp
+        private void HandleSpectrogram()
+        {
             double curAudioPos = app.AudioSource.AudioFFT.CurrentTime.TotalMilliseconds;
             if (Prefs.STORE_SPEC_DATA && curAudioPos >= largestTimestamp)
             {
                 if (Spectrogram.Frames.Count / (curAudioPos / 1000) <= Prefs.SPEC_UPDATE_RATE)
                 {
-                    //double[] sqrData = new double[processedData.Length];
-                    //for (int i = 0; i < sqrData.Length; i++)
-                    //    sqrData[i] = Math.Pow(processedData[i], 2);
                     byte[] specData = SpectrogramQuantiser(processedData);
+                    specData = FilterSpectrogramData(specData);
+
+                    if (Spectrogram.FrequencyScale == null)
+                    {
+                        object scale = GetScriptVal("SCALE", "Double");
+                        if (scale == null)
+                            scale = GetScriptVal("SCALE", "Func`2");
+                        Spectrogram.FrequencyScale = scale;
+                    }
+
                     Spectrogram.CreateFrame(curAudioPos, specData);
                     CurTimestamp = curAudioPos;
                     largestTimestamp = curAudioPos;
@@ -251,6 +263,35 @@ namespace MusicAnalyser.App.DSP
             double bandSize = data.Max() / 256;
             for (int i = 0; i < data.Length; i++)
                 output[i] = (byte)Math.Floor(data[i] / bandSize);
+            return output;
+        }
+
+        private byte[] FilterSpectrogramData(byte[] data)
+        {
+            object scale = GetScriptVal("SCALE", "Double");
+            if (scale == null)
+                scale = GetScriptVal("SCALE", "Func`2");
+            int size = 0;
+            if (scale.GetType().Name == "Func`2")
+            {
+                Func<int, double> scaleFunc = (Func<int, double>)scale;
+                if (scaleFunc(data.Length - 1) <= Prefs.SPEC_MAX_FREQ)
+                    return data;
+                
+                for(int i = data.Length - 2; i > 0; i--)
+                {
+                    if(scaleFunc(i) <= Prefs.SPEC_MAX_FREQ)
+                    {
+                        size = i;
+                        break;
+                    }
+                }
+            }
+            else
+                size = (int)Math.Floor(Prefs.SPEC_MAX_FREQ / (double)scale);
+
+            byte[] output = new byte[size];
+            Array.Copy(data, output, output.Length);
             return output;
         }
 

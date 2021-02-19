@@ -8,7 +8,8 @@ namespace MusicAnalyser.App
         public static Dictionary<string, string> DefaultsDict = new Dictionary<string, string>
         {
             { "UI_THEME", "0" }, { "FOLLOW_SECS", "10" }, { "UPDATE_MODE", "0" }, { "MIN_UPDATE_TIME", "10" }, { "SMOOTH_FACTOR", "4" },
-            { "CHORD_DETECTION_INTERVAL", "10" }, { "CHORD_NOTE_OCCURENCE_OFFSET", "8" }, { "CAPTURE_DEVICE", "0" }, { "STORE_SPEC_DATA", "1" }, { "SPEC_UPDATE_RATE", "30" }
+            { "CHORD_DETECTION_INTERVAL", "10" }, { "CHORD_NOTE_OCCURENCE_OFFSET", "8" }, { "CAPTURE_DEVICE", "0" }, { "STORE_SPEC_DATA", "1" }, 
+            { "SPEC_UPDATE_RATE", "30" }, { "SPEC_MAX_FREQ", "2000" }
         };
 
         public static int UI_DELAY_FACTOR = 1000000;
@@ -27,6 +28,7 @@ namespace MusicAnalyser.App
         public static int CAPTURE_DEVICE = 0;
         public static bool STORE_SPEC_DATA = true;
         public static int SPEC_UPDATE_RATE = 30;
+        public static int SPEC_MAX_FREQ = 2000;
 
         public static void LoadPrefs(Dictionary<string, string> prefsLoaded)
         {
@@ -63,6 +65,9 @@ namespace MusicAnalyser.App
                         break;
                     case "SPEC_UPDATE_RATE":
                         SPEC_UPDATE_RATE = Convert.ToInt32(prefsLoaded[key]);
+                        break;
+                    case "SPEC_MAX_FREQ":
+                        SPEC_MAX_FREQ = Convert.ToInt32(prefsLoaded[key]);
                         break;
                     default:
                         Console.WriteLine("Error: Preference '" + key + "' could not be loaded");

@@ -32,6 +32,7 @@ namespace MusicAnalyser
             numOccurThd.Value = Prefs.CHORD_NOTE_OCCURENCE_OFFSET;
             chbStoreSpecData.Checked = Prefs.STORE_SPEC_DATA;
             numSpecUpdates.Value = Prefs.SPEC_UPDATE_RATE;
+            numSpecMaxFreq.Value = Prefs.SPEC_MAX_FREQ;
         }
 
         private void SavePrefs()
@@ -47,6 +48,7 @@ namespace MusicAnalyser
             prefsToSave.Add("CAPTURE_DEVICE=" + comDevices.SelectedIndex);
             prefsToSave.Add("STORE_SPEC_DATA=" + chbStoreSpecData.Checked);
             prefsToSave.Add("SPEC_UPDATE_RATE=" + numSpecUpdates.Value);
+            prefsToSave.Add("SPEC_MAX_FREQ=" + numSpecMaxFreq.Value);
             FileHandler.WriteFile("prefs.ini", prefsToSave.ToArray()); 
         }
 

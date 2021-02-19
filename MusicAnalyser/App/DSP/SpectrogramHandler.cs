@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace MusicAnalyser.App.DSP
 {
-    class SpectrogramHandler
+    public class SpectrogramHandler
     {
         public List<SpectrogramFrame> Frames { get; set; }
+        public object FrequencyScale { get; set; }
+        public int FrequencyBins { get; set; }
 
         public SpectrogramHandler()
         {
@@ -17,6 +19,8 @@ namespace MusicAnalyser.App.DSP
         public void CreateFrame(double timestamp, byte[] data)
         {
             Frames.Add(new SpectrogramFrame(timestamp, data));
+            if (FrequencyBins == 0)
+                FrequencyBins = data.Length;
         }
 
         public void AddAnalysis(double timestamp, Note[] notes, Chord[] chords, string key)
@@ -30,6 +34,7 @@ namespace MusicAnalyser.App.DSP
         public void Dispose()
         {
             Frames.Clear();
+            FrequencyScale = null;
         }
     }
 }

@@ -562,7 +562,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.specViewer.Enabled = false;
             this.specViewer.Location = new System.Drawing.Point(32, 114);
-            this.specViewer.MySpectrogramFrames = null;
+            this.specViewer.MySpectrogram = null;
             this.specViewer.Name = "specViewer";
             this.specViewer.Size = new System.Drawing.Size(1413, 750);
             this.specViewer.TabIndex = 48;
