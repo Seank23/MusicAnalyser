@@ -41,6 +41,8 @@ namespace MusicAnalyser.UI
             Overlay.BringToFront();
         }
 
+        public Form1 GetForm() { return (Form1)Parent; }
+
         public void GenerateSpectrogramImage()
         {
             if (MySpectrogram == null)
@@ -86,25 +88,33 @@ namespace MusicAnalyser.UI
 
             if (MySpectrogram.FrequencyScale.GetType().Name == "Func`2")
             {
-                Func<int, double> scale = (Func<int, double>)MySpectrogram.FrequencyScale;
+                Func<double, double> scale = (Func<double, double>)MySpectrogram.FrequencyScale;
                 return new double[] { scale(top), scale(bottom) };
             }
             else
                 return new double[] { (double)MySpectrogram.FrequencyScale * top * 0.95, (double)MySpectrogram.FrequencyScale * bottom * 0.95 };
         }
 
-        public double GetNonLinearFrequencyPoint(float relativePos)
+        public double GetFrequencyPoint(float relativePos)
         {
-            double freq = 0;
+            int bins = MySpectrogram.FrequencyBins;
+            int top = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y), MySpectrogram.Frames[0].SpectrumData.Length - 1), 0);
+            int bottom = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y + projectionRect.Height), MySpectrogram.Frames[0].SpectrumData.Length - 1), 0);
+            double binPos = bottom + (relativePos * (top - bottom));
+
             if (MySpectrogram.FrequencyScale.GetType().Name == "Func`2")
             {
-                Func<int, double> scale = (Func<int, double>)MySpectrogram.FrequencyScale;
-                int bins = MySpectrogram.FrequencyBins;
-                int top = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y), MySpectrogram.Frames[0].SpectrumData.Length - 1), 0);
-                int bottom = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y + projectionRect.Height), MySpectrogram.Frames[0].SpectrumData.Length - 1), 0);
-                freq = scale((int)(bottom + (relativePos * (top - bottom))));
+                Func<double, double> scale = (Func<double, double>)MySpectrogram.FrequencyScale;
+                return scale(binPos);
             }
-            return freq;
+            else
+                return (double)MySpectrogram.FrequencyScale * binPos * 0.95;
+        }
+
+        public double GetTimePointSeconds(float relativePos)
+        {
+            double[] ends = GetTimeEndsInView();
+            return (ends[0] + relativePos * (ends[1] - ends[0])) / 1000;
         }
 
         private void Zoom(bool zoomOut)

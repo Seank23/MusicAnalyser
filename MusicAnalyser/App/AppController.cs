@@ -16,9 +16,10 @@ namespace MusicAnalyser.App
     public class AppController
     {
         public AudioSource AudioSource { get; set; }
+        public DSPMain Dsp { get; set; }
 
         private Form1 ui;
-        private DSPMain dsp;
+        //private DSPMain Dsp;
         private LiveInputRecorder liveRecorder;
 
         private List<int> executionTime = new List<int>();
@@ -37,7 +38,7 @@ namespace MusicAnalyser.App
         public AppController(Form1 form)
         {
             ui = form;
-            dsp = new DSPMain(this);
+            Dsp = new DSPMain(this);
             liveRecorder = new LiveInputRecorder(ui);
             Mode = 0;
             StepMilliseconds = 50;
@@ -181,26 +182,26 @@ namespace MusicAnalyser.App
 
         public void AddScript()
         {
-            SetScriptSelectorUI(dsp.ScriptManager.GetAllScriptNames(), true);
+            SetScriptSelectorUI(Dsp.ScriptManager.GetAllScriptNames(), true);
         }
 
         public void ApplyScripts(Dictionary<int, int> selectionDict)
         {
-            dsp.ApplyScripts(selectionDict);
+            Dsp.ApplyScripts(selectionDict);
         }
 
         public void ApplyScriptSettings(int scriptIndex, string[] settings)
         {
-            dsp.ScriptManager.SetScriptSettings(scriptIndex, settings);
+            Dsp.ScriptManager.SetScriptSettings(scriptIndex, settings);
         }
 
         public void ApplyPreset(string presetName)
         {
-            Dictionary<int, int> selectionDict = dsp.ScriptManager.GetPresetSelectionDict(presetName);
+            Dictionary<int, int> selectionDict = Dsp.ScriptManager.GetPresetSelectionDict(presetName);
             if(CheckSelectionValidity(selectionDict, out string message))
             {
                 ApplyScripts(selectionDict);
-                Dictionary<string, string[]> preset = dsp.ScriptManager.Presets[presetName];
+                Dictionary<string, string[]> preset = Dsp.ScriptManager.Presets[presetName];
                 for (int i = 0; i < selectionDict.Count; i++)
                     ApplyScriptSettings(selectionDict.Values.ElementAt(i), preset.Values.ElementAt(i));
                 ui.SetAppliedScripts(selectionDict);
@@ -222,9 +223,9 @@ namespace MusicAnalyser.App
             }
             for(int i = 0; i < selectionDict.Count; i++)
             {
-                if(dsp.ScriptManager.ProcessorScripts.ContainsKey(selectionDict[i]))
+                if(Dsp.ScriptManager.ProcessorScripts.ContainsKey(selectionDict[i]))
                 {
-                    bool isPrimary = dsp.ScriptManager.ProcessorScripts[selectionDict[i]].IsPrimary;
+                    bool isPrimary = Dsp.ScriptManager.ProcessorScripts[selectionDict[i]].IsPrimary;
                     if (isPrimary && primaryProcessor == -1)
                     {
                         primaryProcessor = i;
@@ -236,9 +237,9 @@ namespace MusicAnalyser.App
                         return false;
                     }
                 }
-                else if(dsp.ScriptManager.DetectorScripts.ContainsKey(selectionDict[i]))
+                else if(Dsp.ScriptManager.DetectorScripts.ContainsKey(selectionDict[i]))
                 {
-                    bool isPrimary = dsp.ScriptManager.DetectorScripts[selectionDict[i]].IsPrimary;
+                    bool isPrimary = Dsp.ScriptManager.DetectorScripts[selectionDict[i]].IsPrimary;
                     if (isPrimary && primaryDetector == -1 && primaryProcessor != -1)
                     {
                         primaryDetector = i;
@@ -262,18 +263,18 @@ namespace MusicAnalyser.App
 
         public Dictionary<string, string[]> GetScriptSettings(int scriptIndex)
         {
-            return dsp.ScriptManager.GetScriptSettings(scriptIndex);
+            return Dsp.ScriptManager.GetScriptSettings(scriptIndex);
         }
 
         public void SaveScriptSettings(int scriptIndex)
         {
             ApplyScriptSettings(scriptIndex, ui.GetSettingValues());
-            dsp.ScriptManager.SaveScriptSettings(scriptIndex);
+            Dsp.ScriptManager.SaveScriptSettings(scriptIndex);
         }
 
         public void SetDefaultSettingValues(int scriptIndex)
         {
-            dsp.ScriptManager.SetScriptSettings(scriptIndex, dsp.ScriptManager.SettingDefaults[scriptIndex]);
+            Dsp.ScriptManager.SetScriptSettings(scriptIndex, Dsp.ScriptManager.SettingDefaults[scriptIndex]);
             ui.DisplayScriptSettings(scriptIndex);
         }
 
@@ -285,12 +286,12 @@ namespace MusicAnalyser.App
                 Dictionary<string, Dictionary<string, string[]>> presetData = new Dictionary<string, Dictionary<string, string[]>>();
                 for (int i = 0; i < scripts.Length; i++)
                 {
-                    string scriptName = dsp.ScriptManager.GetScriptName(scripts[i]);
+                    string scriptName = Dsp.ScriptManager.GetScriptName(scripts[i]);
                     Dictionary<string, string[]> settings = GetScriptSettings(scripts[i]);
                     presetData[scriptName] = settings;
                 }
-                dsp.ScriptManager.SavePreset(name, presetData);
-                dsp.LoadPresets();
+                Dsp.ScriptManager.SavePreset(name, presetData);
+                Dsp.LoadPresets();
                 ApplyPreset(name);
             }
             else
@@ -307,22 +308,22 @@ namespace MusicAnalyser.App
                 ui.EnableTimer(false);
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                dsp.RunFrequencyAnalysis();
-                dsp.FrequencyAnalysisToSpectrum();
-                dsp.RunPitchDetection();
-                dsp.Analyser.GetNotes(dsp.FreqPeaks, (double[])dsp.GetScriptVal("POSITIONS", "Double[]"), analysisUpdates);
+                Dsp.RunFrequencyAnalysis();
+                Dsp.FrequencyAnalysisToSpectrum();
+                Dsp.RunPitchDetection();
+                Dsp.Analyser.GetNotes(Dsp.FreqPeaks, (double[])Dsp.GetScriptVal("POSITIONS", "Double[]"), analysisUpdates);
                 Task asyncAnalysis = RunAnalysisAsync();
                 DisplayAnalysisUI();
                 ui.RenderSpectrum();
 
-                if (dsp.Analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
+                if (Dsp.Analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
                 {
-                    int error = (int)dsp.Analyser.GetAvgError().Average();
+                    int error = (int)Dsp.Analyser.GetAvgError().Average();
                     if (error >= 0)
                         ui.SetErrorText("+ " + Math.Abs(error) + " Cents");
                     else
                         ui.SetErrorText("- " + Math.Abs(error) + " Cents");
-                    dsp.Analyser.ResetError();
+                    Dsp.Analyser.ResetError();
                 }
 
                 await asyncAnalysis;
@@ -356,11 +357,11 @@ namespace MusicAnalyser.App
             {
                 if (analysisUpdates % Prefs.CHORD_DETECTION_INTERVAL == 0)
                 {
-                    dsp.Analyser.FindKey();
+                    Dsp.Analyser.FindKey();
                     ui.InvokeUI(() => ui.ClearNotesList());
-                    if (dsp.Analyser.FindChordsNotes())
+                    if (Dsp.Analyser.FindChordsNotes())
                     {
-                        dsp.Analyser.FindChords();
+                        Dsp.Analyser.FindChords();
                         DisplayChords();
                     }
                 }
@@ -369,17 +370,17 @@ namespace MusicAnalyser.App
 
         public void DisplayAnalysisUI()
         {
-            List<Note> notes = dsp.Analyser.GetNotes();
-            List<Note>[] chordNotes = dsp.Analyser.GetChordNotes();
-            Color[] noteColors = dsp.Analyser.GetNoteColors();
-            double[] notePercents = dsp.Analyser.GetNotePercents();
-            dsp.Analyser.GetChords(out List<Chord> chords);
-            string key = dsp.Analyser.GetCurrentKey();
-            string mode = dsp.Analyser.GetCurrentMode();
+            List<Note> notes = Dsp.Analyser.GetNotes();
+            List<Note>[] chordNotes = Dsp.Analyser.GetChordNotes();
+            Color[] noteColors = Dsp.Analyser.GetNoteColors();
+            double[] notePercents = Dsp.Analyser.GetNotePercents();
+            Dsp.Analyser.GetChords(out List<Chord> chords);
+            string key = Dsp.Analyser.GetCurrentKey();
+            string mode = Dsp.Analyser.GetCurrentMode();
 
             // Adds analysis annotations to spectrogram frame if present
-            if(dsp.CurTimestamp != 0)
-                dsp.Spectrogram.AddAnalysis(dsp.CurTimestamp, notes.ToArray(), chords.ToArray(), key);
+            if(Dsp.CurTimestamp != 0)
+                Dsp.Spectrogram.AddAnalysis(Dsp.CurTimestamp, notes.ToArray(), chords.ToArray(), key);
 
             if (notes != null)
             {
@@ -414,15 +415,15 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, dsp.MaxGain + Math.Abs(dsp.MaxGain * 0.07), Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Blue, false);
 
                         X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }
@@ -454,10 +455,10 @@ namespace MusicAnalyser.App
         public void DisplayChords()
         {
             ui.InvokeUI(() => ui.ClearNotesList());
-            List<Note>[] chordNotes = dsp.Analyser.GetChordNotes();
+            List<Note>[] chordNotes = Dsp.Analyser.GetChordNotes();
             if (chordNotes == null)
                 return;
-            dsp.Analyser.GetChords(out List<Chord> chords);
+            Dsp.Analyser.GetChords(out List<Chord> chords);
 
             for (int i = 0; i < chords.Count; i++)
             {
@@ -515,8 +516,8 @@ namespace MusicAnalyser.App
         public void PitchChange(int value)
         {
             int centDifference = 50 - value;
-            dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
-            dsp.Analyser.GetMusic().ResetNoteCount();
+            Dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
+            Dsp.Analyser.GetMusic().ResetNoteCount();
         }
 
         public void SetFilter(float lowPassFreq, float highPassFreq, float centreFreq, float centreQ, float gain)
@@ -536,9 +537,9 @@ namespace MusicAnalyser.App
             double lowFreq = 20000;
             double highFreq = 20;
             double centreFreq = x;
-            if(dsp.GetScriptVal("SCALE", "Func`2") != null)
+            if(Dsp.GetScriptVal("SCALE", "Func`2") != null)
             {
-                Func<int, double> scale = (Func<int, double>)dsp.GetScriptVal("SCALE", "Func`2");
+                Func<int, double> scale = (Func<int, double>)Dsp.GetScriptVal("SCALE", "Func`2");
                 centreFreq = scale((int)x);
             }
             if (y > 0.7)
@@ -547,7 +548,7 @@ namespace MusicAnalyser.App
                 lowFreq = centreFreq + centreFreq - highFreq;
             }
             SetFilter((float)lowFreq, (float)highFreq, (float)centreFreq, (float)(16 * y), (float)(40 * y));
-            string note = dsp.Analyser.GetMusic().GetNote(centreFreq);
+            string note = Dsp.Analyser.GetMusic().GetNote(centreFreq);
             ui.SetFilterText(note, centreFreq);
         }
 
@@ -610,12 +611,12 @@ namespace MusicAnalyser.App
                 MessageBox.Show("Error: Recording could not be saved");
         }
 
-        public SpectrogramHandler GetSpectrogram() { return dsp.Spectrogram; }
+        public SpectrogramHandler GetSpectrogram() { return Dsp.Spectrogram; }
 
         public void DisposeAudio()
         {
             started = false;
-            dsp.Dispose();
+            Dsp.Dispose();
             if (ui.Output != null)
             {
                 ui.Output.Stop();

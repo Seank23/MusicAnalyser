@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MusicAnalyser.App.DSP
 {
-    class DSPMain
+    public class DSPMain
     {
         public Analyser Analyser { get; set; }
         public ScriptManager ScriptManager { get; set; }
@@ -274,7 +274,7 @@ namespace MusicAnalyser.App.DSP
             int size = 0;
             if (scale.GetType().Name == "Func`2")
             {
-                Func<int, double> scaleFunc = (Func<int, double>)scale;
+                Func<double, double> scaleFunc = (Func<double, double>)scale;
                 if (scaleFunc(data.Length - 1) <= Prefs.SPEC_MAX_FREQ)
                     return data;
                 

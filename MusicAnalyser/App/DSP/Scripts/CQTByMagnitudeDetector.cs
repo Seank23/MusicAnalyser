@@ -37,13 +37,13 @@ class CQTByMagnitudeDetector : ISignalDetector
     public void Detect()
     {
         double[] input = null;
-        Func<int, double> scale = null;
+        Func<double, double> scale = null;
         if (InputData.GetType().Name == "Double[]")
             input = (double[])InputData;
         if (InputArgs.ContainsKey("SCALE"))
         {
             if (InputArgs["SCALE"].GetType().Name == "Func`2")
-                scale = (Func<int, double>)InputArgs["SCALE"];
+                scale = (Func<double, double>)InputArgs["SCALE"];
         }
         if (input == null || scale == null)
             return;

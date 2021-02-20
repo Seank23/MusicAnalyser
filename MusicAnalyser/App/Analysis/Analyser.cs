@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MusicAnalyser.App.Analysis
 {
-    class Analyser
+    public class Analyser
     {
         private Music music;
 

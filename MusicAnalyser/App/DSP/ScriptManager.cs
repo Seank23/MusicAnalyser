@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace MusicAnalyser.App.DSP
 {
-    class ScriptManager
+    public class ScriptManager
     {
         public Dictionary<int, ISignalProcessor> ProcessorScripts { get; set; }
         public Dictionary<int, ISignalDetector> DetectorScripts { get; set; }

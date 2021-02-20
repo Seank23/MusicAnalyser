@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MusicAnalyser.App.Analysis;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,11 +11,13 @@ namespace MusicAnalyser.UI
 {
     public class SpectrogramOverlay : UserControl
     {
+        private Music myMusic;
         private SpectrogramViewer parent;
         private List<Rectangle> timeTicks;
         private List<Rectangle> freqTicks;
         private List<Label> timeLabels;
         private List<Label> frequencyLabels;
+        private Label lblTimeFreqPoint;
 
         public SpectrogramOverlay(SpectrogramViewer p)
         {
@@ -25,11 +28,13 @@ namespace MusicAnalyser.UI
             freqTicks = new List<Rectangle>();
             timeLabels = new List<Label>();
             frequencyLabels = new List<Label>();
+            lblTimeFreqPoint = new Label();
         }
 
         public void DrawTimeAxis()
         {
             this.Controls.Clear();
+            this.Controls.Add(lblTimeFreqPoint);
             timeTicks.Clear();
             timeLabels.Clear();
 
@@ -202,10 +207,28 @@ namespace MusicAnalyser.UI
                 foreach(Label freqLabel in frequencyLabels)
                 {
                     float labelPos = (projectionHeight - freqLabel.Top + freqLabel.Height / 2) / projectionHeight;
-                    double newFreq = parent.GetNonLinearFrequencyPoint(labelPos);
+                    double newFreq = parent.GetFrequencyPoint(labelPos);
                     freqLabel.Text = newFreq.ToString("0") + " Hz";
                 }
             }
+        }
+
+        private void GetTimeFrequencyMousePosition(int x, int y)
+        {
+            if(myMusic == null)
+                myMusic = parent.GetForm().GetApp().Dsp.Analyser.GetMusic();
+
+            float relX = (float)(x - SpectrogramViewer.PADDING_LEFT) / (this.Width - SpectrogramViewer.PADDING_LEFT);
+            float relY = (float)(this.Height - SpectrogramViewer.PADDING_BOTTOM - y) / (this.Height - SpectrogramViewer.PADDING_BOTTOM);
+            double timeSeconds = parent.GetTimePointSeconds(relX);
+            double freq = parent.GetFrequencyPoint(relY);
+            string note = myMusic.GetNote(freq);
+
+            lblTimeFreqPoint.Text = TimeSpan.FromSeconds(timeSeconds).ToString(@"m\:ss\:fff") + " | " + freq.ToString("0.##") + " Hz (" + note + ")";
+            lblTimeFreqPoint.TextAlign = ContentAlignment.MiddleCenter;
+            lblTimeFreqPoint.AutoSize = true;
+            lblTimeFreqPoint.Top = Height - SpectrogramViewer.PADDING_BOTTOM - lblTimeFreqPoint.Height;
+            lblTimeFreqPoint.Left = Width - lblTimeFreqPoint.Width;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -217,6 +240,8 @@ namespace MusicAnalyser.UI
             // Frequency axis background
             g.FillRectangle(new SolidBrush(Color.Black), new Rectangle(SpectrogramViewer.PADDING_LEFT, 0, 1, Height - SpectrogramViewer.PADDING_BOTTOM));
             g.FillRectangle(new SolidBrush(Color.FromKnownColor(KnownColor.ControlLight)), new Rectangle(0, 0, SpectrogramViewer.PADDING_LEFT - 1, Height));
+            // Time/Frequency reading
+            g.FillRectangle(new SolidBrush(Color.FromKnownColor(KnownColor.ControlLight)), new Rectangle(Width - lblTimeFreqPoint.Width, Height - SpectrogramViewer.PADDING_BOTTOM - lblTimeFreqPoint.Height, lblTimeFreqPoint.Width, lblTimeFreqPoint.Height));
             if (timeTicks != null)
             {
                 foreach (Rectangle tick in timeTicks)
@@ -237,6 +262,8 @@ namespace MusicAnalyser.UI
         protected override void OnMouseMove(MouseEventArgs e)
         {
             parent.InteractMove(e);
+            if (e.X >= SpectrogramViewer.PADDING_LEFT && e.Y <= this.Height - SpectrogramViewer.PADDING_BOTTOM)
+                GetTimeFrequencyMousePosition(e.X, e.Y);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
