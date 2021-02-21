@@ -22,7 +22,6 @@ namespace MusicAnalyser
         private Point filterDragPoint;
         private Point musicPanelLocation, controlPanelLocation, spectrumLocation;
 
-
         public Form1()
         {
             InitializeComponent();
@@ -174,7 +173,6 @@ namespace MusicAnalyser
                         btnViewSpec.Enabled = true;
                     else
                         btnViewSpec.Enabled = false;
-                        
                 }
                 else
                 {
@@ -235,6 +233,7 @@ namespace MusicAnalyser
         {
             CloseSpectrogram();
             btnViewSpec.Enabled = false;
+            btnSpecEnlarge.Enabled = false;
             chbFilter.Checked = false;
             this.Text = "Music Analyser";
             lstChords.Items.Clear();
@@ -889,6 +888,7 @@ namespace MusicAnalyser
             specViewer.Visible = true;
             specViewer.BringToFront();
             btnViewSpec.Text = "Hide Spectrogram";
+            btnSpecEnlarge.Enabled = true;
         }
 
         public void CloseSpectrogram()
@@ -901,6 +901,7 @@ namespace MusicAnalyser
             specViewer.Reset();
             ResizeSpectrogramUI(false);
             btnViewSpec.Text = "View Spectrogram";
+            btnSpecEnlarge.Enabled = false;
         }
 
         private void ResizeSpectrogramUI(bool show)
@@ -913,6 +914,27 @@ namespace MusicAnalyser
             pnlMusic.Location = new Point(pnlMusic.Location.X, musicPanelLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
             pnlSpectrumControls.Location = new Point(pnlSpectrumControls.Location.X, controlPanelLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
             spFFT.Location = new Point(spFFT.Location.X, spectrumLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
+        }
+
+        public void ReassignSpectrogramViewer(SpectrogramViewer viewer)
+        {
+            specViewer = viewer;
+            specViewer.SetNewParent(this);
+            this.Controls.Add(specViewer);
+            specViewer.Size = new Size((int)(specViewer.Width * 0.98), specViewer.Width / 3);
+            btnSpecEnlarge.Enabled = true;
+            ResizeSpectrogramUI(true);
+        }
+
+        private void btnSpecEnlarge_Click(object sender, EventArgs e)
+        {
+            if(specViewer.MySpectrogram != null)
+            {
+                specViewer.Size = new Size((int)(specViewer.Width * 1.02), specViewer.Width / 3);
+                SpectrogramWindow specWindow = new SpectrogramWindow(this, specViewer);
+                specWindow.Show();
+                btnSpecEnlarge.Enabled = false;
+            }
         }
 
         private void btnViewSpec_Click(object sender, EventArgs e)

@@ -240,7 +240,7 @@ namespace MusicAnalyser.UI
             // Frequency axis background
             g.FillRectangle(new SolidBrush(Color.Black), new Rectangle(SpectrogramViewer.PADDING_LEFT, 0, 1, Height - SpectrogramViewer.PADDING_BOTTOM));
             g.FillRectangle(new SolidBrush(Color.FromKnownColor(KnownColor.ControlLight)), new Rectangle(0, 0, SpectrogramViewer.PADDING_LEFT - 1, Height));
-            // Time/Frequency reading
+            // Time/Frequency reading background
             g.FillRectangle(new SolidBrush(Color.FromKnownColor(KnownColor.ControlLight)), new Rectangle(Width - lblTimeFreqPoint.Width, Height - SpectrogramViewer.PADDING_BOTTOM - lblTimeFreqPoint.Height, lblTimeFreqPoint.Width, lblTimeFreqPoint.Height));
             if (timeTicks != null)
             {

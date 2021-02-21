@@ -88,6 +88,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lstChords = new System.Windows.Forms.ListBox();
             this.pnlSpectrumControls = new System.Windows.Forms.Panel();
+            this.btnSpecEnlarge = new System.Windows.Forms.Button();
             this.btnViewSpec = new System.Windows.Forms.Button();
             this.chbFilter = new System.Windows.Forms.CheckBox();
             this.lblError = new System.Windows.Forms.Label();
@@ -338,7 +339,7 @@
             this.closeToolStripMenuItem,
             this.saveRecordingToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
@@ -370,7 +371,7 @@
             this.playToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
             this.playbackToolStripMenuItem.Text = "Playback";
             // 
             // playToolStripMenuItem
@@ -394,7 +395,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.perferencesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // perferencesToolStripMenuItem
@@ -562,6 +563,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.specViewer.Enabled = false;
             this.specViewer.Location = new System.Drawing.Point(32, 114);
+            this.specViewer.MinimumSize = new System.Drawing.Size(600, 200);
             this.specViewer.MySpectrogram = null;
             this.specViewer.Name = "specViewer";
             this.specViewer.Size = new System.Drawing.Size(1413, 750);
@@ -785,6 +787,7 @@
             // 
             // pnlSpectrumControls
             // 
+            this.pnlSpectrumControls.Controls.Add(this.btnSpecEnlarge);
             this.pnlSpectrumControls.Controls.Add(this.btnViewSpec);
             this.pnlSpectrumControls.Controls.Add(this.chbFilter);
             this.pnlSpectrumControls.Controls.Add(this.lblError);
@@ -804,6 +807,18 @@
             this.pnlSpectrumControls.Name = "pnlSpectrumControls";
             this.pnlSpectrumControls.Size = new System.Drawing.Size(1378, 77);
             this.pnlSpectrumControls.TabIndex = 51;
+            // 
+            // btnSpecEnlarge
+            // 
+            this.btnSpecEnlarge.Enabled = false;
+            this.btnSpecEnlarge.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSpecEnlarge.Location = new System.Drawing.Point(1172, 7);
+            this.btnSpecEnlarge.Name = "btnSpecEnlarge";
+            this.btnSpecEnlarge.Size = new System.Drawing.Size(73, 29);
+            this.btnSpecEnlarge.TabIndex = 65;
+            this.btnSpecEnlarge.Text = "Undock";
+            this.btnSpecEnlarge.UseVisualStyleBackColor = true;
+            this.btnSpecEnlarge.Click += new System.EventHandler(this.btnSpecEnlarge_Click);
             // 
             // btnViewSpec
             // 
@@ -1279,6 +1294,7 @@
         private System.Windows.Forms.Label lblSelMessage;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnAddScript;
+        private System.Windows.Forms.Button btnSpecEnlarge;
     }
 }
 

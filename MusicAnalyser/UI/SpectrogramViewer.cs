@@ -26,13 +26,12 @@ namespace MusicAnalyser.UI
         private RectangleF prevProjectionRect;
         private Point prevPanLocation;
 
-        public SpectrogramViewer(Form1 frm)
+        public SpectrogramViewer(Form frm)
         {
             InitializeComponent();
+            SetNewParent(frm);
             this.DoubleBuffered = true;
             this.MouseWheel += SpectrogramViewer_MouseWheel;
-            this.Parent = frm;
-            this.Parent.KeyDown += new KeyEventHandler(SpectrogramViewer_KeyDown);
             prevProjectionRect = new RectangleF();
 
             Overlay = new SpectrogramOverlay(this);
@@ -41,7 +40,21 @@ namespace MusicAnalyser.UI
             Overlay.BringToFront();
         }
 
-        public Form1 GetForm() { return (Form1)Parent; }
+        public void SetNewParent(Form newParent)
+        {
+            if(Parent != null)
+                Parent.KeyDown -= SpectrogramViewer_KeyDown;
+            Parent = newParent;
+            Parent.KeyDown += new KeyEventHandler(SpectrogramViewer_KeyDown);
+        }
+
+        public Form1 GetForm() 
+        {
+            if (Parent.GetType().Name == "Form1")
+                return (Form1)Parent;
+            else
+                return (Form1)Parent.Parent;
+        }
 
         public void GenerateSpectrogramImage()
         {
@@ -214,10 +227,11 @@ namespace MusicAnalyser.UI
         private void SpectrogramViewer_Resize(object sender, EventArgs e)
         {
             Overlay.DrawTimeAxis();
+            Overlay.DrawFrequencyAxis();
             Refresh();
         }
 
-        private void SpectrogramViewer_KeyDown(object sender, KeyEventArgs e)
+        public void SpectrogramViewer_KeyDown(object sender, KeyEventArgs e)
         {
             if (MySpectrogram == null)
                 return;
@@ -226,13 +240,13 @@ namespace MusicAnalyser.UI
                 Zoom(false);
             else if (e.KeyCode == Keys.Subtract)
                 Zoom(true);
-            else if (e.KeyCode == Keys.Left)
+            else if (e.KeyCode == Keys.Left || e.KeyCode == Keys.NumPad4)
                 Pan(30f, 0);
-            else if (e.KeyCode == Keys.Right)
+            else if (e.KeyCode == Keys.Right || e.KeyCode == Keys.NumPad6)
                 Pan(-30f, 0);
-            else if (e.KeyCode == Keys.Up)
+            else if (e.KeyCode == Keys.Up || e.KeyCode == Keys.NumPad8)
                 Pan(0, 30f);
-            else if (e.KeyCode == Keys.Down)
+            else if (e.KeyCode == Keys.Down || e.KeyCode == Keys.NumPad2)
                 Pan(0, -30f);
         }
     }
