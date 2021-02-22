@@ -21,6 +21,7 @@ namespace MusicAnalyser.App.DSP
         private Dictionary<int, ISignalDetector> detectors = new Dictionary<int, ISignalDetector>();
         private List<double[]> prevProcessedData = new List<double[]>();
         private Dictionary<string, object> scriptVals = new Dictionary<string, object>();
+        private string scriptSet, startingScriptSet;
         private double[] processedData;
         private int detectorIndex = 0;
         private double largestTimestamp = -1;
@@ -62,6 +63,7 @@ namespace MusicAnalyser.App.DSP
             processors.Clear();
             detectors.Clear();
             detectorIndex = 0;
+            scriptSet = "";
 
             for(int i = 0; i < selectionDict.Count; i++)
             {
@@ -72,11 +74,13 @@ namespace MusicAnalyser.App.DSP
                         if (ScriptManager.ProcessorScripts.ContainsKey(j))
                         {
                             processors.Add(i, ScriptManager.ProcessorScripts[j]);
+                            scriptSet += j;
                             break;
                         }
                         else if (ScriptManager.DetectorScripts.ContainsKey(j))
                         {
                             detectors.Add(i, ScriptManager.DetectorScripts[j]);
+                            scriptSet += j;
                             if (ScriptManager.DetectorScripts[j].IsPrimary && detectorIndex == 0)
                                 detectorIndex = i;
                             break;
@@ -142,6 +146,14 @@ namespace MusicAnalyser.App.DSP
                         if (scale == null)
                             scale = GetScriptVal("SCALE", "Func`2");
                         Spectrogram.FrequencyScale = scale;
+                    }
+
+                    if (startingScriptSet == null)
+                        startingScriptSet = scriptSet;
+                    if(scriptSet != startingScriptSet)
+                    {
+                        Spectrogram.Clear(); // Clears previous spectrogram frames if scripts are changed
+                        startingScriptSet = scriptSet;
                     }
 
                     Spectrogram.CreateFrame(curAudioPos, specData);
@@ -309,7 +321,7 @@ namespace MusicAnalyser.App.DSP
         {
             largestTimestamp = -1;
             CurTimestamp = -1;
-            Spectrogram.Dispose();
+            Spectrogram.Clear();
         }
     }
 }

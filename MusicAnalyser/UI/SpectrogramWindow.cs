@@ -39,10 +39,5 @@ namespace MusicAnalyser.UI
             myViewer.Anchor = origAnchor;
             myForm.ReassignSpectrogramViewer(myViewer);
         }
-
-        //private void SpectrogramWindow_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    //myViewer.SpectrogramViewer_KeyDown(sender, e);
-        //}
     }
 }

@@ -29,6 +29,7 @@ namespace MusicAnalyser.UI
             timeLabels = new List<Label>();
             frequencyLabels = new List<Label>();
             lblTimeFreqPoint = new Label();
+            lblTimeFreqPoint.Font = new Font(Form1.fonts.Families[0], 9F, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         public void DrawTimeAxis()
@@ -92,6 +93,7 @@ namespace MusicAnalyser.UI
                 timeStamp.Top = this.Height - 20;
                 timeStamp.Left = SpectrogramViewer.PADDING_LEFT + (int)(projectionWidth * timeStampPos) - timeStamp.Width / 2;
                 timeStamp.Text = t.ToString(@"m\:ss\:fff");
+                timeStamp.Font = new Font(Form1.fonts.Families[0], 7.8F, FontStyle.Regular, GraphicsUnit.Point);
                 this.Controls.Add(timeStamp);
                 timeLabels.Add(timeStamp);
 
@@ -174,6 +176,7 @@ namespace MusicAnalyser.UI
                 freqLabel.Top = (int)(projectionHeight * freqPos) - freqLabel.Height / 2;
                 freqLabel.Left = -freqLabel.Width / 4;
                 freqLabel.Text = freqSamples[i].ToString("0.##") + " Hz";
+                freqLabel.Font = new Font(Form1.fonts.Families[0], 7.8F, FontStyle.Regular, GraphicsUnit.Point);
                 this.Controls.Add(freqLabel);
                 frequencyLabels.Add(freqLabel);
 

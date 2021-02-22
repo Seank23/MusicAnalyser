@@ -36,10 +36,13 @@
             this.chbStoreSpecData = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.comDevices = new System.Windows.Forms.ComboBox();
+            this.numSpecMaxFreq = new System.Windows.Forms.NumericUpDown();
             this.numSpecUpdates = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.numFollowSecs = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -58,11 +61,9 @@
             this.numSmooth = new System.Windows.Forms.NumericUpDown();
             this.numUpdateTime = new System.Windows.Forms.NumericUpDown();
             this.comboMode = new System.Windows.Forms.ComboBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.numSpecMaxFreq = new System.Windows.Forms.NumericUpDown();
             this.tabControlPrefs.SuspendLayout();
             this.tabGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpecMaxFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpecUpdates)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numFollowSecs)).BeginInit();
             this.tabAnalysis.SuspendLayout();
@@ -70,7 +71,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numChordInterval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSmooth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpdateTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpecMaxFreq)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSave
@@ -165,6 +165,33 @@
             this.comDevices.Size = new System.Drawing.Size(273, 24);
             this.comDevices.TabIndex = 6;
             // 
+            // numSpecMaxFreq
+            // 
+            this.numSpecMaxFreq.Increment = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numSpecMaxFreq.Location = new System.Drawing.Point(209, 180);
+            this.numSpecMaxFreq.Maximum = new decimal(new int[] {
+            4000,
+            0,
+            0,
+            0});
+            this.numSpecMaxFreq.Minimum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numSpecMaxFreq.Name = "numSpecMaxFreq";
+            this.numSpecMaxFreq.Size = new System.Drawing.Size(61, 22);
+            this.numSpecMaxFreq.TabIndex = 5;
+            this.numSpecMaxFreq.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            // 
             // numSpecUpdates
             // 
             this.numSpecUpdates.Enabled = false;
@@ -182,6 +209,15 @@
             0,
             0,
             0});
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(276, 182);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(25, 17);
+            this.label15.TabIndex = 3;
+            this.label15.Text = "Hz";
             // 
             // label13
             // 
@@ -212,6 +248,14 @@
             this.label2.Size = new System.Drawing.Size(61, 17);
             this.label2.TabIndex = 3;
             this.label2.Text = "seconds";
+            // 
+            // label14
+            // 
+            this.label14.Location = new System.Drawing.Point(26, 168);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(177, 34);
+            this.label14.TabIndex = 4;
+            this.label14.Text = "Spectrogram Maximum Frequency:";
             // 
             // label12
             // 
@@ -394,51 +438,6 @@
             this.comboMode.Size = new System.Drawing.Size(92, 24);
             this.comboMode.TabIndex = 6;
             // 
-            // label14
-            // 
-            this.label14.Location = new System.Drawing.Point(26, 168);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(177, 34);
-            this.label14.TabIndex = 4;
-            this.label14.Text = "Spectrogram Maximum Frequency:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(276, 182);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(25, 17);
-            this.label15.TabIndex = 3;
-            this.label15.Text = "Hz";
-            // 
-            // numSpecMaxFreq
-            // 
-            this.numSpecMaxFreq.Enabled = false;
-            this.numSpecMaxFreq.Increment = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numSpecMaxFreq.Location = new System.Drawing.Point(209, 180);
-            this.numSpecMaxFreq.Maximum = new decimal(new int[] {
-            4000,
-            0,
-            0,
-            0});
-            this.numSpecMaxFreq.Minimum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.numSpecMaxFreq.Name = "numSpecMaxFreq";
-            this.numSpecMaxFreq.Size = new System.Drawing.Size(61, 22);
-            this.numSpecMaxFreq.TabIndex = 5;
-            this.numSpecMaxFreq.Value = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            // 
             // PreferencesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -453,6 +452,7 @@
             this.tabControlPrefs.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpecMaxFreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpecUpdates)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numFollowSecs)).EndInit();
             this.tabAnalysis.ResumeLayout(false);
@@ -461,7 +461,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numChordInterval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSmooth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpdateTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpecMaxFreq)).EndInit();
             this.ResumeLayout(false);
 
         }

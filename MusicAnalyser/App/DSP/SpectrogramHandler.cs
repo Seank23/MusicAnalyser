@@ -31,7 +31,7 @@ namespace MusicAnalyser.App.DSP
             myFrame.KeySignature = key;
         }
 
-        public void Dispose()
+        public void Clear()
         {
             Frames.Clear();
             FrequencyScale = null;

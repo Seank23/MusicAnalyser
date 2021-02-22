@@ -35,7 +35,7 @@ namespace MusicAnalyser.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1527, 571);
             this.KeyPreview = true;
             this.Name = "SpectrogramWindow";
             this.Text = "SpectrogramWindow";

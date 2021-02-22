@@ -116,6 +116,7 @@
             this.lblSelMessage = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btnAddScript = new System.Windows.Forms.Button();
+            this.lblSpectrogram = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -129,7 +130,7 @@
             // 
             // btnOpenClose
             // 
-            this.btnOpenClose.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOpenClose.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnOpenClose.Location = new System.Drawing.Point(13, 31);
             this.btnOpenClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnOpenClose.Name = "btnOpenClose";
@@ -142,7 +143,7 @@
             // btnPlay
             // 
             this.btnPlay.Enabled = false;
-            this.btnPlay.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPlay.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPlay.Location = new System.Drawing.Point(13, 64);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnPlay.Name = "btnPlay";
@@ -155,7 +156,7 @@
             // btnStop
             // 
             this.btnStop.Enabled = false;
-            this.btnStop.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStop.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStop.Location = new System.Drawing.Point(93, 31);
             this.btnStop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStop.Name = "btnStop";
@@ -196,7 +197,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(448, 69);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 19);
@@ -206,7 +207,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(525, 69);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 19);
@@ -216,7 +217,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(605, 69);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(45, 19);
@@ -226,7 +227,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(371, 39);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(67, 19);
@@ -238,7 +239,7 @@
             this.chbFollow.AutoSize = true;
             this.chbFollow.Checked = true;
             this.chbFollow.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbFollow.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbFollow.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chbFollow.Location = new System.Drawing.Point(1604, 34);
             this.chbFollow.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chbFollow.Name = "chbFollow";
@@ -259,7 +260,7 @@
             // lblPlayTime
             // 
             this.lblPlayTime.AutoSize = true;
-            this.lblPlayTime.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPlayTime.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPlayTime.Location = new System.Drawing.Point(971, 34);
             this.lblPlayTime.Name = "lblPlayTime";
             this.lblPlayTime.Size = new System.Drawing.Size(108, 19);
@@ -281,7 +282,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(660, 38);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(63, 19);
@@ -291,7 +292,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(731, 66);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(37, 19);
@@ -301,7 +302,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(808, 66);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(45, 19);
@@ -311,7 +312,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(893, 65);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(45, 19);
@@ -408,7 +409,7 @@
             // lblSelectTime
             // 
             this.lblSelectTime.AutoSize = true;
-            this.lblSelectTime.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSelectTime.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSelectTime.Location = new System.Drawing.Point(1187, 34);
             this.lblSelectTime.Name = "lblSelectTime";
             this.lblSelectTime.Size = new System.Drawing.Size(90, 19);
@@ -427,7 +428,7 @@
             // lblLoopDuration
             // 
             this.lblLoopDuration.AutoSize = true;
-            this.lblLoopDuration.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLoopDuration.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLoopDuration.Location = new System.Drawing.Point(1379, 34);
             this.lblLoopDuration.Name = "lblLoopDuration";
             this.lblLoopDuration.Size = new System.Drawing.Size(108, 19);
@@ -455,7 +456,7 @@
             // segMode
             // 
             this.segMode.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.segMode.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.segMode.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.segMode.Items = "Play Mode, Step Mode, Record Mode";
             this.segMode.Location = new System.Drawing.Point(175, 33);
             this.segMode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -472,7 +473,7 @@
             // 
             // numStepVal
             // 
-            this.numStepVal.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numStepVal.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numStepVal.Location = new System.Drawing.Point(92, 66);
             this.numStepVal.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numStepVal.Maximum = new decimal(new int[] {
@@ -500,7 +501,7 @@
             // lblStep
             // 
             this.lblStep.AutoSize = true;
-            this.lblStep.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStep.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStep.Location = new System.Drawing.Point(13, 68);
             this.lblStep.Name = "lblStep";
             this.lblStep.Size = new System.Drawing.Size(75, 19);
@@ -511,7 +512,7 @@
             // lblFilterFreq
             // 
             this.lblFilterFreq.AutoSize = true;
-            this.lblFilterFreq.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFilterFreq.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFilterFreq.ForeColor = System.Drawing.Color.Gray;
             this.lblFilterFreq.Location = new System.Drawing.Point(764, 654);
             this.lblFilterFreq.Name = "lblFilterFreq";
@@ -541,7 +542,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cwvViewer.BackColor = System.Drawing.SystemColors.ControlLight;
             this.cwvViewer.BytesPerSample = 0;
-            this.cwvViewer.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cwvViewer.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cwvViewer.LeftSample = ((long)(0));
             this.cwvViewer.Location = new System.Drawing.Point(32, 114);
             this.cwvViewer.LoopEndSample = ((long)(0));
@@ -599,7 +600,7 @@
             // 
             this.lblMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMode.AutoSize = true;
-            this.lblMode.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMode.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMode.Location = new System.Drawing.Point(115, 253);
             this.lblMode.Name = "lblMode";
             this.lblMode.Size = new System.Drawing.Size(48, 19);
@@ -610,7 +611,7 @@
             // 
             this.lblKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblKey.AutoSize = true;
-            this.lblKey.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblKey.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblKey.Location = new System.Drawing.Point(23, 224);
             this.lblKey.Name = "lblKey";
             this.lblKey.Size = new System.Drawing.Size(112, 19);
@@ -621,7 +622,7 @@
             // 
             this.lblB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblB.AutoSize = true;
-            this.lblB.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblB.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblB.Location = new System.Drawing.Point(20, 189);
             this.lblB.Name = "lblB";
             this.lblB.Size = new System.Drawing.Size(34, 19);
@@ -632,7 +633,7 @@
             // 
             this.lblBb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblBb.AutoSize = true;
-            this.lblBb.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBb.Location = new System.Drawing.Point(20, 172);
             this.lblBb.Name = "lblBb";
             this.lblBb.Size = new System.Drawing.Size(43, 19);
@@ -643,7 +644,7 @@
             // 
             this.lblA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblA.AutoSize = true;
-            this.lblA.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblA.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblA.Location = new System.Drawing.Point(20, 156);
             this.lblA.Name = "lblA";
             this.lblA.Size = new System.Drawing.Size(34, 19);
@@ -654,7 +655,7 @@
             // 
             this.lblAb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblAb.AutoSize = true;
-            this.lblAb.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAb.Location = new System.Drawing.Point(20, 138);
             this.lblAb.Name = "lblAb";
             this.lblAb.Size = new System.Drawing.Size(43, 19);
@@ -665,7 +666,7 @@
             // 
             this.lblG.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblG.AutoSize = true;
-            this.lblG.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblG.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblG.Location = new System.Drawing.Point(20, 121);
             this.lblG.Name = "lblG";
             this.lblG.Size = new System.Drawing.Size(35, 19);
@@ -676,7 +677,7 @@
             // 
             this.lblGb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblGb.AutoSize = true;
-            this.lblGb.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGb.Location = new System.Drawing.Point(20, 104);
             this.lblGb.Name = "lblGb";
             this.lblGb.Size = new System.Drawing.Size(44, 19);
@@ -687,7 +688,7 @@
             // 
             this.lblF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblF.AutoSize = true;
-            this.lblF.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblF.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblF.Location = new System.Drawing.Point(20, 87);
             this.lblF.Name = "lblF";
             this.lblF.Size = new System.Drawing.Size(32, 19);
@@ -698,7 +699,7 @@
             // 
             this.lblE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblE.AutoSize = true;
-            this.lblE.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblE.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblE.Location = new System.Drawing.Point(20, 71);
             this.lblE.Name = "lblE";
             this.lblE.Size = new System.Drawing.Size(33, 19);
@@ -709,7 +710,7 @@
             // 
             this.lblEb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblEb.AutoSize = true;
-            this.lblEb.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEb.Location = new System.Drawing.Point(20, 53);
             this.lblEb.Name = "lblEb";
             this.lblEb.Size = new System.Drawing.Size(42, 19);
@@ -720,7 +721,7 @@
             // 
             this.lblD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblD.AutoSize = true;
-            this.lblD.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblD.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblD.Location = new System.Drawing.Point(20, 36);
             this.lblD.Name = "lblD";
             this.lblD.Size = new System.Drawing.Size(35, 19);
@@ -731,7 +732,7 @@
             // 
             this.lblDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDb.AutoSize = true;
-            this.lblDb.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDb.Location = new System.Drawing.Point(20, 19);
             this.lblDb.Name = "lblDb";
             this.lblDb.Size = new System.Drawing.Size(44, 19);
@@ -742,7 +743,7 @@
             // 
             this.lblC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblC.AutoSize = true;
-            this.lblC.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblC.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblC.Location = new System.Drawing.Point(20, 2);
             this.lblC.Name = "lblC";
             this.lblC.Size = new System.Drawing.Size(34, 19);
@@ -753,7 +754,7 @@
             // 
             this.chbAllChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chbAllChords.AutoSize = true;
-            this.chbAllChords.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbAllChords.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chbAllChords.Location = new System.Drawing.Point(174, 152);
             this.chbAllChords.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chbAllChords.Name = "chbAllChords";
@@ -766,7 +767,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(169, -1);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(107, 19);
@@ -776,7 +777,7 @@
             // lstChords
             // 
             this.lstChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstChords.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstChords.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstChords.FormattingEnabled = true;
             this.lstChords.ItemHeight = 18;
             this.lstChords.Location = new System.Drawing.Point(173, 29);
@@ -811,7 +812,7 @@
             // btnSpecEnlarge
             // 
             this.btnSpecEnlarge.Enabled = false;
-            this.btnSpecEnlarge.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSpecEnlarge.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSpecEnlarge.Location = new System.Drawing.Point(1172, 7);
             this.btnSpecEnlarge.Name = "btnSpecEnlarge";
             this.btnSpecEnlarge.Size = new System.Drawing.Size(73, 29);
@@ -823,7 +824,7 @@
             // btnViewSpec
             // 
             this.btnViewSpec.Enabled = false;
-            this.btnViewSpec.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnViewSpec.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnViewSpec.Location = new System.Drawing.Point(1021, 8);
             this.btnViewSpec.Name = "btnViewSpec";
             this.btnViewSpec.Size = new System.Drawing.Size(148, 29);
@@ -835,7 +836,7 @@
             // chbFilter
             // 
             this.chbFilter.AutoSize = true;
-            this.chbFilter.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbFilter.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chbFilter.Location = new System.Drawing.Point(827, 12);
             this.chbFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chbFilter.Name = "chbFilter";
@@ -848,7 +849,7 @@
             // lblError
             // 
             this.lblError.AutoSize = true;
-            this.lblError.Font = new System.Drawing.Font("Open Sans Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblError.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblError.Location = new System.Drawing.Point(714, 12);
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(70, 19);
@@ -858,7 +859,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label19.Location = new System.Drawing.Point(175, 12);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(50, 19);
@@ -868,7 +869,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(371, 12);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(85, 19);
@@ -878,7 +879,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.Location = new System.Drawing.Point(626, 47);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(33, 19);
@@ -888,7 +889,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.Location = new System.Drawing.Point(551, 47);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(17, 19);
@@ -898,7 +899,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label17.Location = new System.Drawing.Point(237, 51);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(33, 19);
@@ -908,7 +909,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label18.Location = new System.Drawing.Point(283, 51);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(24, 19);
@@ -918,7 +919,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label16.Location = new System.Drawing.Point(327, 51);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(24, 19);
@@ -928,7 +929,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.Location = new System.Drawing.Point(457, 47);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(30, 19);
@@ -960,7 +961,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label20.Location = new System.Drawing.Point(665, 12);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(47, 19);
@@ -972,7 +973,7 @@
             this.lblExeTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblExeTime.AutoSize = true;
-            this.lblExeTime.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExeTime.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExeTime.Location = new System.Drawing.Point(13, 12);
             this.lblExeTime.Name = "lblExeTime";
             this.lblExeTime.Size = new System.Drawing.Size(151, 19);
@@ -1017,7 +1018,7 @@
             // btnSavePreset
             // 
             this.btnSavePreset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSavePreset.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSavePreset.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSavePreset.Location = new System.Drawing.Point(271, 51);
             this.btnSavePreset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSavePreset.Name = "btnSavePreset";
@@ -1031,7 +1032,7 @@
             // 
             this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label21.Location = new System.Drawing.Point(23, 58);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(51, 19);
@@ -1041,7 +1042,7 @@
             // cbPresets
             // 
             this.cbPresets.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbPresets.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbPresets.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbPresets.FormattingEnabled = true;
             this.cbPresets.Location = new System.Drawing.Point(78, 56);
             this.cbPresets.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1054,7 +1055,7 @@
             // 
             this.btnDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDefaults.Enabled = false;
-            this.btnDefaults.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDefaults.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDefaults.Location = new System.Drawing.Point(176, 335);
             this.btnDefaults.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnDefaults.Name = "btnDefaults";
@@ -1067,7 +1068,7 @@
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.Location = new System.Drawing.Point(271, 335);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
@@ -1083,7 +1084,7 @@
             this.tblSettings.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblSettings.ColumnCount = 1;
             this.tblSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblSettings.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tblSettings.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tblSettings.Location = new System.Drawing.Point(10, 209);
             this.tblSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tblSettings.Name = "tblSettings";
@@ -1095,7 +1096,7 @@
             // btnApplyScripts
             // 
             this.btnApplyScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApplyScripts.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnApplyScripts.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnApplyScripts.Location = new System.Drawing.Point(271, 172);
             this.btnApplyScripts.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnApplyScripts.Name = "btnApplyScripts";
@@ -1120,17 +1121,29 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Open Sans Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font(Form1.fonts.Families[1], 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(118, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(148, 23);
             this.label6.TabIndex = 49;
             this.label6.Text = "Processing Chain";
             // 
+            // lblSpectrogram
+            // 
+            this.lblSpectrogram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSpectrogram.AutoSize = true;
+            this.lblSpectrogram.Visible = false;
+            this.lblSpectrogram.Font = new System.Drawing.Font(Form1.fonts.Families[0], 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpectrogram.Location = new System.Drawing.Point(118, 0);
+            this.lblSpectrogram.Name = "lblSpectrogram";
+            this.lblSpectrogram.Size = new System.Drawing.Size(148, 23);
+            this.lblSpectrogram.TabIndex = 49;
+            this.lblSpectrogram.Text = "Generating Spectrogram...";
+            // 
             // btnAddScript
             // 
             this.btnAddScript.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddScript.Font = new System.Drawing.Font("Open Sans", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddScript.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddScript.Location = new System.Drawing.Point(271, 137);
             this.btnAddScript.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAddScript.Name = "btnAddScript";
@@ -1180,6 +1193,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.specViewer);
             this.Controls.Add(this.pnlScripts);
+            this.Controls.Add(this.lblSpectrogram);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1293,6 +1307,7 @@
         private System.Windows.Forms.Button btnApplyScripts;
         private System.Windows.Forms.Label lblSelMessage;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblSpectrogram;
         private System.Windows.Forms.Button btnAddScript;
         private System.Windows.Forms.Button btnSpecEnlarge;
     }

@@ -9,11 +9,14 @@ using MusicAnalyser.UI;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Syncfusion.WinForms.Core.Utils;
+using System.Drawing.Text;
 
 namespace MusicAnalyser
 {
     public partial class Form1 : Form
     {
+        public static PrivateFontCollection fonts = new PrivateFontCollection();
         public DirectSoundOut Output { get; set; }
         public int fftZoom = 1000;
         private AppController app;
@@ -21,9 +24,11 @@ namespace MusicAnalyser
         private int selectedScript;
         private Point filterDragPoint;
         private Point musicPanelLocation, controlPanelLocation, spectrumLocation;
+        private BusyIndicator loadingIndicator = new BusyIndicator();
 
         public Form1()
         {
+            LoadResources();
             InitializeComponent();
             app = new AppController(this);
             SetupFFTPlot();
@@ -41,6 +46,13 @@ namespace MusicAnalyser
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             flpScripts.Controls.Add(new ScriptSelector(this) { Parent = flpScripts, Label = "Script " + flpScripts.Controls.Count });
             OnSelectorChange();
+        }
+
+        private void LoadResources()
+        {
+            loadingIndicator.Image = Image.FromFile("Resources\\loading.gif");
+            fonts.AddFontFile("Resources\\OpenSans-Regular.ttf");
+            fonts.AddFontFile("Resources\\OpenSans-SemiBold.ttf");
         }
 
         public void InvokeUI(Action a)
@@ -880,7 +892,14 @@ namespace MusicAnalyser
         public async void LoadSpectrogram()
         {
             specViewer.MySpectrogram = app.GetSpectrogram();
+            loadingIndicator.Show(cwvViewer);
+            lblSpectrogram.Location = new Point(cwvViewer.Location.X + cwvViewer.Width / 2 - lblSpectrogram.Width / 2, cwvViewer.Location.Y + cwvViewer.Height / 2 + 50);
+            lblSpectrogram.Visible = true;
+            lblSpectrogram.BringToFront();
             await Task.Run(() => specViewer.GenerateSpectrogramImage());
+            loadingIndicator.Hide();
+            lblSpectrogram.Visible = false;
+            lblSpectrogram.SendToBack();
             ResizeSpectrogramUI(true);
             cwvViewer.Enabled = false;
             cwvViewer.Visible = false;
