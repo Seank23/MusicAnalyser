@@ -896,7 +896,7 @@ namespace MusicAnalyser
             lblSpectrogram.Location = new Point(cwvViewer.Location.X + cwvViewer.Width / 2 - lblSpectrogram.Width / 2, cwvViewer.Location.Y + cwvViewer.Height / 2 + 50);
             lblSpectrogram.Visible = true;
             lblSpectrogram.BringToFront();
-            await Task.Run(() => specViewer.GenerateSpectrogramImage());
+            await Task.Run(() => specViewer.CreateSpectrogram());
             loadingIndicator.Hide();
             lblSpectrogram.Visible = false;
             lblSpectrogram.SendToBack();
@@ -908,6 +908,7 @@ namespace MusicAnalyser
             specViewer.BringToFront();
             btnViewSpec.Text = "Hide Spectrogram";
             btnSpecEnlarge.Enabled = true;
+            chbAnnotations.Enabled = true;
         }
 
         public void CloseSpectrogram()
@@ -921,6 +922,7 @@ namespace MusicAnalyser
             ResizeSpectrogramUI(false);
             btnViewSpec.Text = "View Spectrogram";
             btnSpecEnlarge.Enabled = false;
+            chbAnnotations.Enabled = false;
         }
 
         private void ResizeSpectrogramUI(bool show)
@@ -968,6 +970,12 @@ namespace MusicAnalyser
         {
             if (specViewer.Enabled)
                 ResizeSpectrogramUI(true);
+        }
+
+        private void chbAnnotations_CheckedChanged(object sender, EventArgs e)
+        {
+            specViewer.ShowAnnotations = chbAnnotations.Checked;
+            specViewer.Refresh();
         }
     }
 }

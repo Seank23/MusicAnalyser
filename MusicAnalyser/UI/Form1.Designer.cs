@@ -90,6 +90,7 @@
             this.pnlSpectrumControls = new System.Windows.Forms.Panel();
             this.btnSpecEnlarge = new System.Windows.Forms.Button();
             this.btnViewSpec = new System.Windows.Forms.Button();
+            this.chbAnnotations = new System.Windows.Forms.CheckBox();
             this.chbFilter = new System.Windows.Forms.CheckBox();
             this.lblError = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -790,6 +791,7 @@
             // 
             this.pnlSpectrumControls.Controls.Add(this.btnSpecEnlarge);
             this.pnlSpectrumControls.Controls.Add(this.btnViewSpec);
+            this.pnlSpectrumControls.Controls.Add(this.chbAnnotations);
             this.pnlSpectrumControls.Controls.Add(this.chbFilter);
             this.pnlSpectrumControls.Controls.Add(this.lblError);
             this.pnlSpectrumControls.Controls.Add(this.label19);
@@ -806,7 +808,7 @@
             this.pnlSpectrumControls.Controls.Add(this.lblExeTime);
             this.pnlSpectrumControls.Location = new System.Drawing.Point(32, 439);
             this.pnlSpectrumControls.Name = "pnlSpectrumControls";
-            this.pnlSpectrumControls.Size = new System.Drawing.Size(1378, 77);
+            this.pnlSpectrumControls.Size = new System.Drawing.Size(1500, 77);
             this.pnlSpectrumControls.TabIndex = 51;
             // 
             // btnSpecEnlarge
@@ -832,6 +834,19 @@
             this.btnViewSpec.Text = "View Spectrogram";
             this.btnViewSpec.UseVisualStyleBackColor = true;
             this.btnViewSpec.Click += new System.EventHandler(this.btnViewSpec_Click);
+            // 
+            // chbAnnotations
+            // 
+            this.chbAnnotations.Enabled = false;
+            this.chbAnnotations.Checked = true;
+            this.chbAnnotations.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbAnnotations.Location = new System.Drawing.Point(1255, 12);
+            this.chbAnnotations.Name = "chbAnnotations";
+            this.chbAnnotations.Size = new System.Drawing.Size(148, 23);
+            this.chbAnnotations.TabIndex = 64;
+            this.chbAnnotations.Text = "Show Annotations";
+            this.chbAnnotations.UseVisualStyleBackColor = true;
+            this.chbAnnotations.CheckedChanged += new System.EventHandler(this.chbAnnotations_CheckedChanged);
             // 
             // chbFilter
             // 
@@ -1282,6 +1297,7 @@
         private System.Windows.Forms.ListBox lstChords;
         private System.Windows.Forms.Panel pnlSpectrumControls;
         private System.Windows.Forms.Button btnViewSpec;
+        private System.Windows.Forms.CheckBox chbAnnotations;
         private System.Windows.Forms.CheckBox chbFilter;
         private System.Windows.Forms.Label lblError;
         private System.Windows.Forms.Label label19;
