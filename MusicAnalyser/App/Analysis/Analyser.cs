@@ -84,7 +84,7 @@ namespace MusicAnalyser.App.Analysis
         /*
        * Calculates a color dynamically based on the actualValue in relation to the specified range of values
        */
-        public Color GetNoteColor(int rangeStart, int rangeEnd, int actualValue)
+        public static Color GetNoteColor(int rangeStart, int rangeEnd, int actualValue)
         {
             if (rangeStart >= rangeEnd) return Color.Black;
 

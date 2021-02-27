@@ -22,6 +22,24 @@ namespace MusicAnalyser.UI
             public int length;
             public double freq;
             public double position;
+            public double magnitude;
+            public Rectangle shape;
+        }
+
+        struct ChordAnnotation
+        {
+            public string name;
+            public double startIndex;
+            public int length;
+            public double confidence;
+            public Rectangle shape;
+        }
+
+        struct KeyAnnotation
+        {
+            public string name;
+            public double startIndex;
+            public int length;
             public Rectangle shape;
         }
 
@@ -38,8 +56,11 @@ namespace MusicAnalyser.UI
         private float projectionWidthRatio;
         private float projectionHeightRatio;
         private Point prevPanLocation;
-        private List<NoteAnnotation> noteAnnotations;
         private NoteAnnotation[,] noteAnnotationMatrix;
+        private ChordAnnotation[] chordAnnotationVect;
+        private KeyAnnotation[] keyAnnotationVect;
+        private double maxNoteMag;
+        private bool moving;
 
         public SpectrogramViewer(Form frm)
         {
@@ -76,6 +97,8 @@ namespace MusicAnalyser.UI
         {
             GenerateSpectrogramImage();
             GenerateNoteAnnotations();
+            GenerateChordAnnotations();
+            GenerateKeyAnnotations();
         }
 
         public RectangleF GetProjectionRect() { return projectionRect; }
@@ -172,8 +195,6 @@ namespace MusicAnalyser.UI
                 }
             }
             spectrogramImage.Save("test.bmp");
-
-            return;
         }
 
         private void GenerateNoteAnnotations()
@@ -210,6 +231,7 @@ namespace MusicAnalyser.UI
                             if (myNote.name == noteName && myNote.startIndex == i - myNote.length)
                             {
                                 myNote.length++;
+                                myNote.magnitude += frameNotes[j].Magnitude;
                                 notePresent = true;
                                 annotations[k] = myNote;
                                 break;
@@ -224,6 +246,7 @@ namespace MusicAnalyser.UI
                     newNote.freq = frameNotes[j].Frequency;
                     newNote.position = frameNotes[j].Position;
                     newNote.length++;
+                    newNote.magnitude = frameNotes[j].Magnitude;
                     annotations.Add(newNote);
                 }
             }
@@ -240,9 +263,10 @@ namespace MusicAnalyser.UI
                 NoteAnnotation myNote = annotations[i];
                 int nextIndex = i + skip + 1;
                 double timeDifference = annotations[nextIndex].startIndex - (myNote.startIndex + myNote.length);
-                if (timeDifference < 10 * projectionWidthRatio && annotations[nextIndex].name == myNote.name)
+                if (timeDifference < 16 && annotations[nextIndex].name == myNote.name)
                 {
                     myNote.length += (int)timeDifference + annotations[nextIndex].length;
+                    myNote.magnitude += annotations[nextIndex].magnitude;
                     annotations[i] = myNote;
                     indexToRemove.Add(nextIndex);
                     skip++;
@@ -262,7 +286,7 @@ namespace MusicAnalyser.UI
             int index = 0;
             while (index < annotations.Count)
             {
-                if (annotations[index].length < 6)
+                if (annotations[index].length < 10)
                     annotations.RemoveAt(index);
                 else
                     index++;
@@ -272,24 +296,212 @@ namespace MusicAnalyser.UI
             double[] freqRange = GetFrequencyRangeInView();
             int noteCount = Music.GetNoteIndexFromFrequency(freqRange[0]) + 1;
             noteAnnotationMatrix = new NoteAnnotation[noteCount, MySpectrogram.Frames.Count];
+            maxNoteMag = 0;
 
             // Populate matrix
             for (int i = 0; i < annotations.Count; i++)
             {
                 NoteAnnotation a = annotations[i];
+                a.magnitude /= a.length;
+                if (a.magnitude > maxNoteMag)
+                    maxNoteMag = a.magnitude;
+
                 int noteIndex = Music.GetNoteIndexFromFrequency(a.freq);
                 int fullLength = a.length;
+                double initialIndex = a.startIndex;
                 for (int j = 0; j < fullLength; j++)
                 {
                     a.length = fullLength - j;
-                    noteAnnotationMatrix[noteIndex, (int)a.startIndex + j] = a;
+                    a.startIndex = initialIndex + j;
+                    noteAnnotationMatrix[noteIndex, (int)a.startIndex] = a;
                 }
             }
         }
 
-        private void DrawNoteAnnotations()
+        private void GenerateChordAnnotations()
         {
-            noteAnnotations = new List<NoteAnnotation>();
+            List<ChordAnnotation> annotations = new List<ChordAnnotation>();
+            int[] frameEnds = GetFramesInView();
+            int blockSize = 50;
+
+            // Gets the most common chord over a given block size and adds it to annotations
+            for(int i = frameEnds[0]; i < frameEnds[1]; i += blockSize)
+            {
+                Dictionary<string, int> chordCountDict = new Dictionary<string, int>();
+                Dictionary<string, int> chordRootDict = new Dictionary<string, int>();
+                Dictionary<string, double> chordConfidenceDict = new Dictionary<string, double>();
+                for (int j = 0; j < blockSize; j++)
+                {
+                    if (i + j >= frameEnds[1])
+                        break;
+                    if (MySpectrogram.Frames[i + j].Chords == null)
+                        continue;
+
+                    if (MySpectrogram.Frames[i + j].Chords.Length > 0)
+                    {
+                        string chord = MySpectrogram.Frames[i + j].Chords[0].Name;
+                        string root = MySpectrogram.Frames[i + j].Chords[0].Root;
+                        if (chordRootDict.ContainsKey(root))
+                            chordRootDict[root]++;
+                        else
+                            chordRootDict.Add(root, 1);
+                        if (chordCountDict.ContainsKey(chord))
+                        {
+                            chordCountDict[chord]++;
+                            chordConfidenceDict[chord] += MySpectrogram.Frames[i + j].Chords[0].Probability;
+                        }
+                        else
+                        {
+                            chordCountDict.Add(chord, 1);
+                            chordConfidenceDict.Add(chord, MySpectrogram.Frames[i + j].Chords[0].Probability);
+                        }
+                    }
+                }
+                if (chordCountDict.Values.Sum() > blockSize / 5)
+                {
+                    string bestRoot = chordRootDict.OrderByDescending(x => x.Value).FirstOrDefault().Key;
+                    string bestChordGuess = chordCountDict.Where(x => x.Key.Contains(bestRoot)).OrderByDescending(x => x.Value).FirstOrDefault().Key;
+                    ChordAnnotation myChord = new ChordAnnotation();
+                    myChord.name = bestChordGuess;
+                    myChord.startIndex = i;
+                    myChord.length = Math.Min(blockSize, frameEnds[1] - i);
+                    myChord.confidence = chordConfidenceDict[bestChordGuess] / chordCountDict[bestChordGuess];
+                    annotations.Add(myChord);
+                }
+            }
+
+            annotations = annotations.OrderBy(x => x.name).ToList();
+            List<int> indexToRemove = new List<int>();
+            int skip = 0;
+
+            // Joins adjacent chords if they are the same
+            for (int i = 0; i < annotations.Count; i++)
+            {
+                if (i + skip + 1 >= annotations.Count)
+                    break;
+                ChordAnnotation myChord = annotations[i];
+                int nextIndex = i + skip + 1;
+                double timeDifference = annotations[nextIndex].startIndex - (myChord.startIndex + myChord.length);
+                if (timeDifference < 16 && annotations[nextIndex].name == myChord.name)
+                {
+                    myChord.length += (int)timeDifference + annotations[nextIndex].length;
+                    myChord.confidence += annotations[nextIndex].confidence;
+                    annotations[i] = myChord;
+                    indexToRemove.Add(nextIndex);
+                    skip++;
+                    i--;
+                }
+                else
+                {
+                    i += skip;
+                    skip = 0;
+                }
+            }
+
+            for (int i = 0; i < indexToRemove.Count; i++)
+                annotations.RemoveAt(indexToRemove[i] - i);
+
+            chordAnnotationVect = new ChordAnnotation[MySpectrogram.Frames.Count];
+
+            // Populates chord annotations vector
+            for(int i = 0; i < annotations.Count; i++)
+            {
+                ChordAnnotation a = annotations[i];
+                a.confidence /= a.length / blockSize;
+                int fullLength = a.length;
+                double initialIndex = a.startIndex;
+                for (int j = 0; j < fullLength; j++)
+                {
+                    a.length = fullLength - j;
+                    a.startIndex = initialIndex + j;
+                    chordAnnotationVect[(int)a.startIndex] = a;
+                }
+            }
+        }
+
+        private void GenerateKeyAnnotations()
+        {
+            List<KeyAnnotation> annotations = new List<KeyAnnotation>();
+            int[] frameEnds = GetFramesInView();
+            int blockSize = 200;
+
+            for(int i = frameEnds[0]; i < frameEnds[1]; i += blockSize)
+            {
+                Dictionary<string, int> keyCountDict = new Dictionary<string, int>();
+
+                for(int j = 0; j < blockSize; j++)
+                {
+                    if (i + j >= frameEnds[1])
+                        break;
+                    string key = MySpectrogram.Frames[i + j].KeySignature;
+                    if (key != null)
+                    {
+                        if (keyCountDict.ContainsKey(key))
+                            keyCountDict[key]++;
+                        else
+                            keyCountDict.Add(key, 1);
+                    }
+                }
+                if(keyCountDict.Values.Sum() > blockSize / 5)
+                {
+                    KeyAnnotation myKey = new KeyAnnotation();
+                    myKey.name = keyCountDict.OrderByDescending(x => x.Value).FirstOrDefault().Key;
+                    myKey.startIndex = i;
+                    myKey.length = Math.Min(blockSize, frameEnds[1] - i);
+                    annotations.Add(myKey);
+                }
+            }
+
+            annotations = annotations.OrderBy(x => x.name).ToList();
+            List<int> indexToRemove = new List<int>();
+            int skip = 0;
+
+            // Joins adjacent keys if they are the same
+            for (int i = 0; i < annotations.Count; i++)
+            {
+                if (i + skip + 1 >= annotations.Count)
+                    break;
+                KeyAnnotation myKey = annotations[i];
+                int nextIndex = i + skip + 1;
+                double timeDifference = annotations[nextIndex].startIndex - (myKey.startIndex + myKey.length);
+                if (timeDifference < 16 && annotations[nextIndex].name == myKey.name)
+                {
+                    myKey.length += (int)timeDifference + annotations[nextIndex].length;
+                    annotations[i] = myKey;
+                    indexToRemove.Add(nextIndex);
+                    skip++;
+                    i--;
+                }
+                else
+                {
+                    i += skip;
+                    skip = 0;
+                }
+            }
+
+            for (int i = 0; i < indexToRemove.Count; i++)
+                annotations.RemoveAt(indexToRemove[i] - i);
+
+            keyAnnotationVect = new KeyAnnotation[MySpectrogram.Frames.Count];
+
+            // Populates key annotations vector
+            for (int i = 0; i < annotations.Count; i++)
+            {
+                KeyAnnotation a = annotations[i];
+                int fullLength = a.length;
+                double initialIndex = a.startIndex;
+                for (int j = 0; j < fullLength; j++)
+                {
+                    a.length = fullLength - j;
+                    a.startIndex = initialIndex + j;
+                    keyAnnotationVect[(int)a.startIndex] = a;
+                }
+            }
+        }
+
+        private NoteAnnotation[] DrawNoteAnnotations()
+        {
+            List<NoteAnnotation> noteAnnotations = new List<NoteAnnotation>();
             double[] freqRange = GetFrequencyRangeInView();
             int startFreq = Math.Max(Music.GetNoteIndexFromFrequency(freqRange[1]), 0);
             int endFreq = Music.GetNoteIndexFromFrequency(freqRange[0]) + 1;
@@ -320,6 +532,57 @@ namespace MusicAnalyser.UI
                 myNote.shape = new Rectangle(startX, startY, width, 10);
                 noteAnnotations[i] = myNote;
             }
+            return noteAnnotations.ToArray();
+        }
+
+        private ChordAnnotation[] DrawChordAnnotations()
+        {
+            List<ChordAnnotation> chordAnnotations = new List<ChordAnnotation>();
+            int[] frameRange = GetFramesInView();
+
+            for (int i = frameRange[0]; i < frameRange[1]; i++)
+            {
+                if (chordAnnotationVect[i].name != null)
+                {
+                    chordAnnotations.Add(chordAnnotationVect[i]);
+                    i += chordAnnotationVect[i].length - 1;
+                }
+            }
+
+            for(int i = 0; i < chordAnnotations.Count; i++)
+            {
+                ChordAnnotation myChord = chordAnnotations[i];
+                int startX = (int)GetTimeCoordinate(myChord.startIndex);
+                int width = (int)GetTimeCoordinate(myChord.startIndex + myChord.length) - startX;
+                myChord.shape = new Rectangle(startX, 20, width, 10);
+                chordAnnotations[i] = myChord;
+            }
+            return chordAnnotations.ToArray();
+        }
+
+        private KeyAnnotation[] DrawKeyAnnotations()
+        {
+            List<KeyAnnotation> keyAnnotations = new List<KeyAnnotation>();
+            int[] frameRange = GetFramesInView();
+
+            for (int i = frameRange[0]; i < frameRange[1]; i++)
+            {
+                if (keyAnnotationVect[i].name != null)
+                {
+                    keyAnnotations.Add(keyAnnotationVect[i]);
+                    i += keyAnnotationVect[i].length - 1;
+                }
+            }
+
+            for (int i = 0; i < keyAnnotations.Count; i++)
+            {
+                KeyAnnotation myKey = keyAnnotations[i];
+                int startX = (int)GetTimeCoordinate(myKey.startIndex);
+                int width = (int)GetTimeCoordinate(myKey.startIndex + myKey.length) - startX;
+                myKey.shape = new Rectangle(startX, 5, width, 10);
+                keyAnnotations[i] = myKey;
+            }
+            return keyAnnotations.ToArray();
         }
 
         private void Zoom(bool zoomOut)
@@ -346,6 +609,11 @@ namespace MusicAnalyser.UI
 
         private void Pan(float deltaX, float deltaY)
         {
+            if (Math.Abs(deltaX) > 1 || Math.Abs(deltaY) > 1)
+                moving = true;
+            else
+                moving = false;
+
             float sensitivity = 0.3f;
             if (projectionRect.X - deltaX >= 0 && projectionRect.X - deltaX + projectionRect.Width <= spectrogramImage.Width)
                 projectionRect.X -= deltaX * sensitivity;
@@ -376,7 +644,10 @@ namespace MusicAnalyser.UI
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            if(moving)
+                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            else
+                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
 
             if (spectrogramImage == null)
             {
@@ -392,7 +663,7 @@ namespace MusicAnalyser.UI
 
             if (ShowAnnotations)
             {
-                DrawNoteAnnotations();
+                NoteAnnotation[] noteAnnotations = DrawNoteAnnotations();
                 if (noteAnnotations != null)
                 {
                     float penSize = Math.Max(2 * projectionHeightRatio, 1);
@@ -400,9 +671,37 @@ namespace MusicAnalyser.UI
                     {
                         foreach (NoteAnnotation note in noteAnnotations)
                         {
+                            int alpha = Math.Min(Math.Max((int)(note.magnitude / maxNoteMag * 255), 127), 220);
+                            p.Color = Color.FromArgb(alpha, 0, 128, 0);
                             e.Graphics.DrawLine(p, new Point(note.shape.X, (int)(note.shape.Y + penSize / 2)), new Point(note.shape.X + note.shape.Width, (int)(note.shape.Y + penSize / 2)));
                             if (penSize > 4)
                                 e.Graphics.DrawString(note.name, new Font(Form1.fonts.Families[0], penSize), new SolidBrush(Color.White), new Point(note.shape.X + 5, (int)(note.shape.Y - penSize / 2)));
+                        }
+                    }
+                }
+
+                ChordAnnotation[] chordAnnotations = DrawChordAnnotations();
+                if(chordAnnotations != null)
+                {
+                    foreach (ChordAnnotation chord in chordAnnotations)
+                    {
+                        Pen p = new Pen(Color.FromArgb(200, Analyser.GetNoteColor(30, 60, (int)chord.confidence)), 5);
+                        e.Graphics.DrawLine(p, new Point(chord.shape.X + 2, chord.shape.Y), new Point(chord.shape.X + chord.shape.Width - 2, chord.shape.Y));
+                        int textX = Math.Max(chord.shape.X, PADDING_LEFT) + Math.Min(chord.shape.Width, this.Width - PADDING_LEFT) / 2 - 4 * chord.name.Length;
+                        e.Graphics.DrawString(chord.name, new Font(Form1.fonts.Families[0], 8), new SolidBrush(Color.White), new Point(textX, chord.shape.Y + 6));
+                    }
+                }
+
+                KeyAnnotation[] keyAnnotations = DrawKeyAnnotations();
+                if(keyAnnotations != null)
+                {
+                    using (Pen p = new Pen(Color.FromArgb(200, Color.Green), 10))
+                    {
+                        foreach (KeyAnnotation key in keyAnnotations)
+                        {
+                            e.Graphics.DrawLine(p, new Point(key.shape.X + 2, key.shape.Y), new Point(key.shape.X + key.shape.Width - 2, key.shape.Y));
+                            int textX = Math.Max(key.shape.X, PADDING_LEFT) + Math.Min(key.shape.Width, this.Width - PADDING_LEFT) / 2 - 4 * key.name.Length;
+                            e.Graphics.DrawString(key.name, new Font(Form1.fonts.Families[0], 8), new SolidBrush(Color.White), new Point(textX, key.shape.Y - 10));
                         }
                     }
                 }
