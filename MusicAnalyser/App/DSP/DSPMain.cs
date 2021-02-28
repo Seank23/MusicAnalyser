@@ -150,7 +150,7 @@ namespace MusicAnalyser.App.DSP
 
                     if (startingScriptSet == null)
                         startingScriptSet = scriptSet;
-                    if(scriptSet != startingScriptSet)
+                    if (scriptSet != startingScriptSet || curAudioPos - largestTimestamp > 1000)
                     {
                         Spectrogram.Clear(); // Clears previous spectrogram frames if scripts are changed
                         startingScriptSet = scriptSet;
