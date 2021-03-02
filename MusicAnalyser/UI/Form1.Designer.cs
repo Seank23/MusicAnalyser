@@ -1276,7 +1276,7 @@
         private System.Windows.Forms.Label lblStep;
         private MusicAnalyser.UI.RoundButton btnFilterDrag;
         private System.Windows.Forms.Label lblFilterFreq;
-        private UI.SpectrogramViewer specViewer;
+        internal UI.SpectrogramViewer specViewer;
         private System.Windows.Forms.Panel pnlMusic;
         private System.Windows.Forms.Label lblMode;
         private System.Windows.Forms.Label lblKey;

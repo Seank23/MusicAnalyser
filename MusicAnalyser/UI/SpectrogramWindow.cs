@@ -24,6 +24,11 @@ namespace MusicAnalyser.UI
             myViewer = viewer;
         }
 
+        public Form1 GetForm()
+        {
+            return myForm;
+        }
+
         private void SpectrogramWindow_Load(object sender, EventArgs e)
         {
             origDock = myViewer.Dock;

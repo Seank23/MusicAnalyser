@@ -32,7 +32,7 @@ class SpectrumQuantiserProcessor : ISignalProcessor
 
         if (Settings["ENABLED"][0] == "Yes")
         {
-            double bandSize = input.Max() / int.Parse(Settings["LEVELS"][0]);
+            double bandSize = input.Max() / int.Parse(Settings["LEVELS"][0]) - 1;
             double[] output = new double[input.Length];
 
             for (int i = 0; i < input.Length; i++)

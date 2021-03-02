@@ -13,6 +13,7 @@ namespace MusicAnalyser.UI
     {
         private Music myMusic;
         private SpectrogramViewer parent;
+        private Rectangle posIndicator;
         private List<Rectangle> timeTicks;
         private List<Rectangle> freqTicks;
         private List<Label> timeLabels;
@@ -24,6 +25,7 @@ namespace MusicAnalyser.UI
             DoubleBuffered = true;
             parent = p;
             this.Parent = parent;
+            posIndicator = new Rectangle(SpectrogramViewer.PADDING_LEFT, 0, 1, parent.Height - SpectrogramViewer.PADDING_BOTTOM);
             timeTicks = new List<Rectangle>();
             freqTicks = new List<Rectangle>();
             timeLabels = new List<Label>();
@@ -216,6 +218,15 @@ namespace MusicAnalyser.UI
             }
         }
 
+        public void MovePosIndicator(double timePoint)
+        {
+            float relX = parent.GetPosFromTimePoint(timePoint);
+            int x = (int)(relX * (this.Width - SpectrogramViewer.PADDING_LEFT) + SpectrogramViewer.PADDING_LEFT);
+            posIndicator.X = x;
+            posIndicator.Height = this.Height - SpectrogramViewer.PADDING_BOTTOM;
+            Invalidate(false);
+        }
+
         private void GetTimeFrequencyMousePosition(int x, int y)
         {
             if(myMusic == null)
@@ -245,6 +256,8 @@ namespace MusicAnalyser.UI
             g.FillRectangle(new SolidBrush(Color.FromKnownColor(KnownColor.ControlLight)), new Rectangle(0, 0, SpectrogramViewer.PADDING_LEFT - 1, Height));
             // Time/Frequency reading background
             g.FillRectangle(new SolidBrush(Color.FromKnownColor(KnownColor.ControlLight)), new Rectangle(Width - lblTimeFreqPoint.Width, Height - SpectrogramViewer.PADDING_BOTTOM - lblTimeFreqPoint.Height, lblTimeFreqPoint.Width, lblTimeFreqPoint.Height));
+            // Playback position indicator
+            g.FillRectangle(new SolidBrush(Color.White), posIndicator);
             if (timeTicks != null)
             {
                 foreach (Rectangle tick in timeTicks)

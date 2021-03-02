@@ -310,7 +310,7 @@ namespace MusicAnalyser
                     break;
                 }
 
-                if (Output.PlaybackState == PlaybackState.Playing)
+                if (Output.PlaybackState == PlaybackState.Playing && !app.SpectrogramPlayback)
                 {
                     if (!app.IsStarted() && chbFollow.Checked)
                     {
@@ -897,6 +897,7 @@ namespace MusicAnalyser
             lblSpectrogram.Visible = true;
             lblSpectrogram.BringToFront();
             await Task.Run(() => specViewer.CreateSpectrogram());
+            app.SpectrogramPlayback = true;
             loadingIndicator.Hide();
             lblSpectrogram.Visible = false;
             lblSpectrogram.SendToBack();
@@ -909,10 +910,14 @@ namespace MusicAnalyser
             btnViewSpec.Text = "Hide Spectrogram";
             btnSpecEnlarge.Enabled = true;
             chbAnnotations.Enabled = true;
+            timerFFT.Interval = (int)((1.0f / Prefs.SPEC_UPDATE_RATE) * 1000);
+            app.Dsp.Analyser.DisposeAnalyser();
+            app.TriggerStop();
         }
 
         public void CloseSpectrogram()
         {
+            app.SpectrogramPlayback = false;
             specViewer.Visible = false;
             specViewer.Enabled = false;
             cwvViewer.Enabled = true;
@@ -923,6 +928,8 @@ namespace MusicAnalyser
             btnViewSpec.Text = "View Spectrogram";
             btnSpecEnlarge.Enabled = false;
             chbAnnotations.Enabled = false;
+            timerFFT.Interval = (int)((1.0f / Prefs.MIN_UPDATE_TIME) * 1000);
+            app.Dsp.Analyser.DisposeAnalyser();
         }
 
         private void ResizeSpectrogramUI(bool show)

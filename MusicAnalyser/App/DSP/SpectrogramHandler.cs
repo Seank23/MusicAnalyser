@@ -50,9 +50,10 @@ namespace MusicAnalyser.App.DSP
             Frames = new List<SpectrogramFrame>();
         }
 
-        public void CreateFrame(double timestamp, byte[] data)
+        public void CreateFrame(double timestamp, byte[] data, Note[] notes, Chord[] chords, string key, double quantScale)
         {
-            Frames.Add(new SpectrogramFrame(timestamp, data));
+            SpectrogramFrame newFrame = new SpectrogramFrame(timestamp, data, notes, chords, key, quantScale);
+            Frames.Add(newFrame);
             if (FrequencyBins == 0)
                 FrequencyBins = data.Length;
         }
@@ -107,6 +108,7 @@ namespace MusicAnalyser.App.DSP
                 for (int j = 0; j < frameNotes.Length; j++)
                 {
                     string noteName = frameNotes[j].Name + frameNotes[j].Octave;
+                    frameNotes[j].Magnitude /= Frames[i].QuantisationScale; // Scales note correctly for spectrum display
                     if (i > 0)
                     {
                         // Checks if current note is sustained from previous frame
@@ -135,6 +137,7 @@ namespace MusicAnalyser.App.DSP
                     newNote.magnitude = frameNotes[j].Magnitude;
                     annotations.Add(newNote);
                 }
+                Frames[i].QuantisationScale = 1;
             }
 
             annotations = annotations.OrderBy(x => x.name).ToList();

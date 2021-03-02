@@ -19,7 +19,6 @@ namespace MusicAnalyser.App
         public DSPMain Dsp { get; set; }
 
         private Form1 ui;
-        //private DSPMain Dsp;
         private LiveInputRecorder liveRecorder;
 
         private List<int> executionTime = new List<int>();
@@ -34,6 +33,7 @@ namespace MusicAnalyser.App
         public bool ScriptSelectionValid { get; set; }
         public int StepMilliseconds { get; set; }
         public bool StepBack { get; set; }
+        public bool SpectrogramPlayback { get; set; }
 
         public AppController(Form1 form)
         {
@@ -122,7 +122,7 @@ namespace MusicAnalyser.App
                 ui.Output.Play();
                 ui.DrawPlayUI();
 
-                if (!started)
+                if (!started && !SpectrogramPlayback)
                 {
                     var ts = new ThreadStart(ui.UpdatePlayPosition); // New thread to handle playback position indicator
                     var backgroundThread = new Thread(ts);
@@ -136,8 +136,16 @@ namespace MusicAnalyser.App
         {
             ui.Output.Stop();
             ui.EnableTimer(false);
-            startSample = ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels;
-            ui.SetPlayBtnText("Play from " + TimeSpan.FromSeconds((double)ui.cwvViewer.SelectSample / ui.cwvViewer.GetSampleRate()).ToString(@"m\:ss\:fff"));
+            if (SpectrogramPlayback)
+            {
+                startSample = (long)(ui.specViewer.SelectTimestamp * ((double)AudioSource.AudioStream.WaveFormat.SampleRate / 1000) * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels);
+                ui.SetPlayBtnText("Play from " + TimeSpan.FromMilliseconds(ui.specViewer.SelectTimestamp).ToString(@"m\:ss\:fff"));
+            }
+            else
+            {
+                startSample = ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels;
+                ui.SetPlayBtnText("Play from " + TimeSpan.FromSeconds((double)ui.cwvViewer.SelectSample / ui.cwvViewer.GetSampleRate()).ToString(@"m\:ss\:fff"));
+            }
             ui.CheckAppState();
         }
 
@@ -146,9 +154,8 @@ namespace MusicAnalyser.App
          */
         public void TriggerClose()
         {
+            TriggerStop();
             Opened = false;
-            ui.EnableTimer(false);
-            ui.Output.Stop();
             Thread.Sleep(100);
             DisposeAudio();
             analysisUpdates = 0;
@@ -167,7 +174,6 @@ namespace MusicAnalyser.App
         public void DrawSpectrum(double[] freqData, double scale, double avgGain, double maxGain)
         {
             ui.DisplayFFT(freqData, scale, avgGain, maxGain);
-            Application.DoEvents();
         }
 
         public void SetScriptSelectorUI(Dictionary<int, string> scripts, bool add)
@@ -305,49 +311,63 @@ namespace MusicAnalyser.App
         {
             if (ui.Output.PlaybackState == PlaybackState.Playing || Mode == 1)
             {
-                ui.EnableTimer(false);
-                var watch = System.Diagnostics.Stopwatch.StartNew();
-
-                Dsp.RunFrequencyAnalysis();
-                Dsp.FrequencyAnalysisToSpectrum();
-                Dsp.RunPitchDetection();
-                Dsp.Analyser.GetNotes(Dsp.FreqPeaks, (double[])Dsp.GetScriptVal("POSITIONS", "Double[]"), analysisUpdates);
-                Task asyncAnalysis = RunAnalysisAsync();
-                DisplayAnalysisUI();
-                ui.RenderSpectrum();
-
-                if (Dsp.Analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
+                if (SpectrogramPlayback) // Display spectrogram analysis in real-time
                 {
-                    int error = (int)Dsp.Analyser.GetAvgError().Average();
-                    if (error >= 0)
-                        ui.SetErrorText("+ " + Math.Abs(error) + " Cents");
-                    else
-                        ui.SetErrorText("- " + Math.Abs(error) + " Cents");
-                    Dsp.Analyser.ResetError();
+                    Dsp.ReadSpectrogramFrame();
+                    DisplayAnalysisUI();
+                    DisplayChords();
+                    if(AudioSource.AudioStream != null)
+                        ui.specViewer.SetCurrentTimestamp(AudioSource.AudioStream.CurrentTime.TotalMilliseconds);
+                    ui.RenderSpectrum();
                 }
-
-                await asyncAnalysis;
-                watch.Stop();
-
-                if (Prefs.UPDATE_MODE == 0) // Dynamic update mode
+                else // Perform real-time analysis pipeline
                 {
-                    executionTime.Add((int)watch.ElapsedMilliseconds);
-                    if (executionTime.Count == Prefs.AVG_EXECUTIONS) // Calculate average execution time
+                    ui.EnableTimer(false);
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+
+                    Dsp.RunFrequencyAnalysis();
+                    Dsp.FrequencyAnalysisToSpectrum();
+                    Dsp.RunPitchDetection();
+                    Dsp.Analyser.GetNotes(Dsp.FreqPeaks, (double[])Dsp.GetScriptVal("POSITIONS", "Double[]"), analysisUpdates);
+                    Task asyncAnalysis = RunAnalysisAsync();
+                    DisplayAnalysisUI();
+                    ui.RenderSpectrum();
+
+                    if (Dsp.Analyser.GetAvgError().Count == Prefs.ERROR_DURATION) // Calculate average note error
                     {
-                        int executionTime = AverageExecutionTime();
-                        if (executionTime >= Prefs.MIN_UPDATE_TIME)
-                            ui.SetTimerInterval(executionTime);
-                        ui.SetExecTimeText(executionTime);
+                        int error = (int)Dsp.Analyser.GetAvgError().Average();
+                        if (error >= 0)
+                            ui.SetErrorText("+ " + Math.Abs(error) + " Cents");
+                        else
+                            ui.SetErrorText("- " + Math.Abs(error) + " Cents");
+                        Dsp.Analyser.ResetError();
                     }
+
+                    await asyncAnalysis;
+                    if (Prefs.STORE_SPEC_DATA)
+                        Dsp.WriteToSpectrogram();
+                    watch.Stop();
+
+                    if (Prefs.UPDATE_MODE == 0) // Dynamic update mode
+                    {
+                        executionTime.Add((int)watch.ElapsedMilliseconds);
+                        if (executionTime.Count == Prefs.AVG_EXECUTIONS) // Calculate average execution time
+                        {
+                            int executionTime = AverageExecutionTime();
+                            if (executionTime >= Prefs.MIN_UPDATE_TIME)
+                                ui.SetTimerInterval(executionTime);
+                            ui.SetExecTimeText(executionTime);
+                        }
+                    }
+                    else if (Prefs.UPDATE_MODE == 1) // Manual update mode
+                    {
+                        ui.SetTimerInterval(Prefs.MIN_UPDATE_TIME);
+                        ui.SetExecTimeText((int)watch.ElapsedMilliseconds);
+                    }
+                    if (Mode != 1)
+                        ui.EnableTimer(true);
+                    analysisUpdates++;
                 }
-                else if (Prefs.UPDATE_MODE == 1) // Manual update mode
-                {
-                    ui.SetTimerInterval(Prefs.MIN_UPDATE_TIME);
-                    ui.SetExecTimeText((int)watch.ElapsedMilliseconds);
-                }
-                if(Mode != 1)
-                    ui.EnableTimer(true);
-                analysisUpdates++;
             }
         }
 
@@ -370,17 +390,13 @@ namespace MusicAnalyser.App
 
         public void DisplayAnalysisUI()
         {
-            List<Note> notes = Dsp.Analyser.GetNotes();
+            List<Note> notes = Dsp.Analyser.Notes;
             List<Note>[] chordNotes = Dsp.Analyser.GetChordNotes();
+            List<Chord> chords = Dsp.Analyser.Chords;
             Color[] noteColors = Dsp.Analyser.GetNoteColors();
             double[] notePercents = Dsp.Analyser.GetNotePercents();
-            Dsp.Analyser.GetChords(out List<Chord> chords);
-            string key = Dsp.Analyser.GetCurrentKey();
-            string mode = Dsp.Analyser.GetCurrentMode();
-
-            // Adds analysis annotations to spectrogram frame if present
-            if(Dsp.CurTimestamp != 0)
-                Dsp.Spectrogram.AddAnalysis(Dsp.CurTimestamp, notes.ToArray(), chords.ToArray(), key);
+            string key = Dsp.Analyser.CurrentKey;
+            string mode = Dsp.Analyser.CurrentMode;
 
             if (notes != null)
             {
@@ -458,7 +474,7 @@ namespace MusicAnalyser.App
             List<Note>[] chordNotes = Dsp.Analyser.GetChordNotes();
             if (chordNotes == null)
                 return;
-            Dsp.Analyser.GetChords(out List<Chord> chords);
+            List<Chord> chords = Dsp.Analyser.Chords;
 
             for (int i = 0; i < chords.Count; i++)
             {

@@ -20,6 +20,8 @@ namespace MusicAnalyser.UI
         public SpectrogramHandler MySpectrogram { get; set; }
         public SpectrogramOverlay Overlay { get; }
         public bool ShowAnnotations { get; set; }
+        public double SelectTimestamp { get; set; }
+        private double curTimestamp;
         private Bitmap spectrogramImage;
         private float binsPerPixel;
         private float framesPerPixel;
@@ -57,12 +59,25 @@ namespace MusicAnalyser.UI
         {
             if (Parent.GetType().Name == "Form1")
                 return (Form1)Parent;
-            else
-                return (Form1)Parent.Parent;
+            else if(Parent.GetType().Name == "SpectrogramWindow")
+            {
+                SpectrogramWindow p = (SpectrogramWindow)Parent;
+                return p.GetForm();
+            }
+            return null;
+        }
+
+        public void SetCurrentTimestamp(double timestamp)
+        {
+            curTimestamp = timestamp;
+            if (curTimestamp > MySpectrogram.Frames[MySpectrogram.Frames.Count - 1].Timestamp)
+                GetForm().GetApp().TriggerStop();
+            Overlay.MovePosIndicator(curTimestamp);
         }
 
         public void CreateSpectrogram()
         {
+            SelectTimestamp = MySpectrogram.Frames[0].Timestamp;
             GenerateSpectrogramImage();
             MySpectrogram.GenerateAnnotations();
         }
@@ -138,6 +153,12 @@ namespace MusicAnalyser.UI
         {
             double[] ends = GetTimeEndsInView();
             return (ends[0] + relativePos * (ends[1] - ends[0])) / 1000;
+        }
+
+        public float GetPosFromTimePoint(double timePoint)
+        {
+            double[] ends = GetTimeEndsInView();
+            return (float)((timePoint - ends[0]) / (ends[1] - ends[0]));
         }
 
         private void GenerateSpectrogramImage()

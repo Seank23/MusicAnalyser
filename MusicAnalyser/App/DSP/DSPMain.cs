@@ -19,10 +19,10 @@ namespace MusicAnalyser.App.DSP
         private AppController app;
         private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
         private Dictionary<int, ISignalDetector> detectors = new Dictionary<int, ISignalDetector>();
-        private List<double[]> prevProcessedData = new List<double[]>();
+        private List<double[]> prevSpectrumData = new List<double[]>();
         private Dictionary<string, object> scriptVals = new Dictionary<string, object>();
         private string scriptSet, startingScriptSet;
-        private double[] processedData;
+        private double[] spectrumData;
         private int detectorIndex = 0;
         private double largestTimestamp = -1;
 
@@ -89,7 +89,7 @@ namespace MusicAnalyser.App.DSP
                 }
             }
             app.ScriptSelectionApplied = true;
-            prevProcessedData.Clear();
+            prevSpectrumData.Clear();
             scriptVals.Clear();
         }
 
@@ -122,22 +122,20 @@ namespace MusicAnalyser.App.DSP
                 else break;
             }
 
-            processedData = (double[])audio;
-            if (!Double.IsInfinity(processedData[0]) && !Double.IsNaN(processedData[0]) && app.Mode != 1)
-                processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
-
-            HandleSpectrogram();
+            spectrumData = (double[])audio;
+            if (!Double.IsInfinity(spectrumData[0]) && !Double.IsNaN(spectrumData[0]) && app.Mode != 1)
+                spectrumData = SmoothSignal(spectrumData, Prefs.SMOOTH_FACTOR);
         }
 
         // Creates a spectrogram frame at specified update rate and initialises with spectrum data and timestamp
-        private void HandleSpectrogram()
+        public void WriteToSpectrogram()
         {
             double curAudioPos = app.AudioSource.AudioFFT.CurrentTime.TotalMilliseconds;
-            if (Prefs.STORE_SPEC_DATA && curAudioPos >= largestTimestamp)
+            if (curAudioPos >= largestTimestamp)
             {
                 if (Spectrogram.Frames.Count / (curAudioPos / 1000) <= Prefs.SPEC_UPDATE_RATE)
                 {
-                    byte[] specData = SpectrogramQuantiser(processedData);
+                    byte[] specData = SpectrogramQuantiser(spectrumData, out double quantScale);
                     specData = FilterSpectrogramData(specData);
 
                     if (Spectrogram.FrequencyScale == null)
@@ -156,7 +154,7 @@ namespace MusicAnalyser.App.DSP
                         startingScriptSet = scriptSet;
                     }
 
-                    Spectrogram.CreateFrame(curAudioPos, specData);
+                    Spectrogram.CreateFrame(curAudioPos, specData, Analyser.Notes.ToArray(), Analyser.Chords.ToArray(), Analyser.CurrentKey, quantScale);
                     CurTimestamp = curAudioPos;
                     largestTimestamp = curAudioPos;
                 }
@@ -169,17 +167,17 @@ namespace MusicAnalyser.App.DSP
 
         public void FrequencyAnalysisToSpectrum()
         {
-            MaxGain = processedData.Max();
-            double avgGain = processedData.Average();
+            MaxGain = spectrumData.Max();
+            double avgGain = spectrumData.Average();
             if (scriptVals["SCALE"].GetType().Name == "Double")
-                app.DrawSpectrum(processedData, (double)scriptVals["SCALE"], avgGain, MaxGain);
+                app.DrawSpectrum(spectrumData, (double)scriptVals["SCALE"], avgGain, MaxGain);
             else
-                app.DrawSpectrum(processedData, 1, avgGain, MaxGain);
+                app.DrawSpectrum(spectrumData, 1, avgGain, MaxGain);
         }
 
         public void RunPitchDetection()
         {
-            object data = processedData;
+            object data = spectrumData;
             for(int i = detectorIndex; i < ScriptManager.GetScriptCount(); i++)
             {
                 if(processors.ContainsKey(i))
@@ -204,6 +202,36 @@ namespace MusicAnalyser.App.DSP
                 }
             }
             FreqPeaks = (Dictionary<double, double>)data;
+        }
+
+        public void ReadSpectrogramFrame()
+        {
+            double curAudioPos = app.AudioSource.AudioStream.CurrentTime.TotalMilliseconds;
+            SpectrogramFrame curFrame = Spectrogram.Frames.Aggregate((x, y) => Math.Abs(x.Timestamp - curAudioPos) < Math.Abs(y.Timestamp - curAudioPos) ? x : y); // Gets the frame with a timestamp closest to curAudioPos
+            
+            // Converts byte valued spectrogram data to double valued spectrum data 
+            double[] doubleData = new double[curFrame.SpectrumData.Length];
+            for (int i = 0; i < doubleData.Length; i++)
+                doubleData[i] = curFrame.SpectrumData[i];
+            spectrumData = doubleData;
+
+            foreach(Note note in curFrame.Notes)
+            {
+                Analyser.BufferNote(note.NoteIndex);
+                Analyser.GetMusic().CountNote(note.Name + "0");
+            }
+
+            // Directly assigns analyser properties from current spectrogram frame
+            Analyser.Notes = curFrame.Notes.ToList();
+            Analyser.Chords = curFrame.Chords.ToList();
+            Analyser.CurrentKey = curFrame.KeySignature;
+            Analyser.CalculateNotePercentages();
+            FrequencyAnalysisToSpectrum();
+
+            curFrame = null;
+            doubleData = null;
+            spectrumData = null;
+            GC.Collect();
         }
 
         private short[] ReadAudioStream()
@@ -240,27 +268,28 @@ namespace MusicAnalyser.App.DSP
         {
             double[] newSignal = new double[signal.Length];
             Array.Copy(signal, newSignal, signal.Length);
-            prevProcessedData.Add(newSignal);
+            prevSpectrumData.Add(newSignal);
 
-            if (prevProcessedData.Count > smoothDepth)
-                prevProcessedData.RemoveAt(0);
+            if (prevSpectrumData.Count > smoothDepth)
+                prevSpectrumData.RemoveAt(0);
 
             for (int i = 0; i < newSignal.Length; i++)
             {
                 double smoothedValue = 0;
-                for (int j = 0; j < prevProcessedData.Count; j++)
+                for (int j = 0; j < prevSpectrumData.Count; j++)
                 {
-                    smoothedValue += prevProcessedData[j][i];
+                    smoothedValue += prevSpectrumData[j][i];
                 }
-                smoothedValue /= prevProcessedData.Count;
+                smoothedValue /= prevSpectrumData.Count;
                 newSignal[i] = smoothedValue;
             }
             return newSignal;
         }
 
-        private byte[] SpectrogramQuantiser(double[] data)
+        private byte[] SpectrogramQuantiser(double[] data, out double quantScale)
         {
             byte[] output = new byte[data.Length];
+            quantScale = 1;
 
             if (GetScriptVal("QUANT_BIT_DEPTH", "Double") != null)
             {
@@ -272,9 +301,10 @@ namespace MusicAnalyser.App.DSP
                 }
             }
 
-            double bandSize = data.Max() / 256;
+            double bandSize = data.Max() / 255;
             for (int i = 0; i < data.Length; i++)
                 output[i] = (byte)Math.Floor(data[i] / bandSize);
+            quantScale = bandSize;
             return output;
         }
 
@@ -322,6 +352,7 @@ namespace MusicAnalyser.App.DSP
             largestTimestamp = -1;
             CurTimestamp = -1;
             Spectrogram.Clear();
+            Analyser.DisposeAnalyser();
         }
     }
 }
