@@ -14,6 +14,8 @@ namespace MusicAnalyser.UI
         private Music myMusic;
         private SpectrogramViewer parent;
         private Rectangle posIndicator;
+        private Rectangle selectMarker;
+        private Rectangle loopEndMarker;
         private List<Rectangle> timeTicks;
         private List<Rectangle> freqTicks;
         private List<Label> timeLabels;
@@ -26,6 +28,8 @@ namespace MusicAnalyser.UI
             parent = p;
             this.Parent = parent;
             posIndicator = new Rectangle(SpectrogramViewer.PADDING_LEFT, 0, 1, parent.Height - SpectrogramViewer.PADDING_BOTTOM);
+            selectMarker = new Rectangle(SpectrogramViewer.PADDING_LEFT, 0, 2, parent.Height - SpectrogramViewer.PADDING_BOTTOM);
+            loopEndMarker = new Rectangle(SpectrogramViewer.PADDING_LEFT, 0, 2, parent.Height - SpectrogramViewer.PADDING_BOTTOM);
             timeTicks = new List<Rectangle>();
             freqTicks = new List<Rectangle>();
             timeLabels = new List<Label>();
@@ -218,13 +222,52 @@ namespace MusicAnalyser.UI
             }
         }
 
+        public float[] GetMousePosRelative(int x, int y)
+        {
+            float relX = (float)(x - SpectrogramViewer.PADDING_LEFT) / (this.Width - SpectrogramViewer.PADDING_LEFT);
+            float relY = (float)(this.Height - SpectrogramViewer.PADDING_BOTTOM - y) / (this.Height - SpectrogramViewer.PADDING_BOTTOM);
+            return new float[] { relX, relY };
+        }
+
         public void MovePosIndicator(double timePoint)
         {
             float relX = parent.GetPosFromTimePoint(timePoint);
             int x = (int)(relX * (this.Width - SpectrogramViewer.PADDING_LEFT) + SpectrogramViewer.PADDING_LEFT);
             posIndicator.X = x;
-            posIndicator.Height = this.Height - SpectrogramViewer.PADDING_BOTTOM;
             Invalidate(false);
+        }
+
+        public void SetSelectMarker(double timePoint)
+        {
+            float relX = parent.GetPosFromTimePoint(timePoint);
+            int x = (int)(relX * (this.Width - SpectrogramViewer.PADDING_LEFT) + SpectrogramViewer.PADDING_LEFT);
+            selectMarker.X = x;
+            Invalidate(false);
+        }
+
+        public void SetLoopEndMarker(double timePoint)
+        {
+            float relX = parent.GetPosFromTimePoint(timePoint);
+            int x = (int)(relX * (this.Width - SpectrogramViewer.PADDING_LEFT) + SpectrogramViewer.PADDING_LEFT);
+            loopEndMarker.X = x;
+            Invalidate(false);
+        }
+
+        public void OnResize()
+        {
+            posIndicator.Height = this.Height - SpectrogramViewer.PADDING_BOTTOM;
+            selectMarker.Height = this.Height - SpectrogramViewer.PADDING_BOTTOM;
+            loopEndMarker.Height = this.Height - SpectrogramViewer.PADDING_BOTTOM;
+            DrawTimeAxis();
+            DrawFrequencyAxis();
+            Refresh();
+        }
+
+        public void ResetOverlay()
+        {
+            posIndicator.X = SpectrogramViewer.PADDING_LEFT;
+            selectMarker.X = SpectrogramViewer.PADDING_LEFT;
+            loopEndMarker.X = -100;
         }
 
         private void GetTimeFrequencyMousePosition(int x, int y)
@@ -232,10 +275,9 @@ namespace MusicAnalyser.UI
             if(myMusic == null)
                 myMusic = parent.GetForm().GetApp().Dsp.Analyser.GetMusic();
 
-            float relX = (float)(x - SpectrogramViewer.PADDING_LEFT) / (this.Width - SpectrogramViewer.PADDING_LEFT);
-            float relY = (float)(this.Height - SpectrogramViewer.PADDING_BOTTOM - y) / (this.Height - SpectrogramViewer.PADDING_BOTTOM);
-            double timeSeconds = parent.GetTimePointSeconds(relX);
-            double freq = parent.GetFrequencyPoint(relY);
+            float[] relPos = GetMousePosRelative(x, y);
+            double timeSeconds = parent.GetTimePointSeconds(relPos[0]);
+            double freq = parent.GetFrequencyPoint(relPos[1]);
             string note = myMusic.GetNote(freq);
 
             lblTimeFreqPoint.Text = TimeSpan.FromSeconds(timeSeconds).ToString(@"m\:ss\:fff") + " | " + freq.ToString("0.##") + " Hz (" + note + ")";
@@ -258,6 +300,10 @@ namespace MusicAnalyser.UI
             g.FillRectangle(new SolidBrush(Color.FromKnownColor(KnownColor.ControlLight)), new Rectangle(Width - lblTimeFreqPoint.Width, Height - SpectrogramViewer.PADDING_BOTTOM - lblTimeFreqPoint.Height, lblTimeFreqPoint.Width, lblTimeFreqPoint.Height));
             // Playback position indicator
             g.FillRectangle(new SolidBrush(Color.White), posIndicator);
+            // Playback select marker
+            g.FillRectangle(new SolidBrush(Color.DarkBlue), selectMarker);
+            // Loop end marker
+            g.FillRectangle(new SolidBrush(Color.Blue), loopEndMarker);
             if (timeTicks != null)
             {
                 foreach (Rectangle tick in timeTicks)

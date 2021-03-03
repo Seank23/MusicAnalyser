@@ -1,5 +1,6 @@
 ﻿using MusicAnalyser.App.Analysis;
 using MusicAnalyser.App.DSP;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +22,7 @@ namespace MusicAnalyser.UI
         public SpectrogramOverlay Overlay { get; }
         public bool ShowAnnotations { get; set; }
         public double SelectTimestamp { get; set; }
+        public double LoopEndTimestamp { get; set; }
         private double curTimestamp;
         private Bitmap spectrogramImage;
         private float binsPerPixel;
@@ -31,6 +33,8 @@ namespace MusicAnalyser.UI
         private float projectionHeightRatio;
         private Point prevPanLocation;
         private bool moving;
+        private bool isLooping;
+        private Point startPos;
 
         public SpectrogramViewer(Form frm)
         {
@@ -67,11 +71,17 @@ namespace MusicAnalyser.UI
             return null;
         }
 
-        public void SetCurrentTimestamp(double timestamp)
+        public void OnTimestampUpdate(double timestamp)
         {
             curTimestamp = timestamp;
+            GetForm().SetTimeStamp(TimeSpan.FromMilliseconds(curTimestamp));
             if (curTimestamp > MySpectrogram.Frames[MySpectrogram.Frames.Count - 1].Timestamp)
+            {
                 GetForm().GetApp().TriggerStop();
+                Overlay.ResetOverlay();
+            }
+            if (isLooping && curTimestamp > LoopEndTimestamp)
+                GetForm().GetApp().LoopPlayback();
             Overlay.MovePosIndicator(curTimestamp);
         }
 
@@ -80,6 +90,7 @@ namespace MusicAnalyser.UI
             SelectTimestamp = MySpectrogram.Frames[0].Timestamp;
             GenerateSpectrogramImage();
             MySpectrogram.GenerateAnnotations();
+            Overlay.ResetOverlay();
         }
 
         public RectangleF GetProjectionRect() { return projectionRect; }
@@ -289,6 +300,10 @@ namespace MusicAnalyser.UI
             float cornerY = Math.Max(Math.Min(projectionRect.Location.Y + (prevProjection.Height - projectionRect.Height) / 2, spectrogramImage.Height - projectionRect.Height), 0);
             PointF newCorner = new PointF(cornerX, cornerY);
             projectionRect.Location = newCorner;
+
+            Overlay.SetSelectMarker(SelectTimestamp);
+            Overlay.SetLoopEndMarker(LoopEndTimestamp);
+
             Refresh();
         }
 
@@ -304,6 +319,10 @@ namespace MusicAnalyser.UI
                 projectionRect.X -= deltaX * sensitivity;
             if (projectionRect.Y - deltaY >= 0 && projectionRect.Y - deltaY + projectionRect.Height <= spectrogramImage.Height)
                 projectionRect.Y -= deltaY * sensitivity;
+
+            Overlay.SetSelectMarker(SelectTimestamp);
+            Overlay.SetLoopEndMarker(LoopEndTimestamp);
+
             Refresh();
         }
 
@@ -403,20 +422,49 @@ namespace MusicAnalyser.UI
 
         public void InteractDown(MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if(e.Button == MouseButtons.Left)
+            {
+                if (e.X >= PADDING_LEFT)
+                {
+                    isLooping = false;
+                    Overlay.SetLoopEndMarker(-5000);
+                    LoopEndTimestamp = 0;
+                    GetForm().SetLoopTime(0);
+                    startPos = new Point(e.X - PADDING_LEFT, e.Y);
+
+                    float[] relPos = Overlay.GetMousePosRelative(e.X, e.Y);
+                    SelectTimestamp = GetTimePointSeconds(relPos[0]) * 1000;
+                    Overlay.SetSelectMarker(SelectTimestamp);
+                    GetForm().SetSelectTime(SelectTimestamp / 1000);
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
             {
                 prevPanLocation = e.Location;
             }
             else if (e.Button == MouseButtons.Middle)
             {
                 projectionRect = new RectangleF(0, 0, spectrogramImage.Width, spectrogramImage.Height);
+                Overlay.SetSelectMarker(SelectTimestamp);
+                Overlay.SetLoopEndMarker(LoopEndTimestamp);
                 Refresh();
             }
         }
 
         public void InteractMove(MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if(e.Button == MouseButtons.Left)
+            {
+                if (e.X >= startPos.X + PADDING_LEFT && e.X <= Width - PADDING_LEFT && e.X - PADDING_LEFT - startPos.X >= 10)
+                {
+                    isLooping = true;
+                    float[] relPos = Overlay.GetMousePosRelative(e.X, e.Y);
+                    LoopEndTimestamp = GetTimePointSeconds(relPos[0]) * 1000;
+                    Overlay.SetLoopEndMarker(LoopEndTimestamp);
+                    GetForm().SetLoopTime((LoopEndTimestamp - SelectTimestamp) / 1000);
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
             {
                 Pan((e.Location.X - prevPanLocation.X) * framesPerPixel, (e.Location.Y - prevPanLocation.Y) * binsPerPixel);
                 prevPanLocation = e.Location;
@@ -425,7 +473,11 @@ namespace MusicAnalyser.UI
 
         public void InteractUp(MouseEventArgs e)
         {
-
+            if(e.X >= PADDING_LEFT)
+            {
+                if (GetForm().Output.PlaybackState == PlaybackState.Stopped)
+                    GetForm().GetApp().TriggerStop();
+            }
         }
 
         private void SpectrogramViewer_MouseWheel(object sender, MouseEventArgs e)
@@ -452,9 +504,7 @@ namespace MusicAnalyser.UI
             }
             if (Overlay != null)
             {
-                Overlay.DrawTimeAxis();
-                Overlay.DrawFrequencyAxis();
-                Refresh();
+                Overlay.OnResize();
             }
         }
 

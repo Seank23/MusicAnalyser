@@ -168,7 +168,10 @@ namespace MusicAnalyser.App
 
         public void LoopPlayback()
         {
-            AudioSource.AudioStream.Seek(ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels, SeekOrigin.Begin);
+            if(SpectrogramPlayback)
+                AudioSource.AudioStream.Seek((long)(ui.specViewer.SelectTimestamp * ((double)AudioSource.AudioStream.WaveFormat.SampleRate / 1000) * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels), SeekOrigin.Begin);
+            else
+                AudioSource.AudioStream.Seek(ui.cwvViewer.SelectSample * ui.cwvViewer.BytesPerSample * ui.cwvViewer.WaveStream.WaveFormat.Channels, SeekOrigin.Begin);
         }
 
         public void DrawSpectrum(double[] freqData, double scale, double avgGain, double maxGain)
@@ -317,7 +320,7 @@ namespace MusicAnalyser.App
                     DisplayAnalysisUI();
                     DisplayChords();
                     if(AudioSource.AudioStream != null)
-                        ui.specViewer.SetCurrentTimestamp(AudioSource.AudioStream.CurrentTime.TotalMilliseconds);
+                        ui.specViewer.OnTimestampUpdate(AudioSource.AudioStream.CurrentTime.TotalMilliseconds);
                     ui.RenderSpectrum();
                 }
                 else // Perform real-time analysis pipeline

@@ -152,7 +152,7 @@ namespace MusicAnalyser.App.DSP
                 NoteAnnotation myNote = annotations[i];
                 int nextIndex = i + skip + 1;
                 double timeDifference = annotations[nextIndex].startIndex - (myNote.startIndex + myNote.length);
-                if (timeDifference < 16 && annotations[nextIndex].name == myNote.name)
+                if (timeDifference < Prefs.SPEC_NOTE_DIFF && annotations[nextIndex].name == myNote.name)
                 {
                     myNote.length += (int)timeDifference + annotations[nextIndex].length;
                     myNote.magnitude += annotations[nextIndex].magnitude;
@@ -218,7 +218,7 @@ namespace MusicAnalyser.App.DSP
         private void GenerateChordAnnotations()
         {
             List<ChordAnnotation> annotations = new List<ChordAnnotation>();
-            int blockSize = 50;
+            int blockSize = Prefs.SPEC_CHORD_BLOCK;
 
             // Gets the most common chord over a given block size and adds it to annotations
             for (int i = 0; i < Frames.Count; i += blockSize)
@@ -318,7 +318,7 @@ namespace MusicAnalyser.App.DSP
         private void GenerateKeyAnnotations()
         {
             List<KeyAnnotation> annotations = new List<KeyAnnotation>();
-            int blockSize = 200;
+            int blockSize = Prefs.SPEC_KEY_BLOCK;
 
             for (int i = 0; i < Frames.Count; i += blockSize)
             {

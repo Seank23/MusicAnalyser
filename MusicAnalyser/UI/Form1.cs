@@ -942,6 +942,10 @@ namespace MusicAnalyser
             pnlMusic.Location = new Point(pnlMusic.Location.X, musicPanelLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
             pnlSpectrumControls.Location = new Point(pnlSpectrumControls.Location.X, controlPanelLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
             spFFT.Location = new Point(spFFT.Location.X, spectrumLocation.Y + (specViewer.Height - cwvViewer.Height) * scale);
+            
+            int newHeight = spFFT.Location.Y + spFFT.Height + 60;
+            if (this.WindowState != FormWindowState.Maximized)
+                this.Height = newHeight;
         }
 
         public void ReassignSpectrogramViewer(SpectrogramViewer viewer)

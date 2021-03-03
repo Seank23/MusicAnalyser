@@ -33,6 +33,9 @@ namespace MusicAnalyser
             chbStoreSpecData.Checked = Prefs.STORE_SPEC_DATA;
             numSpecUpdates.Value = Prefs.SPEC_UPDATE_RATE;
             numSpecMaxFreq.Value = Prefs.SPEC_MAX_FREQ;
+            numNoteDiff.Value = Prefs.SPEC_NOTE_DIFF;
+            numChordBlock.Value = Prefs.SPEC_CHORD_BLOCK;
+            numKeyBlock.Value = Prefs.SPEC_KEY_BLOCK;
         }
 
         private void SavePrefs()
@@ -49,6 +52,9 @@ namespace MusicAnalyser
             prefsToSave.Add("STORE_SPEC_DATA=" + chbStoreSpecData.Checked);
             prefsToSave.Add("SPEC_UPDATE_RATE=" + numSpecUpdates.Value);
             prefsToSave.Add("SPEC_MAX_FREQ=" + numSpecMaxFreq.Value);
+            prefsToSave.Add("SPEC_NOTE_DIFF=" + numNoteDiff.Value);
+            prefsToSave.Add("SPEC_CHORD_BLOCK=" + numChordBlock.Value);
+            prefsToSave.Add("SPEC_KEY_BLOCK=" + numKeyBlock.Value);
             FileHandler.WriteFile("prefs.ini", prefsToSave.ToArray()); 
         }
 
