@@ -1,6 +1,6 @@
-﻿using Accord;
-using MusicAnalyser.App.Analysis;
+﻿using MusicAnalyser.App.Analysis;
 using MusicAnalyser.App.DSP;
+using MusicAnalyser.App.Spectrogram;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -80,11 +80,13 @@ namespace MusicAnalyser.App
                 if (open.FileName.EndsWith(".wav"))
                 {
                     FileHandler.OpenWav(open.FileName, out source);
+                    source.Filename = open.FileName;
                     AudioSource = source;
                 }
                 else if (open.FileName.EndsWith(".mp3"))
                 {
                     FileHandler.OpenMP3(open.FileName, out source);
+                    source.Filename = open.FileName;
                     AudioSource = source;
                 }
                 else return;
@@ -287,18 +289,24 @@ namespace MusicAnalyser.App
             ui.DisplayScriptSettings(scriptIndex);
         }
 
+        public Dictionary<string, Dictionary<string, string[]>> GetScriptChainData()
+        {
+            int[] scripts = ui.GetSelectionDict().Values.ToArray();
+            Dictionary<string, Dictionary<string, string[]>> scriptChain = new Dictionary<string, Dictionary<string, string[]>>();
+            for (int i = 0; i < scripts.Length; i++)
+            {
+                string scriptName = Dsp.ScriptManager.GetScriptName(scripts[i]);
+                Dictionary<string, string[]> settings = GetScriptSettings(scripts[i]);
+                scriptChain[scriptName] = settings;
+            }
+            return scriptChain;
+        }
+
         public void SavePreset(string name)
         {
             if (CheckSelectionValidity(ui.GetSelectionDict(), out string message))
             {
-                int[] scripts = ui.GetSelectionDict().Values.ToArray();
-                Dictionary<string, Dictionary<string, string[]>> presetData = new Dictionary<string, Dictionary<string, string[]>>();
-                for (int i = 0; i < scripts.Length; i++)
-                {
-                    string scriptName = Dsp.ScriptManager.GetScriptName(scripts[i]);
-                    Dictionary<string, string[]> settings = GetScriptSettings(scripts[i]);
-                    presetData[scriptName] = settings;
-                }
+                Dictionary<string, Dictionary<string, string[]>> presetData = GetScriptChainData();
                 Dsp.ScriptManager.SavePreset(name, presetData);
                 Dsp.LoadPresets();
                 ApplyPreset(name);
@@ -329,9 +337,9 @@ namespace MusicAnalyser.App
                     var watch = System.Diagnostics.Stopwatch.StartNew();
 
                     Dsp.RunFrequencyAnalysis();
-                    Dsp.FrequencyAnalysisToSpectrum();
+                    Dsp.FrequencyAnalysisToSpectrum(Dsp.GetScriptVal("SCALE"));
                     Dsp.RunPitchDetection();
-                    Dsp.Analyser.GetNotes(Dsp.FreqPeaks, (double[])Dsp.GetScriptVal("POSITIONS", "Double[]"), analysisUpdates);
+                    Dsp.Analyser.GetNotes(Dsp.FreqPeaks, (double[])Dsp.GetScriptVal("POSITIONS"), analysisUpdates);
                     Task asyncAnalysis = RunAnalysisAsync();
                     DisplayAnalysisUI();
                     ui.RenderSpectrum();
@@ -556,9 +564,9 @@ namespace MusicAnalyser.App
             double lowFreq = 20000;
             double highFreq = 20;
             double centreFreq = x;
-            if(Dsp.GetScriptVal("SCALE", "Func`2") != null)
+            if(Dsp.GetScriptVal("SCALE").GetType().Name == "Func`2")
             {
-                Func<int, double> scale = (Func<int, double>)Dsp.GetScriptVal("SCALE", "Func`2");
+                Func<int, double> scale = (Func<int, double>)Dsp.GetScriptVal("SCALE");
                 centreFreq = scale((int)x);
             }
             if (y > 0.7)
@@ -630,7 +638,19 @@ namespace MusicAnalyser.App
                 MessageBox.Show("Error: Recording could not be saved");
         }
 
-        public SpectrogramHandler GetSpectrogram() { return Dsp.Spectrogram; }
+        public SpectrogramHandler GetSpectrogramHandler() { return Dsp.SpectrogramHandler; }
+
+        public void SaveSpectrogram(string filename)
+        {
+            SpectrogramData specToSave = Dsp.SpectrogramHandler.Spectrogram;
+            FileHandler.WriteSpectrogram(specToSave, filename);
+        }
+
+        public void LoadSpectrogram(string filename)
+        {
+            SpectrogramData loadedSpec = FileHandler.ReadSpectrogram(filename);
+            Dsp.SpectrogramHandler.Spectrogram = loadedSpec;
+        }
 
         public void DisposeAudio()
         {

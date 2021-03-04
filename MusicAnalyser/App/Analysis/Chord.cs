@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MusicAnalyser.App.Analysis
 {
+    [Serializable]
     public class Chord
     {
         public string Name { get; set; }

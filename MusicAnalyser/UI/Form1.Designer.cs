@@ -55,6 +55,9 @@
             this.playbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.spectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblSelectTime = new System.Windows.Forms.Label();
@@ -326,6 +329,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.playbackToolStripMenuItem,
+            this.spectrogramToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -391,6 +395,31 @@
             this.stopToolStripMenuItem.Size = new System.Drawing.Size(123, 26);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
+            // 
+            // spectrogramToolStripMenuItem
+            // 
+            this.spectrogramToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveSpecToolStripMenuItem,
+            this.openSpecToolStripMenuItem});
+            this.spectrogramToolStripMenuItem.Name = "spectrogramToolStripMenuItem";
+            this.spectrogramToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.spectrogramToolStripMenuItem.Text = "Spectrogram";
+            // 
+            // saveSpecToolStripMenuItem
+            // 
+            //this.saveSpecToolStripMenuItem.Enabled = false;
+            this.saveSpecToolStripMenuItem.Name = "saveSpecToolStripMenuItem";
+            this.saveSpecToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.saveSpecToolStripMenuItem.Text = "Save Spectrogram...";
+            this.saveSpecToolStripMenuItem.Click += new System.EventHandler(this.saveSpecToolStripMenuItem_Click);
+            // 
+            // openSpecToolStripMenuItem
+            // 
+            //this.openSpecToolStripMenuItem.Enabled = false;
+            this.openSpecToolStripMenuItem.Name = "saveSpecToolStripMenuItem";
+            this.openSpecToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.openSpecToolStripMenuItem.Text = "Open Spectrogram...";
+            this.openSpecToolStripMenuItem.Click += new System.EventHandler(this.openSpecToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -566,7 +595,7 @@
             this.specViewer.Enabled = false;
             this.specViewer.Location = new System.Drawing.Point(32, 114);
             this.specViewer.MinimumSize = new System.Drawing.Size(600, 200);
-            this.specViewer.MySpectrogram = null;
+            this.specViewer.MySpectrogramHandler = null;
             this.specViewer.Name = "specViewer";
             this.specViewer.Size = new System.Drawing.Size(1413, 750);
             this.specViewer.TabIndex = 48;
@@ -1260,6 +1289,9 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playbackToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem spectrogramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveSpecToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openSpecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem perferencesToolStripMenuItem;
         private System.Windows.Forms.Label lblSelectTime;

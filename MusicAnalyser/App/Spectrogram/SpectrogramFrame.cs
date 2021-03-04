@@ -1,10 +1,9 @@
 ﻿using MusicAnalyser.App.Analysis;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace MusicAnalyser.App.DSP
+namespace MusicAnalyser.App.Spectrogram
 {
+    [Serializable]
     public class SpectrogramFrame
     {
         public double Timestamp { get; set; }

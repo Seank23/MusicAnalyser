@@ -84,7 +84,7 @@ namespace MusicAnalyser
                 this.Text = "Music Analyser - Live Mode - Playback";
             }
             else
-                this.Text = "Music Analyser - " + filename;
+                this.Text = "Music Analyser - " + app.AudioSource.Filename;
         }
 
         public void SetUIState()
@@ -181,7 +181,7 @@ namespace MusicAnalyser
                         segMode.Enabled = false;
                     else
                         segMode.Enabled = true;
-                    if (Output.PlaybackState == PlaybackState.Paused || Output.PlaybackState == PlaybackState.Stopped && app.GetSpectrogram().Frames.Count > 0)
+                    if (Output.PlaybackState == PlaybackState.Paused || Output.PlaybackState == PlaybackState.Stopped && app.GetSpectrogramHandler().Spectrogram.Frames.Count > 0)
                         btnViewSpec.Enabled = true;
                     else
                         btnViewSpec.Enabled = false;
@@ -891,7 +891,7 @@ namespace MusicAnalyser
 
         public async void LoadSpectrogram()
         {
-            specViewer.MySpectrogram = app.GetSpectrogram();
+            specViewer.MySpectrogramHandler = app.GetSpectrogramHandler();
             loadingIndicator.Show(cwvViewer);
             lblSpectrogram.Location = new Point(cwvViewer.Location.X + cwvViewer.Width / 2 - lblSpectrogram.Width / 2, cwvViewer.Location.Y + cwvViewer.Height / 2 + 50);
             lblSpectrogram.Visible = true;
@@ -960,7 +960,7 @@ namespace MusicAnalyser
 
         private void btnSpecEnlarge_Click(object sender, EventArgs e)
         {
-            if(specViewer.MySpectrogram != null)
+            if(specViewer.MySpectrogramHandler != null)
             {
                 specViewer.Size = new Size((int)(specViewer.Width * 1.02), specViewer.Width / 3);
                 SpectrogramWindow specWindow = new SpectrogramWindow(this, specViewer);
@@ -987,6 +987,24 @@ namespace MusicAnalyser
         {
             specViewer.ShowAnnotations = chbAnnotations.Checked;
             specViewer.Refresh();
+        }
+
+        private void saveSpecToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Spectrogram File (*.spec)|*.spec;";
+
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+                app.SaveSpectrogram(saveDialog.FileName);
+        }
+
+        private void openSpecToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Spectrogram File (*.spec)|*.spec;";
+
+            if (openDialog.ShowDialog() == DialogResult.OK)
+                app.LoadSpectrogram(openDialog.FileName);
         }
     }
 }

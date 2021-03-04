@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MusicAnalyser.UI
@@ -211,7 +208,7 @@ namespace MusicAnalyser.UI
                 }
             }
 
-            if(parent.MySpectrogram.FrequencyScale.GetType().Name == "Func`2")
+            if(parent.MySpectrogramHandler.Spectrogram.FrequencyScale.GetType().Name == "Func`2")
             {
                 foreach(Label freqLabel in frequencyLabels)
                 {

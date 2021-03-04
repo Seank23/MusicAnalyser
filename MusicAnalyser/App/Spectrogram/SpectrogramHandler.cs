@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace MusicAnalyser.App.DSP
+namespace MusicAnalyser.App.Spectrogram
 {
     public class SpectrogramHandler
     {
@@ -36,9 +36,7 @@ namespace MusicAnalyser.App.DSP
             public Rectangle shape;
         }
 
-        public List<SpectrogramFrame> Frames { get; set; }
-        public object FrequencyScale { get; set; }
-        public int FrequencyBins { get; set; }
+        public SpectrogramData Spectrogram;
         public NoteAnnotation[,] NoteAnnotationMatrix { get; set; }
         public ChordAnnotation[] ChordAnnotationVect { get; set; }
         public KeyAnnotation[] KeyAnnotationVect { get; set; }
@@ -47,20 +45,20 @@ namespace MusicAnalyser.App.DSP
 
         public SpectrogramHandler()
         {
-            Frames = new List<SpectrogramFrame>();
+            Spectrogram = new SpectrogramData();
         }
 
         public void CreateFrame(double timestamp, byte[] data, Note[] notes, Chord[] chords, string key, double quantScale)
         {
             SpectrogramFrame newFrame = new SpectrogramFrame(timestamp, data, notes, chords, key, quantScale);
-            Frames.Add(newFrame);
-            if (FrequencyBins == 0)
-                FrequencyBins = data.Length;
+            Spectrogram.Frames.Add(newFrame);
+            if (Spectrogram.FrequencyBins == 0)
+                Spectrogram.FrequencyBins = data.Length;
         }
 
         public void AddAnalysis(double timestamp, Note[] notes, Chord[] chords, string key)
         {
-            SpectrogramFrame myFrame = Frames.Where(frame => frame.Timestamp == timestamp).First();
+            SpectrogramFrame myFrame = Spectrogram.Frames.Where(frame => frame.Timestamp == timestamp).First();
             myFrame.Notes = notes;
             myFrame.Chords = chords;
             myFrame.KeySignature = key;
@@ -75,9 +73,11 @@ namespace MusicAnalyser.App.DSP
 
         public void Clear()
         {
-            Frames.Clear();
-            FrequencyBins = 0;
-            FrequencyScale = null;
+            Spectrogram.Frames.Clear();
+            Spectrogram.FrequencyBins = 0;
+            Spectrogram.FrequencyScale = null;
+            Spectrogram.AudioFilename = null;
+            Spectrogram.ScriptProperties = null;
             NoteAnnotationMatrix = null;
             ChordAnnotationVect = null;
             KeyAnnotationVect = null;
@@ -89,9 +89,9 @@ namespace MusicAnalyser.App.DSP
         {
             List<NoteAnnotation> annotations = new List<NoteAnnotation>();
 
-            for (int i = 0; i < Frames.Count; i++)
+            for (int i = 0; i < Spectrogram.Frames.Count; i++)
             {
-                Note[] frameNotes = Frames[i].Notes;
+                Note[] frameNotes = Spectrogram.Frames[i].Notes;
                 if (frameNotes == null)
                 {
                     for (int j = 0; j < annotations.Count; j++)
@@ -108,7 +108,7 @@ namespace MusicAnalyser.App.DSP
                 for (int j = 0; j < frameNotes.Length; j++)
                 {
                     string noteName = frameNotes[j].Name + frameNotes[j].Octave;
-                    frameNotes[j].Magnitude /= Frames[i].QuantisationScale; // Scales note correctly for spectrum display
+                    frameNotes[j].Magnitude /= Spectrogram.Frames[i].QuantisationScale; // Scales note correctly for spectrum display
                     if (i > 0)
                     {
                         // Checks if current note is sustained from previous frame
@@ -137,7 +137,7 @@ namespace MusicAnalyser.App.DSP
                     newNote.magnitude = frameNotes[j].Magnitude;
                     annotations.Add(newNote);
                 }
-                Frames[i].QuantisationScale = 1;
+                Spectrogram.Frames[i].QuantisationScale = 1;
             }
 
             annotations = annotations.OrderBy(x => x.name).ToList();
@@ -183,16 +183,16 @@ namespace MusicAnalyser.App.DSP
 
             // Create noteAnnotationMatrix
             double maxFreq;
-            if (FrequencyScale.GetType().Name == "Func`2")
+            if (Spectrogram.FrequencyScale.GetType().Name == "Func`2")
             {
-                Func<double, double> scale = (Func<double, double>)FrequencyScale;
-                maxFreq = scale(Frames[0].SpectrumData.Length - 1);
+                Func<double, double> scale = (Func<double, double>)Spectrogram.FrequencyScale;
+                maxFreq = scale(Spectrogram.Frames[0].SpectrumData.Length - 1);
             }
             else
-                maxFreq = Frames[0].SpectrumData.Length * (double)FrequencyScale;
+                maxFreq = Spectrogram.Frames[0].SpectrumData.Length * (double)Spectrogram.FrequencyScale;
 
             int noteCount = Music.GetNoteIndexFromFrequency(maxFreq) + 1;
-            NoteAnnotationMatrix = new NoteAnnotation[noteCount, Frames.Count];
+            NoteAnnotationMatrix = new NoteAnnotation[noteCount, Spectrogram.Frames.Count];
             maxNoteMag = 0;
 
             // Populate matrix
@@ -221,22 +221,22 @@ namespace MusicAnalyser.App.DSP
             int blockSize = Prefs.SPEC_CHORD_BLOCK;
 
             // Gets the most common chord over a given block size and adds it to annotations
-            for (int i = 0; i < Frames.Count; i += blockSize)
+            for (int i = 0; i < Spectrogram.Frames.Count; i += blockSize)
             {
                 Dictionary<string, int> chordCountDict = new Dictionary<string, int>();
                 Dictionary<string, int> chordRootDict = new Dictionary<string, int>();
                 Dictionary<string, double> chordConfidenceDict = new Dictionary<string, double>();
                 for (int j = 0; j < blockSize; j++)
                 {
-                    if (i + j >= Frames.Count)
+                    if (i + j >= Spectrogram.Frames.Count)
                         break;
-                    if (Frames[i + j].Chords == null)
+                    if (Spectrogram.Frames[i + j].Chords == null)
                         continue;
 
-                    if (Frames[i + j].Chords.Length > 0)
+                    if (Spectrogram.Frames[i + j].Chords.Length > 0)
                     {
-                        string chord = Frames[i + j].Chords[0].Name;
-                        string root = Frames[i + j].Chords[0].Root;
+                        string chord = Spectrogram.Frames[i + j].Chords[0].Name;
+                        string root = Spectrogram.Frames[i + j].Chords[0].Root;
                         if (chordRootDict.ContainsKey(root))
                             chordRootDict[root]++;
                         else
@@ -244,12 +244,12 @@ namespace MusicAnalyser.App.DSP
                         if (chordCountDict.ContainsKey(chord))
                         {
                             chordCountDict[chord]++;
-                            chordConfidenceDict[chord] += Frames[i + j].Chords[0].Probability;
+                            chordConfidenceDict[chord] += Spectrogram.Frames[i + j].Chords[0].Probability;
                         }
                         else
                         {
                             chordCountDict.Add(chord, 1);
-                            chordConfidenceDict.Add(chord, Frames[i + j].Chords[0].Probability);
+                            chordConfidenceDict.Add(chord, Spectrogram.Frames[i + j].Chords[0].Probability);
                         }
                     }
                 }
@@ -260,7 +260,7 @@ namespace MusicAnalyser.App.DSP
                     ChordAnnotation myChord = new ChordAnnotation();
                     myChord.name = bestChordGuess;
                     myChord.startIndex = i;
-                    myChord.length = Math.Min(blockSize, Frames.Count - i);
+                    myChord.length = Math.Min(blockSize, Spectrogram.Frames.Count - i);
                     myChord.confidence = chordConfidenceDict[bestChordGuess] / chordCountDict[bestChordGuess];
                     annotations.Add(myChord);
                 }
@@ -297,7 +297,7 @@ namespace MusicAnalyser.App.DSP
             for (int i = 0; i < indexToRemove.Count; i++)
                 annotations.RemoveAt(indexToRemove[i] - i);
 
-            ChordAnnotationVect = new ChordAnnotation[Frames.Count];
+            ChordAnnotationVect = new ChordAnnotation[Spectrogram.Frames.Count];
 
             // Populates chord annotations vector
             for (int i = 0; i < annotations.Count; i++)
@@ -320,15 +320,15 @@ namespace MusicAnalyser.App.DSP
             List<KeyAnnotation> annotations = new List<KeyAnnotation>();
             int blockSize = Prefs.SPEC_KEY_BLOCK;
 
-            for (int i = 0; i < Frames.Count; i += blockSize)
+            for (int i = 0; i < Spectrogram.Frames.Count; i += blockSize)
             {
                 Dictionary<string, int> keyCountDict = new Dictionary<string, int>();
 
                 for (int j = 0; j < blockSize; j++)
                 {
-                    if (i + j >= Frames.Count)
+                    if (i + j >= Spectrogram.Frames.Count)
                         break;
-                    string key = Frames[i + j].KeySignature;
+                    string key = Spectrogram.Frames[i + j].KeySignature;
                     if (key != null)
                     {
                         if (keyCountDict.ContainsKey(key))
@@ -342,7 +342,7 @@ namespace MusicAnalyser.App.DSP
                     KeyAnnotation myKey = new KeyAnnotation();
                     myKey.name = keyCountDict.OrderByDescending(x => x.Value).FirstOrDefault().Key;
                     myKey.startIndex = i;
-                    myKey.length = Math.Min(blockSize, Frames.Count - i);
+                    myKey.length = Math.Min(blockSize, Spectrogram.Frames.Count - i);
                     annotations.Add(myKey);
                 }
             }
@@ -377,7 +377,7 @@ namespace MusicAnalyser.App.DSP
             for (int i = 0; i < indexToRemove.Count; i++)
                 annotations.RemoveAt(indexToRemove[i] - i);
 
-            KeyAnnotationVect = new KeyAnnotation[Frames.Count];
+            KeyAnnotationVect = new KeyAnnotation[Spectrogram.Frames.Count];
 
             // Populates key annotations vector
             for (int i = 0; i < annotations.Count; i++)

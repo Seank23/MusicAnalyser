@@ -1,15 +1,9 @@
 ﻿using MusicAnalyser.App.Analysis;
-using MusicAnalyser.App.DSP;
+using MusicAnalyser.App.Spectrogram;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MusicAnalyser.UI
@@ -18,7 +12,7 @@ namespace MusicAnalyser.UI
     {
         public static readonly int PADDING_BOTTOM = 25;
         public static readonly int PADDING_LEFT = 50;
-        public SpectrogramHandler MySpectrogram { get; set; }
+        public SpectrogramHandler MySpectrogramHandler { get; set; }
         public SpectrogramOverlay Overlay { get; }
         public bool ShowAnnotations { get; set; }
         public double SelectTimestamp { get; set; }
@@ -75,7 +69,7 @@ namespace MusicAnalyser.UI
         {
             curTimestamp = timestamp;
             GetForm().SetTimeStamp(TimeSpan.FromMilliseconds(curTimestamp));
-            if (curTimestamp > MySpectrogram.Frames[MySpectrogram.Frames.Count - 1].Timestamp)
+            if (curTimestamp > MySpectrogramHandler.Spectrogram.Frames[MySpectrogramHandler.Spectrogram.Frames.Count - 1].Timestamp)
             {
                 GetForm().GetApp().TriggerStop();
                 Overlay.ResetOverlay();
@@ -87,9 +81,9 @@ namespace MusicAnalyser.UI
 
         public void CreateSpectrogram()
         {
-            SelectTimestamp = MySpectrogram.Frames[0].Timestamp;
+            SelectTimestamp = MySpectrogramHandler.Spectrogram.Frames[0].Timestamp;
             GenerateSpectrogramImage();
-            MySpectrogram.GenerateAnnotations();
+            MySpectrogramHandler.GenerateAnnotations();
             Overlay.ResetOverlay();
         }
 
@@ -97,67 +91,67 @@ namespace MusicAnalyser.UI
 
         public double[] GetFrequencyRangeInView()
         {
-            if (MySpectrogram == null)
+            if (MySpectrogramHandler == null)
                 return null;
 
             double[] binEnds = GetFrequencyBinsInView();
 
-            if (MySpectrogram.FrequencyScale.GetType().Name == "Func`2")
+            if (MySpectrogramHandler.Spectrogram.FrequencyScale.GetType().Name == "Func`2")
             {
-                Func<double, double> scale = (Func<double, double>)MySpectrogram.FrequencyScale;
+                Func<double, double> scale = (Func<double, double>)MySpectrogramHandler.Spectrogram.FrequencyScale;
                 return new double[] { scale(binEnds[0]), scale(binEnds[1]) };
             }
             else
-                return new double[] { (double)MySpectrogram.FrequencyScale * binEnds[0] * 0.95, (double)MySpectrogram.FrequencyScale * binEnds[1] * 0.95 };
+                return new double[] { (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[0] * 0.95, (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[1] * 0.95 };
         }
 
         public double[] GetTimeEndsInView()
         {
-            if (MySpectrogram == null)
+            if (MySpectrogramHandler == null)
                 return null;
 
             int[] frameEnds = GetFramesInView();
 
-            return new double[] { MySpectrogram.Frames[frameEnds[0]].Timestamp, MySpectrogram.Frames[frameEnds[1]].Timestamp };
+            return new double[] { MySpectrogramHandler.Spectrogram.Frames[frameEnds[0]].Timestamp, MySpectrogramHandler.Spectrogram.Frames[frameEnds[1]].Timestamp };
         }
 
         public double[] GetFrequencyBinsInView()
         {
-            if (MySpectrogram == null)
+            if (MySpectrogramHandler == null)
                 return null;
 
-            int bins = MySpectrogram.FrequencyBins;
-            int top = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y), MySpectrogram.Frames[0].SpectrumData.Length - 1), 0);
-            int bottom = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y + projectionRect.Height), MySpectrogram.Frames[0].SpectrumData.Length - 1), 0);
+            int bins = MySpectrogramHandler.Spectrogram.FrequencyBins;
+            int top = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y), MySpectrogramHandler.Spectrogram.Frames[0].SpectrumData.Length - 1), 0);
+            int bottom = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y + projectionRect.Height), MySpectrogramHandler.Spectrogram.Frames[0].SpectrumData.Length - 1), 0);
 
             return new double[] { top, bottom };
         }
 
         public int[] GetFramesInView()
         {
-            if (MySpectrogram == null)
+            if (MySpectrogramHandler == null)
                 return null;
 
-            int startIndex = (int)Math.Max(Math.Min(Math.Floor(projectionRect.X), MySpectrogram.Frames.Count - 1), 0);
-            int endIndex = (int)Math.Max(Math.Min(Math.Floor(projectionRect.X + projectionRect.Width), MySpectrogram.Frames.Count - 1), 0);
+            int startIndex = (int)Math.Max(Math.Min(Math.Floor(projectionRect.X), MySpectrogramHandler.Spectrogram.Frames.Count - 1), 0);
+            int endIndex = (int)Math.Max(Math.Min(Math.Floor(projectionRect.X + projectionRect.Width), MySpectrogramHandler.Spectrogram.Frames.Count - 1), 0);
 
             return new int[] { startIndex, endIndex };
         }
 
         public double GetFrequencyPoint(float relativePos)
         {
-            int bins = MySpectrogram.FrequencyBins;
-            int top = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y), MySpectrogram.Frames[0].SpectrumData.Length - 1), 0);
-            int bottom = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y + projectionRect.Height), MySpectrogram.Frames[0].SpectrumData.Length - 1), 0);
+            int bins = MySpectrogramHandler.Spectrogram.FrequencyBins;
+            int top = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y), MySpectrogramHandler.Spectrogram.Frames[0].SpectrumData.Length - 1), 0);
+            int bottom = bins - (int)Math.Max(Math.Min(Math.Floor(projectionRect.Y + projectionRect.Height), MySpectrogramHandler.Spectrogram.Frames[0].SpectrumData.Length - 1), 0);
             double binPos = bottom + (relativePos * (top - bottom));
 
-            if (MySpectrogram.FrequencyScale.GetType().Name == "Func`2")
+            if (MySpectrogramHandler.Spectrogram.FrequencyScale.GetType().Name == "Func`2")
             {
-                Func<double, double> scale = (Func<double, double>)MySpectrogram.FrequencyScale;
+                Func<double, double> scale = (Func<double, double>)MySpectrogramHandler.Spectrogram.FrequencyScale;
                 return scale(binPos);
             }
             else
-                return (double)MySpectrogram.FrequencyScale * binPos * 0.95;
+                return (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binPos * 0.95;
         }
 
         public double GetTimePointSeconds(float relativePos)
@@ -174,22 +168,22 @@ namespace MusicAnalyser.UI
 
         private void GenerateSpectrogramImage()
         {
-            if (MySpectrogram == null)
+            if (MySpectrogramHandler == null)
                 return;
 
-            spectrogramImage = new Bitmap(MySpectrogram.Frames.Count, MySpectrogram.FrequencyBins);
+            spectrogramImage = new Bitmap(MySpectrogramHandler.Spectrogram.Frames.Count, MySpectrogramHandler.Spectrogram.FrequencyBins);
             projectionRect = new RectangleF(0, 0, spectrogramImage.Width, spectrogramImage.Height);
             binsPerPixel = (float)spectrogramImage.Height / this.Height;
             framesPerPixel = (float)spectrogramImage.Width / this.Width;
             byte pixelVal;
 
-            for (int i = 0; i < MySpectrogram.Frames.Count; i++)
+            for (int i = 0; i < MySpectrogramHandler.Spectrogram.Frames.Count; i++)
             {
-                SpectrogramFrame frame = MySpectrogram.Frames[i];
-                for (int j = 0; j < MySpectrogram.FrequencyBins; j++)
+                SpectrogramFrame frame = MySpectrogramHandler.Spectrogram.Frames[i];
+                for (int j = 0; j < MySpectrogramHandler.Spectrogram.FrequencyBins; j++)
                 {
                     pixelVal = frame.SpectrumData[j];
-                    spectrogramImage.SetPixel(i, MySpectrogram.FrequencyBins - 1 - j, Color.FromArgb(pixelVal, pixelVal, pixelVal));
+                    spectrogramImage.SetPixel(i, MySpectrogramHandler.Spectrogram.FrequencyBins - 1 - j, Color.FromArgb(pixelVal, pixelVal, pixelVal));
                 }
             }
             spectrogramImage.Save("test.bmp");
@@ -207,10 +201,10 @@ namespace MusicAnalyser.UI
             {
                 for (int j = frameRange[0]; j < frameRange[1]; j++)
                 {
-                    if (MySpectrogram.NoteAnnotationMatrix[i, j].freq != 0)
+                    if (MySpectrogramHandler.NoteAnnotationMatrix[i, j].freq != 0)
                     {
-                        noteAnnotations.Add(MySpectrogram.NoteAnnotationMatrix[i, j]);
-                        j += MySpectrogram.NoteAnnotationMatrix[i, j].length - 1;
+                        noteAnnotations.Add(MySpectrogramHandler.NoteAnnotationMatrix[i, j]);
+                        j += MySpectrogramHandler.NoteAnnotationMatrix[i, j].length - 1;
                     }
                 }
             }
@@ -219,7 +213,7 @@ namespace MusicAnalyser.UI
             {
                 SpectrogramHandler.NoteAnnotation myNote = noteAnnotations[i];
                 int startY;
-                if (MySpectrogram.FrequencyScale.GetType().Name == "Func`2")
+                if (MySpectrogramHandler.Spectrogram.FrequencyScale.GetType().Name == "Func`2")
                     startY = (int)GetFrequencyCoordinate(myNote.position);
                 else
                     startY = (int)GetFrequencyCoordinate(myNote.freq);
@@ -238,10 +232,10 @@ namespace MusicAnalyser.UI
 
             for (int i = frameRange[0]; i < frameRange[1]; i++)
             {
-                if (MySpectrogram.ChordAnnotationVect[i].name != null)
+                if (MySpectrogramHandler.ChordAnnotationVect[i].name != null)
                 {
-                    chordAnnotations.Add(MySpectrogram.ChordAnnotationVect[i]);
-                    i += MySpectrogram.ChordAnnotationVect[i].length - 1;
+                    chordAnnotations.Add(MySpectrogramHandler.ChordAnnotationVect[i]);
+                    i += MySpectrogramHandler.ChordAnnotationVect[i].length - 1;
                 }
             }
 
@@ -263,10 +257,10 @@ namespace MusicAnalyser.UI
 
             for (int i = frameRange[0]; i < frameRange[1]; i++)
             {
-                if (MySpectrogram.KeyAnnotationVect[i].name != null)
+                if (MySpectrogramHandler.KeyAnnotationVect[i].name != null)
                 {
-                    keyAnnotations.Add(MySpectrogram.KeyAnnotationVect[i]);
-                    i += MySpectrogram.KeyAnnotationVect[i].length - 1;
+                    keyAnnotations.Add(MySpectrogramHandler.KeyAnnotationVect[i]);
+                    i += MySpectrogramHandler.KeyAnnotationVect[i].length - 1;
                 }
             }
 
@@ -329,7 +323,7 @@ namespace MusicAnalyser.UI
         private double GetFrequencyCoordinate(double freq)
         {
             double[] range;
-            if (MySpectrogram.FrequencyScale.GetType().Name == "Func`2")
+            if (MySpectrogramHandler.Spectrogram.FrequencyScale.GetType().Name == "Func`2")
                 range = GetFrequencyBinsInView();
             else
                 range = GetFrequencyRangeInView();
@@ -375,7 +369,7 @@ namespace MusicAnalyser.UI
                     {
                         foreach (SpectrogramHandler.NoteAnnotation note in noteAnnotations)
                         {
-                            int alpha = Math.Min(Math.Max((int)(note.magnitude / MySpectrogram.GetMaxNoteMagnitude() * 255), 127), 220);
+                            int alpha = Math.Min(Math.Max((int)(note.magnitude / MySpectrogramHandler.GetMaxNoteMagnitude() * 255), 127), 220);
                             p.Color = Color.FromArgb(alpha, 0, 128, 0);
                             e.Graphics.DrawLine(p, new Point(note.shape.X, (int)(note.shape.Y + penSize / 2)), new Point(note.shape.X + note.shape.Width, (int)(note.shape.Y + penSize / 2)));
                             if (penSize > 4)
@@ -490,7 +484,7 @@ namespace MusicAnalyser.UI
 
         public void Reset()
         {
-            MySpectrogram = null;
+            MySpectrogramHandler = null;
             spectrogramImage = null;
             Refresh();
         }
@@ -510,7 +504,7 @@ namespace MusicAnalyser.UI
 
         public void SpectrogramViewer_KeyDown(object sender, KeyEventArgs e)
         {
-            if (MySpectrogram == null)
+            if (MySpectrogramHandler == null)
                 return;
 
             if (e.KeyCode == Keys.Add)
