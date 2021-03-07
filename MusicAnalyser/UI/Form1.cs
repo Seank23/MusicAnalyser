@@ -64,13 +64,13 @@ namespace MusicAnalyser
         {
             if(segMode.SelectedIndex == 1)
                 app.Step(true);
-            else if (!app.Opened)
+            else if (!app.AudioOpened && !app.SpectrogramOpened)
                 app.TriggerOpenFile();
             else
                 app.TriggerClose();
         }
 
-        public void SetupPlaybackUI(WaveStream audioGraph, string filename, bool wasRecording)
+        public void SetupPlaybackUI(WaveStream audioGraph, bool wasRecording)
         {
             Output = new DirectSoundOut();
             cwvViewer.WaveStream = audioGraph;
@@ -156,9 +156,9 @@ namespace MusicAnalyser
 
         public void CheckAppState()
         {
-            if(segMode.SelectedIndex == 0)
+            if (segMode.SelectedIndex == 0)
             {
-                if(app.Opened)
+                if(app.AudioOpened)
                 {
                     btnOpenClose.Text = "Close";
                     btnOpenClose.Enabled = true;
@@ -177,14 +177,17 @@ namespace MusicAnalyser
                         stopToolStripMenuItem.Enabled = false;
                         playToolStripMenuItem.Enabled = false;
                     }
-                    if (Output.PlaybackState == PlaybackState.Playing)
-                        segMode.Enabled = false;
-                    else
-                        segMode.Enabled = true;
-                    if (Output.PlaybackState == PlaybackState.Paused || Output.PlaybackState == PlaybackState.Stopped && app.GetSpectrogramHandler().Spectrogram.Frames.Count > 0)
-                        btnViewSpec.Enabled = true;
-                    else
-                        btnViewSpec.Enabled = false;
+                    if (Output != null)
+                    {
+                        if (Output.PlaybackState == PlaybackState.Playing)
+                            segMode.Enabled = false;
+                        else
+                            segMode.Enabled = true;
+                        if (Output.PlaybackState == PlaybackState.Paused || Output.PlaybackState == PlaybackState.Stopped && app.GetSpectrogramHandler().Spectrogram.Frames.Count > 0)
+                            btnViewSpec.Enabled = true;
+                        else
+                            btnViewSpec.Enabled = false;
+                    }
                 }
                 else
                 {
@@ -197,11 +200,40 @@ namespace MusicAnalyser
                     playToolStripMenuItem.Enabled = false;
                     chbFilter.Enabled = false;
                 }
+                if (app.SpectrogramOpened)
+                {
+                    btnOpenClose.Text = "Close";
+                    segMode.Enabled = false;
+                    if (app.AudioOpened)
+                    {
+                        chbFilter.Enabled = true;
+                        btnPlay.Enabled = true;
+                        btnStop.Enabled = true;
+                        stopToolStripMenuItem.Enabled = true;
+                        playToolStripMenuItem.Enabled = true;
+                    }
+                    else
+                    {
+                        chbFilter.Enabled = false;
+                        btnPlay.Enabled = false;
+                        btnStop.Enabled = false;
+                        stopToolStripMenuItem.Enabled = false;
+                        playToolStripMenuItem.Enabled = false;
+                    }
+                }
+                if(!app.AudioOpened && !app.SpectrogramOpened)
+                {
+                    btnOpenClose.Text = "Open";
+                    btnOpenClose.Enabled = true;
+                    openToolStripMenuItem.Enabled = true;
+                    closeToolStripMenuItem.Enabled = false;
+                    segMode.Enabled = true;
+                }
             }
             else if(segMode.SelectedIndex == 1)
             {
                 chbFilter.Enabled = false;
-                if (app.Opened && app.ScriptSelectionValid)
+                if (app.AudioOpened && app.ScriptSelectionValid)
                 {
                     btnOpenClose.Enabled = true;
                     btnStop.Enabled = true;
@@ -225,7 +257,7 @@ namespace MusicAnalyser
         public bool SelectFile(out OpenFileDialog dialog)
         {
             dialog = new OpenFileDialog();
-            dialog.Filter = "Audio Files (*.wav; *.mp3)|*.wav; *.mp3;";
+            dialog.Filter = "Audio/Spectrogram Files (*.wav; *.mp3, *.spec)|*.wav; *.mp3; *.spec;";
 
             if (dialog.ShowDialog() != DialogResult.OK)
                 return false;
@@ -243,7 +275,10 @@ namespace MusicAnalyser
 
         public void ClearUI()
         {
-            CloseSpectrogram();
+            app.CloseSpectrogram();
+            saveSpecToolStripMenuItem.Enabled = false;
+            openSpecToolStripMenuItem.Enabled = true;
+            saveSpecImageToolStripMenuItem.Enabled = false;
             btnViewSpec.Enabled = false;
             btnSpecEnlarge.Enabled = false;
             chbFilter.Checked = false;
@@ -301,7 +336,7 @@ namespace MusicAnalyser
             int channels = cwvViewer.WaveStream.WaveFormat.Channels;
             int bytesPerSample = cwvViewer.BytesPerSample;
 
-            while (app.Opened)
+            while (app.AudioOpened)
             {
                 if (audioStream.Position >= audioStream.Length)
                 {
@@ -310,7 +345,7 @@ namespace MusicAnalyser
                     break;
                 }
 
-                if (Output.PlaybackState == PlaybackState.Playing && !app.SpectrogramPlayback)
+                if (Output.PlaybackState == PlaybackState.Playing && !app.SpectrogramOpened)
                 {
                     if (!app.IsStarted() && chbFollow.Checked)
                     {
@@ -530,7 +565,7 @@ namespace MusicAnalyser
 
         private void segMode_IndexChanged(object sender, EventArgs e)
         {
-            if (app.Opened && segMode.SelectedIndex == 2)
+            if (app.AudioOpened && segMode.SelectedIndex == 2)
                 segMode.SelectedIndex = 0;
             else if (app.Mode != 2 && segMode.SelectedIndex == 2)
                 app.EnableLiveMode();
@@ -889,19 +924,32 @@ namespace MusicAnalyser
 
         public void SetFilterText(string note, double freq) { lblFilterFreq.Text = note + "\n" + Math.Round(freq, 1) + " Hz"; }
 
-        public async void LoadSpectrogram()
+        public void ShowLoadingIndicator(string message)
         {
-            specViewer.MySpectrogramHandler = app.GetSpectrogramHandler();
             loadingIndicator.Show(cwvViewer);
+            lblSpectrogram.Text = message;
             lblSpectrogram.Location = new Point(cwvViewer.Location.X + cwvViewer.Width / 2 - lblSpectrogram.Width / 2, cwvViewer.Location.Y + cwvViewer.Height / 2 + 50);
             lblSpectrogram.Visible = true;
             lblSpectrogram.BringToFront();
-            await Task.Run(() => specViewer.CreateSpectrogram());
-            app.SpectrogramPlayback = true;
+        }
+
+        public void HideLoadingIndicator()
+        {
             loadingIndicator.Hide();
             lblSpectrogram.Visible = false;
             lblSpectrogram.SendToBack();
+        }
+
+        public void ShowSpectrogramUI()
+        {
+            HideLoadingIndicator();
+            SetUIState();
             ResizeSpectrogramUI(true);
+            segMode.SelectedIndex = 0;
+            segMode.Enabled = false;
+            saveSpecToolStripMenuItem.Enabled = true;
+            openSpecToolStripMenuItem.Enabled = false;
+            saveSpecImageToolStripMenuItem.Enabled = true;
             cwvViewer.Enabled = false;
             cwvViewer.Visible = false;
             specViewer.Enabled = true;
@@ -910,14 +958,12 @@ namespace MusicAnalyser
             btnViewSpec.Text = "Hide Spectrogram";
             btnSpecEnlarge.Enabled = true;
             chbAnnotations.Enabled = true;
-            timerFFT.Interval = (int)((1.0f / Prefs.SPEC_UPDATE_RATE) * 1000);
             app.Dsp.Analyser.DisposeAnalyser();
             app.TriggerStop();
         }
 
-        public void CloseSpectrogram()
+        public void HideSpectrogramUI()
         {
-            app.SpectrogramPlayback = false;
             specViewer.Visible = false;
             specViewer.Enabled = false;
             cwvViewer.Enabled = true;
@@ -928,8 +974,9 @@ namespace MusicAnalyser
             btnViewSpec.Text = "View Spectrogram";
             btnSpecEnlarge.Enabled = false;
             chbAnnotations.Enabled = false;
-            timerFFT.Interval = (int)((1.0f / Prefs.MIN_UPDATE_TIME) * 1000);
-            app.Dsp.Analyser.DisposeAnalyser();
+            saveSpecToolStripMenuItem.Enabled = false;
+            openSpecToolStripMenuItem.Enabled = false;
+            saveSpecImageToolStripMenuItem.Enabled = false;
         }
 
         private void ResizeSpectrogramUI(bool show)
@@ -972,9 +1019,9 @@ namespace MusicAnalyser
         private void btnViewSpec_Click(object sender, EventArgs e)
         {
             if (!specViewer.Enabled)
-                LoadSpectrogram();
+                app.LoadSpectrogram(false);
             else
-                CloseSpectrogram();
+                app.CloseSpectrogram();
         }
 
         private void Form1_SizeChanged(object sender, EventArgs e)
@@ -1004,7 +1051,16 @@ namespace MusicAnalyser
             openDialog.Filter = "Spectrogram File (*.spec)|*.spec;";
 
             if (openDialog.ShowDialog() == DialogResult.OK)
-                app.LoadSpectrogram(openDialog.FileName);
+                app.OpenSpectrogram(openDialog.FileName);
+        }
+
+        private void saveSpecImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Bitmap File (*.bmp)|*.bmp;";
+
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+                specViewer.SaveImage(saveDialog.FileName);
         }
     }
 }

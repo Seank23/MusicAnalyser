@@ -18,6 +18,7 @@ namespace MusicAnalyser.UI
         private List<Label> timeLabels;
         private List<Label> frequencyLabels;
         private Label lblTimeFreqPoint;
+        private int moveCount = 0;
 
         public SpectrogramOverlay(SpectrogramViewer p)
         {
@@ -265,6 +266,7 @@ namespace MusicAnalyser.UI
             posIndicator.X = SpectrogramViewer.PADDING_LEFT;
             selectMarker.X = SpectrogramViewer.PADDING_LEFT;
             loopEndMarker.X = -100;
+            moveCount = 0;
         }
 
         private void GetTimeFrequencyMousePosition(int x, int y)
@@ -321,8 +323,12 @@ namespace MusicAnalyser.UI
         protected override void OnMouseMove(MouseEventArgs e)
         {
             parent.InteractMove(e);
-            if (e.X >= SpectrogramViewer.PADDING_LEFT && e.Y <= this.Height - SpectrogramViewer.PADDING_BOTTOM)
-                GetTimeFrequencyMousePosition(e.X, e.Y);
+            if (moveCount % 5 == 0)
+            {
+                if (e.X >= SpectrogramViewer.PADDING_LEFT && e.Y <= this.Height - SpectrogramViewer.PADDING_BOTTOM)
+                    GetTimeFrequencyMousePosition(e.X, e.Y);
+            }
+            moveCount++;
         }
 
         protected override void OnMouseUp(MouseEventArgs e)

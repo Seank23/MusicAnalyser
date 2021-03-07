@@ -137,7 +137,7 @@ namespace MusicAnalyser.App
             return false;
         }
 
-        public static void WriteSpectrogram(Spectrogram.SpectrogramData spectrogram, string filename)
+        public static void WriteSpectrogram(SpectrogramData spectrogram, string filename)
         {
             FileStream fileStream;
             BinaryFormatter bf = new BinaryFormatter();
@@ -150,16 +150,16 @@ namespace MusicAnalyser.App
             fileStream.Close();
         }
 
-        public static Spectrogram.SpectrogramData ReadSpectrogram(string filename)
+        public static SpectrogramData ReadSpectrogram(string filename)
         {
-            Spectrogram.SpectrogramData spectrogram = null;
+            SpectrogramData spectrogram = null;
             FileStream fileStream;
             BinaryFormatter bf = new BinaryFormatter();
 
             if(File.Exists(filename))
             {
                 fileStream = File.OpenRead(filename);
-                spectrogram = (Spectrogram.SpectrogramData)bf.Deserialize(fileStream);
+                spectrogram = (SpectrogramData)bf.Deserialize(fileStream);
                 fileStream.Close();
             }
 

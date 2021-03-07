@@ -58,6 +58,7 @@
             this.spectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSpecImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblSelectTime = new System.Windows.Forms.Label();
@@ -400,14 +401,15 @@
             // 
             this.spectrogramToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveSpecToolStripMenuItem,
-            this.openSpecToolStripMenuItem});
+            this.openSpecToolStripMenuItem,
+            this.saveSpecImageToolStripMenuItem});
             this.spectrogramToolStripMenuItem.Name = "spectrogramToolStripMenuItem";
             this.spectrogramToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.spectrogramToolStripMenuItem.Text = "Spectrogram";
             // 
             // saveSpecToolStripMenuItem
             // 
-            //this.saveSpecToolStripMenuItem.Enabled = false;
+            this.saveSpecToolStripMenuItem.Enabled = false;
             this.saveSpecToolStripMenuItem.Name = "saveSpecToolStripMenuItem";
             this.saveSpecToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.saveSpecToolStripMenuItem.Text = "Save Spectrogram...";
@@ -415,11 +417,18 @@
             // 
             // openSpecToolStripMenuItem
             // 
-            //this.openSpecToolStripMenuItem.Enabled = false;
             this.openSpecToolStripMenuItem.Name = "saveSpecToolStripMenuItem";
             this.openSpecToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.openSpecToolStripMenuItem.Text = "Open Spectrogram...";
             this.openSpecToolStripMenuItem.Click += new System.EventHandler(this.openSpecToolStripMenuItem_Click);
+            // 
+            // saveSpecImageToolStripMenuItem
+            // 
+            this.saveSpecImageToolStripMenuItem.Enabled = false;
+            this.saveSpecImageToolStripMenuItem.Name = "saveSpecImageToolStripMenuItem";
+            this.saveSpecImageToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.saveSpecImageToolStripMenuItem.Text = "Save Spectrogram Image...";
+            this.saveSpecImageToolStripMenuItem.Click += new System.EventHandler(this.saveSpecImageToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -1182,7 +1191,7 @@
             this.lblSpectrogram.Name = "lblSpectrogram";
             this.lblSpectrogram.Size = new System.Drawing.Size(148, 23);
             this.lblSpectrogram.TabIndex = 49;
-            this.lblSpectrogram.Text = "Generating Spectrogram...";
+            this.lblSpectrogram.Text = "";
             // 
             // btnAddScript
             // 
@@ -1292,6 +1301,7 @@
         private System.Windows.Forms.ToolStripMenuItem spectrogramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSpecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openSpecToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveSpecImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem perferencesToolStripMenuItem;
         private System.Windows.Forms.Label lblSelectTime;

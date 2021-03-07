@@ -29,6 +29,7 @@ namespace MusicAnalyser.UI
         private bool moving;
         private bool isLooping;
         private Point startPos;
+        private int moveCount = 0;
 
         public SpectrogramViewer(Form frm)
         {
@@ -83,8 +84,12 @@ namespace MusicAnalyser.UI
         {
             SelectTimestamp = MySpectrogramHandler.Spectrogram.Frames[0].Timestamp;
             GenerateSpectrogramImage();
-            MySpectrogramHandler.GenerateAnnotations();
             Overlay.ResetOverlay();
+        }
+
+        public void GenerateAnnotations()
+        {
+            MySpectrogramHandler.GenerateAnnotations();
         }
 
         public RectangleF GetProjectionRect() { return projectionRect; }
@@ -166,6 +171,12 @@ namespace MusicAnalyser.UI
             return (float)((timePoint - ends[0]) / (ends[1] - ends[0]));
         }
 
+        public void SaveImage(string filename)
+        {
+            if(spectrogramImage != null)
+                spectrogramImage.Save(filename);
+        }
+
         private void GenerateSpectrogramImage()
         {
             if (MySpectrogramHandler == null)
@@ -186,7 +197,6 @@ namespace MusicAnalyser.UI
                     spectrogramImage.SetPixel(i, MySpectrogramHandler.Spectrogram.FrequencyBins - 1 - j, Color.FromArgb(pixelVal, pixelVal, pixelVal));
                 }
             }
-            spectrogramImage.Save("test.bmp");
         }
 
         private SpectrogramHandler.NoteAnnotation[] DrawNoteAnnotations()
@@ -447,30 +457,37 @@ namespace MusicAnalyser.UI
 
         public void InteractMove(MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Left)
+            if (moveCount % 10 == 0 || GetForm().Output.PlaybackState != PlaybackState.Playing) // Minimize spectrum lag when playing
             {
-                if (e.X >= startPos.X + PADDING_LEFT && e.X <= Width - PADDING_LEFT && e.X - PADDING_LEFT - startPos.X >= 10)
+                if (e.Button == MouseButtons.Left)
                 {
-                    isLooping = true;
-                    float[] relPos = Overlay.GetMousePosRelative(e.X, e.Y);
-                    LoopEndTimestamp = GetTimePointSeconds(relPos[0]) * 1000;
-                    Overlay.SetLoopEndMarker(LoopEndTimestamp);
-                    GetForm().SetLoopTime((LoopEndTimestamp - SelectTimestamp) / 1000);
+                    if (e.X >= startPos.X + PADDING_LEFT && e.X <= Width - PADDING_LEFT && e.X - PADDING_LEFT - startPos.X >= 10)
+                    {
+                        isLooping = true;
+                        float[] relPos = Overlay.GetMousePosRelative(e.X, e.Y);
+                        LoopEndTimestamp = GetTimePointSeconds(relPos[0]) * 1000;
+                        Overlay.SetLoopEndMarker(LoopEndTimestamp);
+                        GetForm().SetLoopTime((LoopEndTimestamp - SelectTimestamp) / 1000);
+                    }
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    Pan((e.Location.X - prevPanLocation.X) * framesPerPixel, (e.Location.Y - prevPanLocation.Y) * binsPerPixel);
+                    prevPanLocation = e.Location;
                 }
             }
-            else if (e.Button == MouseButtons.Right)
-            {
-                Pan((e.Location.X - prevPanLocation.X) * framesPerPixel, (e.Location.Y - prevPanLocation.Y) * binsPerPixel);
-                prevPanLocation = e.Location;
-            }
+            moveCount++;
         }
 
         public void InteractUp(MouseEventArgs e)
         {
             if(e.X >= PADDING_LEFT)
             {
-                if (GetForm().Output.PlaybackState == PlaybackState.Stopped)
-                    GetForm().GetApp().TriggerStop();
+                if (GetForm().Output != null)
+                {
+                    if (GetForm().Output.PlaybackState == PlaybackState.Stopped)
+                        GetForm().GetApp().TriggerStop();
+                }
             }
         }
 
@@ -486,6 +503,7 @@ namespace MusicAnalyser.UI
         {
             MySpectrogramHandler = null;
             spectrogramImage = null;
+            moveCount = 0;
             Refresh();
         }
 

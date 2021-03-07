@@ -12,6 +12,7 @@
  * Settings:
  * - WINDOW: Specifies the window function used - type enum (values: Rectangle, Hamming, Hann, BlackmannHarris)
  * - OUTPUT_MODE: Specifies how the output magnitude should be scaled - type enum (values: Magnitude, dB)
+ * - SQUARE: Specifies whether output magnitudes should be squared - type enum (values: Yes, No)
  * - MAG_LIMIT: Sets the maximum output magnitude value - type int (0 - 10000)
  */
 using System;

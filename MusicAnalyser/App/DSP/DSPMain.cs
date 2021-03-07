@@ -141,13 +141,11 @@ namespace MusicAnalyser.App.DSP
                     if (SpectrogramHandler.Spectrogram.FrequencyScale == null)
                         SpectrogramHandler.Spectrogram.FrequencyScale = GetScriptVal("SCALE");
 
-                    //if (startingScriptSet == null)
-                    //    startingScriptSet = scriptSet;
                     if (scriptSet != startingScriptSet || curAudioPos - largestTimestamp > 1000)
                     {
                         SpectrogramHandler.Clear(); // Clears previous spectrogram frames if scripts are changed
                         SpectrogramHandler.Spectrogram.AudioFilename = app.AudioSource.Filename;
-                        SpectrogramHandler.Spectrogram.ScriptProperties = app.GetScriptChainData();
+                        SpectrogramHandler.Spectrogram.ScriptProperties = app.GetScriptSettingValues(app.GetScriptChainData());
                         startingScriptSet = scriptSet;
                     }
 

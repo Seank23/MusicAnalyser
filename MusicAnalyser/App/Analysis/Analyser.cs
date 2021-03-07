@@ -358,6 +358,15 @@ namespace MusicAnalyser.App.Analysis
                 chordExtensions[i] = avgExtensions - chordExtensions[i];
             chordExtensions = Normalise(chordExtensions);
 
+            double[] notSuspended = new double[Chords.Count];
+            for (int i = 0; i < Chords.Count; i++)
+            {
+                if (Chords[i].Name.Contains("sus"))
+                    notSuspended[i] = -1;
+                else
+                    notSuspended[i] = 1;
+            }
+
             double[] fifthOmitted = new double[Chords.Count];
             for (int i = 0; i < Chords.Count; i++)
                 fifthOmitted[i] = Chords[i].FifthOmitted;
@@ -376,7 +385,7 @@ namespace MusicAnalyser.App.Analysis
             double[] overallProb = new double[Chords.Count];
             for (int i = 0; i < Chords.Count; i++)
                 //overallProb[i] = 1.0 * rootMagnitudes[i] + 1.0 * rootOccurences[i] + 1.0 * chordExtensions[i] + 2 * rootFreq[i] + 1.0 * fifthOmitted[i] + 1.5 * chordPredictedBefore[i];
-                overallProb[i] = 1.1*rootMagnitudes[i] + 1.0*rootOccurences[i] + 2.3*chordExtensions[i] + 1.8*rootFreq[i] + 1.0*fifthOmitted[i] + 0.7*chordPredictedBefore[i];
+                overallProb[i] = 1.1*rootMagnitudes[i] + 1.0*rootOccurences[i] + 2.3*chordExtensions[i] + 1.8*rootFreq[i] + 2.5*notSuspended[i] + 1.0*fifthOmitted[i] + 0.7*chordPredictedBefore[i];
             overallProb = Normalise(overallProb);
             double probSum = overallProb[0] + 1;
             for (int i = 1; i < Chords.Count; i++)
