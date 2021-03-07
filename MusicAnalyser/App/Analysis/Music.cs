@@ -44,6 +44,11 @@ namespace MusicAnalyser.App.Analysis
             "B", "Db", "Eb", "E", "Gb", "Ab", "Bb"
         };
 
+        public static int GetNoteIndexFromFrequency(double frequency)
+        {
+            return (int)Math.Round(12 * (Math.Log(frequency, 2) - Math.Log(32.7, 2)));
+        }
+
         public int[] NoteOccurences { get; set; }
         public List<int> NoteBuffer { get; set; }
         public List<int> NoteError { get; set; }

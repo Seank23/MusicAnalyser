@@ -13,6 +13,7 @@
  * - HARMONICS: Specifies the number of harmonics to merge via downsampling - type int (values: 0 - 5)
  * - INTERP: Specifies an interpolation factor to upsample output spectrum - type int (values: 1 - 5)
  * - MAG_SCALE: Specifies a value to scale down the output magnitude exponentially - type double (1 - 5)
+ * - SQUARE: Specifies whether output magnitudes should be squared - type enum (values: Yes, No)
  * - FLOOR: Specifies the minimum output spectrum value - type double (0 - 10)
  */
 using MusicAnalyser.App.DSP;
@@ -36,6 +37,7 @@ class HPSDownsamplerProcessor : ISignalProcessor
             { "HARMONICS", new string[] { "2", "int", "Number of Harmonics", "0", "5" } },
             { "INTERP", new string[] { "2", "int", "Interpolation Factor", "1", "5" } },
             { "MAG_SCALE", new string[] { "2", "double", "Magnitude Scale Factor", "1", "5" } },
+            { "SQUARE", new string[] { "No", "enum", "Square Output", "Yes|No", "" } },
             { "FLOOR", new string[] { "1", "double", "Spectrum Floor", "0", "10" } },
         };
     }
@@ -68,7 +70,9 @@ class HPSDownsamplerProcessor : ISignalProcessor
             productSpectrum[i] = 1;
             for (int j = 0; j < spectrums.Count; j++)
                 productSpectrum[i] *= spectrums[j][i];
-            productSpectrum[i] = Math.Pow(productSpectrum[i], 1.0 / double.Parse(Settings["MAG_SCALE"][0]));
+            productSpectrum[i] = Math.Max(Math.Pow(productSpectrum[i], 1.0 / double.Parse(Settings["MAG_SCALE"][0])) - double.Parse(Settings["FLOOR"][0]), 0);
+            if (Settings["SQUARE"][0] == "Yes")
+                productSpectrum[i] *= productSpectrum[i];
         }
         if (int.Parse(Settings["INTERP"][0]) > 1)
             OutputBuffer = Interpolate(productSpectrum, int.Parse(Settings["INTERP"][0]));

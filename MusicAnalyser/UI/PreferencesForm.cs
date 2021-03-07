@@ -30,20 +30,32 @@ namespace MusicAnalyser
             numSmooth.Value = Prefs.SMOOTH_FACTOR;
             numChordInterval.Value = Prefs.CHORD_DETECTION_INTERVAL;
             numOccurThd.Value = Prefs.CHORD_NOTE_OCCURENCE_OFFSET;
+            chbStoreSpecData.Checked = Prefs.STORE_SPEC_DATA;
+            numSpecUpdates.Value = Prefs.SPEC_UPDATE_RATE;
+            numSpecMaxFreq.Value = Prefs.SPEC_MAX_FREQ;
+            numNoteDiff.Value = Prefs.SPEC_NOTE_DIFF;
+            numChordBlock.Value = Prefs.SPEC_CHORD_BLOCK;
+            numKeyBlock.Value = Prefs.SPEC_KEY_BLOCK;
         }
 
         private void SavePrefs()
         {
-            string[] prefsToSave = new string[16];
-            prefsToSave[0] = "UI_THEME=" + DictIndexOf(uiThemeDict, comboTheme.Text);
-            prefsToSave[1] = "FOLLOW_SECS=" + numFollowSecs.Value;
-            prefsToSave[2] = "UPDATE_MODE=" + DictIndexOf(updateModeDict, comboMode.Text);
-            prefsToSave[3] = "MIN_UPDATE_TIME=" + numUpdateTime.Value;
-            prefsToSave[7] = "SMOOTH_FACTOR=" + numSmooth.Value;
-            prefsToSave[13] = "CHORD_DETECTION_INTERVAL=" + numChordInterval.Value;
-            prefsToSave[14] = "CHORD_NOTE_OCCURENCE_OFFSET=" + numOccurThd.Value;
-            prefsToSave[15] = "CAPTURE_DEVICE=" + comDevices.SelectedIndex; 
-            FileHandler.WriteFile("prefs.ini", prefsToSave); 
+            List<string> prefsToSave = new List<string>();
+            prefsToSave.Add("UI_THEME=" + DictIndexOf(uiThemeDict, comboTheme.Text));
+            prefsToSave.Add("FOLLOW_SECS=" + numFollowSecs.Value);
+            prefsToSave.Add("UPDATE_MODE=" + DictIndexOf(updateModeDict, comboMode.Text));
+            prefsToSave.Add("MIN_UPDATE_TIME=" + numUpdateTime.Value);
+            prefsToSave.Add("SMOOTH_FACTOR=" + numSmooth.Value);
+            prefsToSave.Add("CHORD_DETECTION_INTERVAL=" + numChordInterval.Value);
+            prefsToSave.Add("CHORD_NOTE_OCCURENCE_OFFSET=" + numOccurThd.Value);
+            prefsToSave.Add("CAPTURE_DEVICE=" + comDevices.SelectedIndex);
+            prefsToSave.Add("STORE_SPEC_DATA=" + chbStoreSpecData.Checked);
+            prefsToSave.Add("SPEC_UPDATE_RATE=" + numSpecUpdates.Value);
+            prefsToSave.Add("SPEC_MAX_FREQ=" + numSpecMaxFreq.Value);
+            prefsToSave.Add("SPEC_NOTE_DIFF=" + numNoteDiff.Value);
+            prefsToSave.Add("SPEC_CHORD_BLOCK=" + numChordBlock.Value);
+            prefsToSave.Add("SPEC_KEY_BLOCK=" + numKeyBlock.Value);
+            FileHandler.WriteFile("prefs.ini", prefsToSave.ToArray()); 
         }
 
         private void SetupDeviceList()
@@ -85,6 +97,14 @@ namespace MusicAnalyser
                 i++;
             }
             return -1;
+        }
+
+        private void chbStoreSpecData_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbStoreSpecData.Checked)
+                numSpecUpdates.Enabled = true;
+            else
+                numSpecUpdates.Enabled = false;
         }
     }
 }

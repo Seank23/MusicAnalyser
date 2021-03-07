@@ -150,6 +150,15 @@
     <Reference Include="ScottPlot.WinForms, Version=4.0.48.0, Culture=neutral, PublicKeyToken=5df1dfa5321e734b, processorArchitecture=MSIL">
       <HintPath>..\packages\ScottPlot.WinForms.4.0.48\lib\net472\ScottPlot.WinForms.dll</HintPath>
     </Reference>
+    <Reference Include="Syncfusion.Core.WinForms, Version=18.4460.0.43, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Core.WinForms.18.4.0.43\lib\net46\Syncfusion.Core.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Licensing, Version=18.4460.0.43, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Licensing.18.4.0.43\lib\net46\Syncfusion.Licensing.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Shared.Base, Version=18.4460.0.43, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Shared.Base.18.4.0.43\lib\net46\Syncfusion.Shared.Base.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -158,6 +167,7 @@
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -189,6 +199,13 @@
     <Compile Include="App\DSP\Scripts\RemoveKickNoiseProcessor.cs" />
     <Compile Include="App\DSP\ScriptManager.cs" />
     <Compile Include="App\DSP\Scripts\SpectrumFilterProcessor.cs" />
+    <Compile Include="App\DSP\Scripts\SpectrumQuantiserProcessor.cs" />
+    <Compile Include="App\Spectrogram\SpectrogramFrame.cs" />
+    <Compile Include="App\Spectrogram\SpectrogramHandler.cs" />
+    <Compile Include="App\Spectrogram\SpectrogramData.cs" />
+    <Compile Include="UI\SpectrogramOverlay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UI\CustomWaveViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -203,7 +220,13 @@
     <Compile Include="App\LiveInputRecorder.cs" />
     <Compile Include="App\Analysis\Music.cs" />
     <Compile Include="App\Analysis\Note.cs" />
-    <Compile Include="UI\OverlayPanel.cs">
+    <Compile Include="UI\SpectrogramWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SpectrogramWindow.Designer.cs">
+      <DependentUpon>SpectrogramWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\WaveViewerOverlay.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="App\Prefs.cs" />
@@ -231,6 +254,12 @@
     <Compile Include="UI\ScriptSelector.Designer.cs">
       <DependentUpon>ScriptSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\SpectrogramViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\SpectrogramViewer.Designer.cs">
+      <DependentUpon>SpectrogramViewer.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="UI\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -249,6 +278,15 @@
     </Compile>
     <EmbeddedResource Include="UI\ScriptSelector.resx">
       <DependentUpon>ScriptSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SpectrogramOverlay.resx">
+      <DependentUpon>SpectrogramOverlay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SpectrogramViewer.resx">
+      <DependentUpon>SpectrogramViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SpectrogramWindow.resx">
+      <DependentUpon>SpectrogramWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

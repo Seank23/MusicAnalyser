@@ -1,14 +1,12 @@
 ﻿using MusicAnalyser.App.DSP;
-using NAudio.Dsp;
+using MusicAnalyser.App.Spectrogram;
 using NAudio.MediaFoundation;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MusicAnalyser.App
 {
@@ -19,7 +17,7 @@ namespace MusicAnalyser.App
             source = new AudioSource();
             source.Audio = new AudioFileReader(filename);
             source.AudioGraph = WaveFormatConversionStream.CreatePcmStream(new WaveFileReader(filename));
-            source.AudioFFT = ResampleWav(new WaveFileReader(filename), 8000);
+            source.AudioAnalysis = ResampleWav(new WaveFileReader(filename), 8000);
         }
 
         public static void OpenMP3(string filename, out AudioSource source)
@@ -137,6 +135,35 @@ namespace MusicAnalyser.App
                 }
             }
             return false;
+        }
+
+        public static void WriteSpectrogram(SpectrogramData spectrogram, string filename)
+        {
+            FileStream fileStream;
+            BinaryFormatter bf = new BinaryFormatter();
+
+            if (File.Exists(filename))
+                File.Delete(filename);
+
+            fileStream = File.Create(filename);
+            bf.Serialize(fileStream, spectrogram);
+            fileStream.Close();
+        }
+
+        public static SpectrogramData ReadSpectrogram(string filename)
+        {
+            SpectrogramData spectrogram = null;
+            FileStream fileStream;
+            BinaryFormatter bf = new BinaryFormatter();
+
+            if(File.Exists(filename))
+            {
+                fileStream = File.OpenRead(filename);
+                spectrogram = (SpectrogramData)bf.Deserialize(fileStream);
+                fileStream.Close();
+            }
+
+            return spectrogram;
         }
     }
 }

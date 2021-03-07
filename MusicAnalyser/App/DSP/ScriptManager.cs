@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace MusicAnalyser.App.DSP
 {
-    class ScriptManager
+    public class ScriptManager
     {
         public Dictionary<int, ISignalProcessor> ProcessorScripts { get; set; }
         public Dictionary<int, ISignalDetector> DetectorScripts { get; set; }
@@ -74,9 +74,11 @@ namespace MusicAnalyser.App.DSP
             return Presets.Keys.ToArray();
         }
 
-        public Dictionary<int, int> GetPresetSelectionDict(string presetName)
+        public Dictionary<int, int> GetPresetSelectionDict(string presetName = null, Dictionary<string, string[]> preset = null)
         {
-            var preset = Presets[presetName];
+            if(presetName != null && preset == null)
+                preset = Presets[presetName];
+
             Dictionary<int, int> selectionDict = new Dictionary<int, int>();
             for(int i = 0; i < preset.Count; i++)
             {
@@ -105,6 +107,8 @@ namespace MusicAnalyser.App.DSP
 
             for (int i = 0; i < settingsDict.Count; i++)
             {
+                if (settings.Length == i)
+                    break;
                 string[] vals = settingsDict[settingsDict.ElementAt(i).Key];
                 vals[0] = settings[i];
             }

@@ -1,4 +1,5 @@
 ﻿using MusicAnalyser.App.Analysis;
+using MusicAnalyser.App.Spectrogram;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,26 +7,31 @@ using System.Threading.Tasks;
 
 namespace MusicAnalyser.App.DSP
 {
-    class DSPMain
+    public class DSPMain
     {
         public Analyser Analyser { get; set; }
         public ScriptManager ScriptManager { get; set; }
+        public SpectrogramHandler SpectrogramHandler { get; set; }
         public double MaxGain { get; set; }
         public Dictionary<double, double> FreqPeaks { get; set; }
+        public double CurTimestamp { get; set; }
 
         private AppController app;
         private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
         private Dictionary<int, ISignalDetector> detectors = new Dictionary<int, ISignalDetector>();
-        private List<double[]> prevProcessedData = new List<double[]>();
+        private List<double[]> prevSpectrumData = new List<double[]>();
         private Dictionary<string, object> scriptVals = new Dictionary<string, object>();
-        private double[] processedData;
+        private string scriptSet, startingScriptSet;
+        private double[] spectrumData;
         private int detectorIndex = 0;
+        private double largestTimestamp = -1;
 
         public DSPMain(AppController appController)
         {
             Analyser = new Analyser();
             app = appController;
             ScriptManager = new ScriptManager();
+            SpectrogramHandler = new SpectrogramHandler();
             LoadScripts();
             LoadPresets();
         }
@@ -57,6 +63,7 @@ namespace MusicAnalyser.App.DSP
             processors.Clear();
             detectors.Clear();
             detectorIndex = 0;
+            scriptSet = "";
 
             for(int i = 0; i < selectionDict.Count; i++)
             {
@@ -67,11 +74,13 @@ namespace MusicAnalyser.App.DSP
                         if (ScriptManager.ProcessorScripts.ContainsKey(j))
                         {
                             processors.Add(i, ScriptManager.ProcessorScripts[j]);
+                            scriptSet += j;
                             break;
                         }
                         else if (ScriptManager.DetectorScripts.ContainsKey(j))
                         {
                             detectors.Add(i, ScriptManager.DetectorScripts[j]);
+                            scriptSet += j;
                             if (ScriptManager.DetectorScripts[j].IsPrimary && detectorIndex == 0)
                                 detectorIndex = i;
                             break;
@@ -80,7 +89,7 @@ namespace MusicAnalyser.App.DSP
                 }
             }
             app.ScriptSelectionApplied = true;
-            prevProcessedData.Clear();
+            prevSpectrumData.Clear();
             scriptVals.Clear();
         }
 
@@ -94,7 +103,7 @@ namespace MusicAnalyser.App.DSP
 
         public void RunFrequencyAnalysis()
         {
-            scriptVals["SAMPLE_RATE"] = app.AudioSource.AudioFFT.WaveFormat.SampleRate;
+            scriptVals["SAMPLE_RATE"] = app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
             scriptVals["TUNING_PERCENT"] = Analyser.GetMusic().GetTuningPercent();
             object audio = ReadAudioStream();
 
@@ -113,21 +122,57 @@ namespace MusicAnalyser.App.DSP
                 else break;
             }
 
-            processedData = (double[])audio;
-            if (!Double.IsInfinity(processedData[0]) && !Double.IsNaN(processedData[0]) && app.Mode != 1)
-                processedData = SmoothSignal(processedData, Prefs.SMOOTH_FACTOR);
+            spectrumData = (double[])audio;
+            if (!Double.IsInfinity(spectrumData[0]) && !Double.IsNaN(spectrumData[0]) && app.Mode != 1)
+                spectrumData = SmoothSignal(spectrumData, Prefs.SMOOTH_FACTOR);
+        }
 
-            MaxGain = processedData.Max();
-            double avgGain = processedData.Average();
-            if (scriptVals["SCALE"].GetType().Name == "Double")
-                app.DrawSpectrum(processedData, (double)scriptVals["SCALE"], avgGain, MaxGain);
+        // Creates a spectrogram frame at specified update rate containing the current spectrum data, timestamp and analysis
+        public void WriteToSpectrogram()
+        {
+            double curAudioPos = app.AudioSource.AudioAnalysis.CurrentTime.TotalMilliseconds;
+            if (curAudioPos >= largestTimestamp)
+            {
+                if (SpectrogramHandler.Spectrogram.Frames.Count / (curAudioPos / 1000) <= Prefs.SPEC_UPDATE_RATE)
+                {
+                    byte[] specData = SpectrogramQuantiser(spectrumData, out double quantScale);
+                    specData = FilterSpectrogramData(specData);
+
+                    if (SpectrogramHandler.Spectrogram.FrequencyScale == null)
+                        SpectrogramHandler.Spectrogram.FrequencyScale = GetScriptVal("SCALE");
+
+                    if (scriptSet != startingScriptSet || curAudioPos - largestTimestamp > 1000)
+                    {
+                        SpectrogramHandler.Clear(); // Clears previous spectrogram frames if scripts are changed
+                        SpectrogramHandler.Spectrogram.AudioFilename = app.AudioSource.Filename;
+                        SpectrogramHandler.Spectrogram.ScriptProperties = app.GetScriptSettingValues(app.GetScriptChainData());
+                        startingScriptSet = scriptSet;
+                    }
+
+                    SpectrogramHandler.CreateFrame(curAudioPos, specData, Analyser.Notes.ToArray(), Analyser.Chords.ToArray(), Analyser.CurrentKey, quantScale);
+                    CurTimestamp = curAudioPos;
+                    largestTimestamp = curAudioPos;
+                }
+                else
+                    CurTimestamp = 0;
+            }
             else
-                app.DrawSpectrum(processedData, 1, avgGain, MaxGain);
+                CurTimestamp = 0;
+        }
+
+        public void FrequencyAnalysisToSpectrum(object scale)
+        {
+            MaxGain = spectrumData.Max();
+            double avgGain = spectrumData.Average();
+            if (scale.GetType().Name == "Double")
+                app.DrawSpectrum(spectrumData, (double)scale, avgGain, MaxGain);
+            else
+                app.DrawSpectrum(spectrumData, 1, avgGain, MaxGain);
         }
 
         public void RunPitchDetection()
         {
-            object data = processedData;
+            object data = spectrumData;
             for(int i = detectorIndex; i < ScriptManager.GetScriptCount(); i++)
             {
                 if(processors.ContainsKey(i))
@@ -154,28 +199,58 @@ namespace MusicAnalyser.App.DSP
             FreqPeaks = (Dictionary<double, double>)data;
         }
 
+        public void ReadSpectrogramFrame()
+        {
+            double curAudioPos = app.AudioSource.AudioStream.CurrentTime.TotalMilliseconds;
+            SpectrogramFrame curFrame = SpectrogramHandler.Spectrogram.Frames.Aggregate((x, y) => Math.Abs(x.Timestamp - curAudioPos) < Math.Abs(y.Timestamp - curAudioPos) ? x : y); // Gets the frame with a timestamp closest to curAudioPos
+            
+            // Converts byte valued spectrogram data to double valued spectrum data 
+            double[] doubleData = new double[curFrame.SpectrumData.Length];
+            for (int i = 0; i < doubleData.Length; i++)
+                doubleData[i] = curFrame.SpectrumData[i];
+            spectrumData = doubleData;
+
+            foreach(Note note in curFrame.Notes)
+            {
+                Analyser.BufferNote(note.NoteIndex);
+                Analyser.GetMusic().CountNote(note.Name + "0");
+            }
+
+            // Directly assigns analyser properties from current spectrogram frame
+            Analyser.Notes = curFrame.Notes.ToList();
+            Analyser.Chords = curFrame.Chords.ToList();
+            Analyser.CurrentKey = curFrame.KeySignature;
+            Analyser.CalculateNotePercentages();
+            FrequencyAnalysisToSpectrum(SpectrogramHandler.Spectrogram.FrequencyScale);
+
+            curFrame = null;
+            doubleData = null;
+            spectrumData = null;
+            GC.Collect();
+        }
+
         private short[] ReadAudioStream()
         {
             byte[] bytesBuffer;
             short[] audioBuffer;
 
             bytesBuffer = new byte[Prefs.BUFFERSIZE];
-            double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate / (double)app.AudioSource.AudioFFT.WaveFormat.SampleRate;
+            double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate / (double)app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
             if (app.Mode == 1)
             {
-                if(app.StepBack && app.AudioSource.AudioFFT.Position > 0)
-                    app.AudioSource.AudioFFT.Position -= app.AudioSource.AudioFFT.WaveFormat.SampleRate * app.StepMilliseconds / 1000 * app.AudioSource.AudioFFT.WaveFormat.BitsPerSample / 4;
+                if(app.StepBack && app.AudioSource.AudioAnalysis.Position > 0)
+                    app.AudioSource.AudioAnalysis.Position -= app.AudioSource.AudioAnalysis.WaveFormat.SampleRate * app.StepMilliseconds / 1000 * app.AudioSource.AudioAnalysis.WaveFormat.BitsPerSample / 4;
                 else
-                    app.AudioSource.AudioFFT.Position += app.AudioSource.AudioFFT.WaveFormat.SampleRate * app.StepMilliseconds / 1000 * app.AudioSource.AudioFFT.WaveFormat.BitsPerSample / 4;
+                    app.AudioSource.AudioAnalysis.Position += app.AudioSource.AudioAnalysis.WaveFormat.SampleRate * app.StepMilliseconds / 1000 * app.AudioSource.AudioAnalysis.WaveFormat.BitsPerSample / 4;
 
-                app.AudioSource.AudioStream.Position = (long)(app.AudioSource.AudioFFT.Position * posScaleFactor * app.AudioSource.AudioStream.WaveFormat.Channels);
+                app.AudioSource.AudioStream.Position = (long)(app.AudioSource.AudioAnalysis.Position * posScaleFactor * app.AudioSource.AudioStream.WaveFormat.Channels);
             }
             else
             {
-                app.AudioSource.AudioFFT.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
+                app.AudioSource.AudioAnalysis.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
             }
-            app.AudioSource.AudioFFT.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
-            app.AudioSource.AudioFFT.Position -= Prefs.BUFFERSIZE;
+            app.AudioSource.AudioAnalysis.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
+            app.AudioSource.AudioAnalysis.Position -= Prefs.BUFFERSIZE;
             audioBuffer = new short[Prefs.BUFFERSIZE];
             Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
             return audioBuffer;
@@ -184,36 +259,90 @@ namespace MusicAnalyser.App.DSP
         /*
          * Performs smoothing on frequency domain data by averaging several frames
          */
-        public double[] SmoothSignal(double[] signal, int smoothDepth)
+        private double[] SmoothSignal(double[] signal, int smoothDepth)
         {
             double[] newSignal = new double[signal.Length];
             Array.Copy(signal, newSignal, signal.Length);
-            prevProcessedData.Add(newSignal);
+            prevSpectrumData.Add(newSignal);
 
-            if (prevProcessedData.Count > smoothDepth)
-                prevProcessedData.RemoveAt(0);
+            if (prevSpectrumData.Count > smoothDepth)
+                prevSpectrumData.RemoveAt(0);
 
             for (int i = 0; i < newSignal.Length; i++)
             {
                 double smoothedValue = 0;
-                for (int j = 0; j < prevProcessedData.Count; j++)
+                for (int j = 0; j < prevSpectrumData.Count; j++)
                 {
-                    smoothedValue += prevProcessedData[j][i];
+                    smoothedValue += prevSpectrumData[j][i];
                 }
-                smoothedValue /= prevProcessedData.Count;
+                smoothedValue /= prevSpectrumData.Count;
                 newSignal[i] = smoothedValue;
             }
             return newSignal;
         }
 
-        public object GetScriptVal(string name, string type)
+        private byte[] SpectrogramQuantiser(double[] data, out double quantScale)
+        {
+            byte[] output = new byte[data.Length];
+            quantScale = 1;
+
+            if (GetScriptVal("QUANT_BIT_DEPTH") != null)
+            {
+                if ((double)GetScriptVal("QUANT_BIT_DEPTH") == 8.0)
+                {
+                    for (int i = 0; i < data.Length; i++)
+                        output[i] = (byte)data[i];
+                    return output;
+                }
+            }
+
+            double bandSize = data.Max() / 255;
+            for (int i = 0; i < data.Length; i++)
+                output[i] = (byte)Math.Floor(data[i] / bandSize);
+            quantScale = bandSize;
+            return output;
+        }
+
+        private byte[] FilterSpectrogramData(byte[] data)
+        {
+            object scale = GetScriptVal("SCALE");
+            int size = 0;
+            if (scale.GetType().Name == "Func`2")
+            {
+                Func<double, double> scaleFunc = (Func<double, double>)scale;
+                if (scaleFunc(data.Length - 1) <= Prefs.SPEC_MAX_FREQ)
+                    return data;
+                
+                for(int i = data.Length - 2; i > 0; i--)
+                {
+                    if(scaleFunc(i) <= Prefs.SPEC_MAX_FREQ)
+                    {
+                        size = i;
+                        break;
+                    }
+                }
+            }
+            else
+                size = (int)Math.Floor(Prefs.SPEC_MAX_FREQ / (double)scale);
+
+            byte[] output = new byte[size];
+            Array.Copy(data, output, output.Length);
+            return output;
+        }
+
+        public object GetScriptVal(string name)
         {
             if(scriptVals.ContainsKey(name))
-            {
-                if (scriptVals[name].GetType().Name == type)
-                    return scriptVals[name];
-            }
+                return scriptVals[name];
             return null;
+        }
+
+        public void Dispose()
+        {
+            largestTimestamp = -1;
+            CurTimestamp = -1;
+            SpectrogramHandler.Clear();
+            Analyser.DisposeAnalyser();
         }
     }
 }

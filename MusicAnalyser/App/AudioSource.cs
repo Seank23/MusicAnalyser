@@ -8,8 +8,9 @@ namespace MusicAnalyser.App
 {
     public class AudioSource : IDisposable
     {
+        public string Filename { get; set; }
         private WaveStream audio;
-        private WaveStream audioFFT;
+        private WaveStream audioAnalysis;
         private WaveStream audioGraph;
         private WaveChannel32 audioStream;
         public VarispeedSampleProvider SpeedControl { set; get; }
@@ -39,10 +40,10 @@ namespace MusicAnalyser.App
             set { audioStream = value; }
         }
 
-        public WaveStream AudioFFT
+        public WaveStream AudioAnalysis
         {
-            get { return audioFFT; }
-            set { audioFFT = value; }
+            get { return audioAnalysis; }
+            set { audioAnalysis = value; }
         }
 
         public void Dispose()
@@ -57,8 +58,8 @@ namespace MusicAnalyser.App
             audioStream = null;
             audioGraph.Dispose();
             audioGraph = null;
-            audioFFT.Dispose();
-            audioFFT = null;
+            audioAnalysis.Dispose();
+            audioAnalysis = null;
             GC.Collect();
         }
     }

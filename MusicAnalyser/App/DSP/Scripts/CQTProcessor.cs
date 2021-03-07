@@ -95,7 +95,7 @@ class CQTProcessor : ISignalProcessor
         }
 
         OutputBuffer = mag;
-        Func<int, double> scale = i => double.Parse(Settings["MIN_FREQ"][0]) * Math.Pow(2, (double)i / int.Parse(Settings["BINS_PER_OCTAVE"][0]));
+        Func<double, double> scale = i => double.Parse(Settings["MIN_FREQ"][0]) * Math.Pow(2, (double)i / int.Parse(Settings["BINS_PER_OCTAVE"][0]));
         OutputArgs.Add("SCALE", scale);
     }
 

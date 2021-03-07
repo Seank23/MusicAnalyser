@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MusicAnalyser
+namespace MusicAnalyser.UI
 {
-    public class OverlayPanel : Panel
+    public class WaveViewerOverlay : Panel
     {
         private CustomWaveViewer parent;
         private Rectangle posIndicator;
@@ -18,7 +16,7 @@ namespace MusicAnalyser
         private Rectangle timeBar;
         private List<Rectangle> ticks;
 
-        public OverlayPanel(CustomWaveViewer p)
+        public WaveViewerOverlay(CustomWaveViewer p)
         {
             DoubleBuffered = true;
             parent = p;
@@ -84,11 +82,12 @@ namespace MusicAnalyser
                 double seconds = (double)timeStampSamples[i] / sampleRate;
                 TimeSpan t = TimeSpan.FromSeconds(seconds);
                 Label timeStamp = new Label();
-                this.Controls.Add(timeStamp);
                 timeStamp.TextAlign = ContentAlignment.MiddleCenter;
                 timeStamp.Top = this.Height - 20;
                 timeStamp.Left = parent.GetWaveformPadding() + (int)(waveformWidth * timeStampPos) - timeStamp.Width / 2;
                 timeStamp.Text = t.ToString(@"m\:ss\:fff");
+                timeStamp.Font = new Font(Form1.fonts.Families[0], 7.8F, FontStyle.Regular, GraphicsUnit.Point);
+                this.Controls.Add(timeStamp);
 
                 Rectangle primaryTick = new Rectangle(timeStamp.Left + timeStamp.Width / 2, this.Height - 25, 1, 10);
                     
@@ -178,7 +177,7 @@ namespace MusicAnalyser
             Graphics g = e.Graphics;
             if(parent.GetIsRecording())
             {
-                g.DrawString("Recording...", new Font(this.Font.FontFamily, 16), new SolidBrush(Color.Red), new Point(this.Width / 2 - (this.Width / 14), this.Height / 2 - (this.Height / 10)));
+                g.DrawString("Recording...", new Font(Form1.fonts.Families[0], 16, FontStyle.Regular, GraphicsUnit.Point), new SolidBrush(Color.Red), new Point(this.Width / 2 - (this.Width / 14), this.Height / 2 - (this.Height / 10)));
             }
             if (parent.WaveStream != null)
             {
@@ -198,7 +197,7 @@ namespace MusicAnalyser
             }
             else
             {
-                g.DrawString("No file selected", new Font(this.Font.FontFamily, 12), new SolidBrush(Color.Gray), new Point(this.Width / 2 - (this.Width / 14), this.Height / 2));
+                g.DrawString("No file selected", new Font(Form1.fonts.Families[0], 12, FontStyle.Regular, GraphicsUnit.Point), new SolidBrush(Color.Gray), new Point(this.Width / 2 - (this.Width / 14), this.Height / 2));
             }
         }
     }
