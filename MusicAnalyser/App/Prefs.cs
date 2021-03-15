@@ -14,7 +14,7 @@ namespace MusicAnalyser.App
 
         public static int UI_DELAY_FACTOR = 1000000;
         public static int FOLLOW_SECS = 10;
-        public static int BUFFERSIZE = (int)Math.Pow(2, 13);
+        public static int BUFFERSIZE = (int)Math.Pow(2, 12); // 4096
         public static int SMOOTH_FACTOR = 3;
         public static int NOTE_BUFFER_SIZE = 10000;
         public static int ERROR_DURATION = 5;

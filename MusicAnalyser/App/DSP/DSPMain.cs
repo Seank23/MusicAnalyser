@@ -152,6 +152,9 @@ namespace MusicAnalyser.App.DSP
                     SpectrogramHandler.CreateFrame(curAudioPos, specData, Analyser.Notes.ToArray(), Analyser.Chords.ToArray(), Analyser.CurrentKey, quantScale);
                     CurTimestamp = curAudioPos;
                     largestTimestamp = curAudioPos;
+
+                    specData = null;
+                    GC.Collect();
                 }
                 else
                     CurTimestamp = 0;
@@ -234,7 +237,7 @@ namespace MusicAnalyser.App.DSP
             byte[] bytesBuffer;
             short[] audioBuffer;
 
-            bytesBuffer = new byte[Prefs.BUFFERSIZE];
+            bytesBuffer = new byte[Prefs.BUFFERSIZE * 2];
             double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate / (double)app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
             if (app.Mode == 1)
             {
@@ -249,10 +252,10 @@ namespace MusicAnalyser.App.DSP
             {
                 app.AudioSource.AudioAnalysis.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
             }
-            app.AudioSource.AudioAnalysis.Read(bytesBuffer, 0, Prefs.BUFFERSIZE); // Reads PCM data at synced position to bytesBuffer
-            app.AudioSource.AudioAnalysis.Position -= Prefs.BUFFERSIZE;
+            app.AudioSource.AudioAnalysis.Read(bytesBuffer, 0, Prefs.BUFFERSIZE * 2); // Reads PCM data at synced position to bytesBuffer
+            app.AudioSource.AudioAnalysis.Position -= Prefs.BUFFERSIZE * 2;
             audioBuffer = new short[Prefs.BUFFERSIZE];
-            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
+            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, audioBuffer.Length); // Bytes to shorts
             return audioBuffer;
         }
 
