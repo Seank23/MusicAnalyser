@@ -107,7 +107,7 @@ namespace MusicAnalyser.UI
                 return new double[] { scale(binEnds[0]), scale(binEnds[1]) };
             }
             else
-                return new double[] { (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[0] * 0.95, (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[1] * 0.95 };
+                return new double[] { (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[0], (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[1] };
         }
 
         public double[] GetTimeEndsInView()
@@ -156,7 +156,7 @@ namespace MusicAnalyser.UI
                 return scale(binPos);
             }
             else
-                return (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binPos * 0.95;
+                return (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binPos;
         }
 
         public double GetTimePointSeconds(float relativePos)

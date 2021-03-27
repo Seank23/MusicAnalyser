@@ -25,6 +25,7 @@ namespace MusicAnalyser.App.DSP
         private double[] spectrumData;
         private int detectorIndex = 0;
         private double largestTimestamp = -1;
+        private double lastGC = 0;
 
         public DSPMain(AppController appController)
         {
@@ -153,8 +154,11 @@ namespace MusicAnalyser.App.DSP
                     CurTimestamp = curAudioPos;
                     largestTimestamp = curAudioPos;
 
-                    specData = null;
-                    GC.Collect();
+                    if (curAudioPos - lastGC >= 1000) // Garbage collection every second
+                    {
+                        GC.Collect();
+                        lastGC = curAudioPos;
+                    }
                 }
                 else
                     CurTimestamp = 0;
@@ -344,6 +348,7 @@ namespace MusicAnalyser.App.DSP
         {
             largestTimestamp = -1;
             CurTimestamp = -1;
+            lastGC = 0;
             SpectrogramHandler.Clear();
             Analyser.DisposeAnalyser();
         }

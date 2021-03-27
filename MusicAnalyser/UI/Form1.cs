@@ -252,6 +252,11 @@ namespace MusicAnalyser
                 else
                     btnPlay.Text = "Start Recording";
             }
+            if (!Prefs.STORE_SPEC_DATA && !app.SpectrogramOpened)
+            {
+                btnViewSpec.Enabled = false;
+                btnSpecEnlarge.Enabled = false;
+            }
         }
 
         public bool SelectFile(out OpenFileDialog dialog)

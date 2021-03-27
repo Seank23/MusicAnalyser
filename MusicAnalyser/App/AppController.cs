@@ -474,15 +474,15 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Blue, false);
 
                         X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
                     }
@@ -598,7 +598,7 @@ namespace MusicAnalyser.App
             double centreFreq = x;
             if(Dsp.GetScriptVal("SCALE").GetType().Name == "Func`2")
             {
-                Func<int, double> scale = (Func<int, double>)Dsp.GetScriptVal("SCALE");
+                Func<double, double> scale = (Func<double, double>)Dsp.GetScriptVal("SCALE");
                 centreFreq = scale((int)x);
             }
             if (y > 0.7)
