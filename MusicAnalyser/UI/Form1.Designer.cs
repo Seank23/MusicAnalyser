@@ -59,6 +59,7 @@
             this.saveSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSpecImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblSelectTime = new System.Windows.Forms.Label();
@@ -94,7 +95,8 @@
             this.pnlSpectrumControls = new System.Windows.Forms.Panel();
             this.btnSpecEnlarge = new System.Windows.Forms.Button();
             this.btnViewSpec = new System.Windows.Forms.Button();
-            this.chbAnnotations = new System.Windows.Forms.CheckBox();
+            this.chbNoteAnnotations = new System.Windows.Forms.CheckBox();
+            this.chbChordKeyAnnotations = new System.Windows.Forms.CheckBox();
             this.chbFilter = new System.Windows.Forms.CheckBox();
             this.lblError = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -402,7 +404,8 @@
             this.spectrogramToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveSpecToolStripMenuItem,
             this.openSpecToolStripMenuItem,
-            this.saveSpecImageToolStripMenuItem});
+            this.saveSpecImageToolStripMenuItem,
+            this.clearSpecToolStripMenuItem});
             this.spectrogramToolStripMenuItem.Name = "spectrogramToolStripMenuItem";
             this.spectrogramToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.spectrogramToolStripMenuItem.Text = "Spectrogram";
@@ -429,6 +432,14 @@
             this.saveSpecImageToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.saveSpecImageToolStripMenuItem.Text = "Save Spectrogram Image...";
             this.saveSpecImageToolStripMenuItem.Click += new System.EventHandler(this.saveSpecImageToolStripMenuItem_Click);
+            // 
+            // saveSpecImageToolStripMenuItem
+            // 
+            this.clearSpecToolStripMenuItem.Enabled = false;
+            this.clearSpecToolStripMenuItem.Name = "clearSpecToolStripMenuItem";
+            this.clearSpecToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.clearSpecToolStripMenuItem.Text = "Clear Spectrogram Data";
+            this.clearSpecToolStripMenuItem.Click += new System.EventHandler(this.clearSpecToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -829,7 +840,8 @@
             // 
             this.pnlSpectrumControls.Controls.Add(this.btnSpecEnlarge);
             this.pnlSpectrumControls.Controls.Add(this.btnViewSpec);
-            this.pnlSpectrumControls.Controls.Add(this.chbAnnotations);
+            this.pnlSpectrumControls.Controls.Add(this.chbNoteAnnotations);
+            this.pnlSpectrumControls.Controls.Add(this.chbChordKeyAnnotations);
             this.pnlSpectrumControls.Controls.Add(this.chbFilter);
             this.pnlSpectrumControls.Controls.Add(this.lblError);
             this.pnlSpectrumControls.Controls.Add(this.label19);
@@ -853,9 +865,9 @@
             // 
             this.btnSpecEnlarge.Enabled = false;
             this.btnSpecEnlarge.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSpecEnlarge.Location = new System.Drawing.Point(1172, 7);
+            this.btnSpecEnlarge.Location = new System.Drawing.Point(1021, 42);
             this.btnSpecEnlarge.Name = "btnSpecEnlarge";
-            this.btnSpecEnlarge.Size = new System.Drawing.Size(73, 29);
+            this.btnSpecEnlarge.Size = new System.Drawing.Size(148, 29);
             this.btnSpecEnlarge.TabIndex = 65;
             this.btnSpecEnlarge.Text = "Undock";
             this.btnSpecEnlarge.UseVisualStyleBackColor = true;
@@ -875,16 +887,29 @@
             // 
             // chbAnnotations
             // 
-            this.chbAnnotations.Enabled = false;
-            this.chbAnnotations.Checked = true;
-            this.chbAnnotations.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chbAnnotations.Location = new System.Drawing.Point(1255, 12);
-            this.chbAnnotations.Name = "chbAnnotations";
-            this.chbAnnotations.Size = new System.Drawing.Size(148, 23);
-            this.chbAnnotations.TabIndex = 64;
-            this.chbAnnotations.Text = "Show Annotations";
-            this.chbAnnotations.UseVisualStyleBackColor = true;
-            this.chbAnnotations.CheckedChanged += new System.EventHandler(this.chbAnnotations_CheckedChanged);
+            this.chbNoteAnnotations.Enabled = false;
+            this.chbNoteAnnotations.Checked = true;
+            this.chbNoteAnnotations.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbNoteAnnotations.Location = new System.Drawing.Point(1180, 15);
+            this.chbNoteAnnotations.Name = "chbAnnotations";
+            this.chbNoteAnnotations.Size = new System.Drawing.Size(180, 23);
+            this.chbNoteAnnotations.TabIndex = 64;
+            this.chbNoteAnnotations.Text = "Show Note Annotations";
+            this.chbNoteAnnotations.UseVisualStyleBackColor = true;
+            this.chbNoteAnnotations.CheckedChanged += new System.EventHandler(this.chbNoteAnnotations_CheckedChanged);
+            // 
+            // chbAnnotations
+            // 
+            this.chbChordKeyAnnotations.Enabled = false;
+            this.chbChordKeyAnnotations.Checked = true;
+            this.chbChordKeyAnnotations.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbChordKeyAnnotations.Location = new System.Drawing.Point(1180, 43);
+            this.chbChordKeyAnnotations.Name = "chbAnnotations";
+            this.chbChordKeyAnnotations.Size = new System.Drawing.Size(250, 23);
+            this.chbChordKeyAnnotations.TabIndex = 64;
+            this.chbChordKeyAnnotations.Text = "Show Chord/Key Annotations";
+            this.chbChordKeyAnnotations.UseVisualStyleBackColor = true;
+            this.chbChordKeyAnnotations.CheckedChanged += new System.EventHandler(this.chbChordKeyAnnotations_CheckedChanged);
             // 
             // chbFilter
             // 
@@ -1302,6 +1327,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveSpecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openSpecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSpecImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearSpecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem perferencesToolStripMenuItem;
         private System.Windows.Forms.Label lblSelectTime;
@@ -1339,7 +1365,8 @@
         private System.Windows.Forms.ListBox lstChords;
         private System.Windows.Forms.Panel pnlSpectrumControls;
         private System.Windows.Forms.Button btnViewSpec;
-        private System.Windows.Forms.CheckBox chbAnnotations;
+        private System.Windows.Forms.CheckBox chbNoteAnnotations;
+        private System.Windows.Forms.CheckBox chbChordKeyAnnotations;
         private System.Windows.Forms.CheckBox chbFilter;
         private System.Windows.Forms.Label lblError;
         private System.Windows.Forms.Label label19;

@@ -49,9 +49,9 @@ class CQTProcessor : ISignalProcessor
     }
 
     public void OnSettingsChange() 
-    { 
-        if(InputBuffer != null || InputArgs != null)
-            GetSparseKernel(); 
+    {
+        if (InputBuffer != null || InputArgs != null)
+            kernel = null;
     }
 
     public void Process()

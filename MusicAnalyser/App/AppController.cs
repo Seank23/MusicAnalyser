@@ -576,7 +576,6 @@ namespace MusicAnalyser.App
         {
             int centDifference = 50 - value;
             Dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
-            Dsp.Analyser.GetMusic().ResetNoteCount();
         }
 
         public void SetFilter(float lowPassFreq, float highPassFreq, float centreFreq, float centreQ, float gain)

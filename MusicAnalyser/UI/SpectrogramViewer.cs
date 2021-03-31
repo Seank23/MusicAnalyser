@@ -14,7 +14,8 @@ namespace MusicAnalyser.UI
         public static readonly int PADDING_LEFT = 50;
         public SpectrogramHandler MySpectrogramHandler { get; set; }
         public SpectrogramOverlay Overlay { get; }
-        public bool ShowAnnotations { get; set; }
+        public bool ShowNoteAnnotations { get; set; }
+        public bool ShowChordKeyAnnotations { get; set; }
         public double SelectTimestamp { get; set; }
         public double LoopEndTimestamp { get; set; }
         private double curTimestamp;
@@ -43,7 +44,8 @@ namespace MusicAnalyser.UI
             Overlay.Dock = DockStyle.Fill;
             Overlay.BackColor = Color.Transparent;
             Overlay.BringToFront();
-            ShowAnnotations = true;
+            ShowNoteAnnotations = true;
+            ShowChordKeyAnnotations = true;
         }
 
         public void SetNewParent(Form newParent)
@@ -369,7 +371,7 @@ namespace MusicAnalyser.UI
             e.Graphics.DrawImage(spectrogramImage, new Rectangle(PADDING_LEFT, 0, this.Width - PADDING_LEFT, this.Height - PADDING_BOTTOM), projectionRect, GraphicsUnit.Pixel);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
-            if (ShowAnnotations)
+            if (ShowNoteAnnotations)
             {
                 SpectrogramHandler.NoteAnnotation[] noteAnnotations = DrawNoteAnnotations();
                 if (noteAnnotations != null)
@@ -387,9 +389,11 @@ namespace MusicAnalyser.UI
                         }
                     }
                 }
-
+            }
+            if (ShowChordKeyAnnotations)
+            {
                 SpectrogramHandler.ChordAnnotation[] chordAnnotations = DrawChordAnnotations();
-                if(chordAnnotations != null)
+                if (chordAnnotations != null)
                 {
                     foreach (SpectrogramHandler.ChordAnnotation chord in chordAnnotations)
                     {
@@ -401,7 +405,7 @@ namespace MusicAnalyser.UI
                 }
 
                 SpectrogramHandler.KeyAnnotation[] keyAnnotations = DrawKeyAnnotations();
-                if(keyAnnotations != null)
+                if (keyAnnotations != null)
                 {
                     using (Pen p = new Pen(Color.FromArgb(200, Color.Green), 10))
                     {
@@ -414,7 +418,6 @@ namespace MusicAnalyser.UI
                     }
                 }
             }
-
             if (projectionRect != prevProjectionRect)
             {
                 Overlay.DrawTimeAxis();

@@ -134,7 +134,7 @@ namespace MusicAnalyser.App.DSP
             double curAudioPos = app.AudioSource.AudioAnalysis.CurrentTime.TotalMilliseconds;
             if (curAudioPos >= largestTimestamp)
             {
-                if (SpectrogramHandler.Spectrogram.Frames.Count / (curAudioPos / 1000) <= Prefs.SPEC_UPDATE_RATE)
+                if (SpectrogramHandler.Spectrogram.Frames.Count / (curAudioPos / 1000) <= Prefs.SPEC_UPDATE_RATE / app.AudioSource.SpeedControl.PlaybackRate)
                 {
                     byte[] specData = SpectrogramQuantiser(spectrumData, out double quantScale);
                     specData = FilterSpectrogramData(specData);
@@ -142,7 +142,7 @@ namespace MusicAnalyser.App.DSP
                     if (SpectrogramHandler.Spectrogram.FrequencyScale == null)
                         SpectrogramHandler.Spectrogram.FrequencyScale = GetScriptVal("SCALE");
 
-                    if (scriptSet != startingScriptSet || curAudioPos - largestTimestamp > 1000)
+                    if (scriptSet != startingScriptSet || specData.Length != SpectrogramHandler.Spectrogram.FrequencyBins || curAudioPos - largestTimestamp > 1000)
                     {
                         SpectrogramHandler.Clear(); // Clears previous spectrogram frames if scripts are changed
                         SpectrogramHandler.Spectrogram.AudioFilename = app.AudioSource.Filename;
