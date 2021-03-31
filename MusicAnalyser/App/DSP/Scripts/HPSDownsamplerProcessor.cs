@@ -64,8 +64,8 @@ class HPSDownsamplerProcessor : ISignalProcessor
             spectrums.Add(downsampledSpectrum);
         }
 
-        double[] productSpectrum = new double[spectrums[spectrums.Count - 1].Length];
-        for(int i = 0; i < productSpectrum.Length; i++)
+        double[] productSpectrum = new double[input.Length];
+        for(int i = 0; i < spectrums[spectrums.Count - 1].Length; i++)
         {
             productSpectrum[i] = 1;
             for (int j = 0; j < spectrums.Count; j++)

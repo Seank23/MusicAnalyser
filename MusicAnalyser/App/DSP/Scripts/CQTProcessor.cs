@@ -15,6 +15,7 @@
  * - MIN_FREQ: Starting frequency (Hz), for analysis in standard tuning use appropriate note frequency (eg. C1 = 32.7 Hz) - type double (1 - 1000)
  * - N_WEIGHTING: Frequency weighting factor, lower values emphasise the magnitude of low frequencies and vice versa - type double (0 - 1)
  * - OUTPUT_MODE: Specifies how the output magnitude should be scaled - type enum (values: Magnitude, dB)
+ * - SQUARE: Specifies whether output magnitudes should be squared - type enum (values: Yes, No)
  */
 using System;
 using System.Collections.Generic;
@@ -43,13 +44,14 @@ class CQTProcessor : ISignalProcessor
             { "MIN_FREQ", new string[] { "32.7", "double", "Minimum Frequency (Hz)", "1", "1000" } },
             { "N_WEIGHTING", new string[] { "0.5", "double", "Frequency Weighting Factor", "0", "1" } },
             { "OUTPUT_MODE", new string[] { "Magnitude", "enum", "Output Mode", "Magnitude|dB", "" } },
+            { "SQUARE", new string[] { "No", "enum", "Square Output", "Yes|No", "" } },
         };
     }
 
     public void OnSettingsChange() 
-    { 
-        if(InputBuffer != null || InputArgs != null)
-            GetSparseKernel(); 
+    {
+        if (InputBuffer != null || InputArgs != null)
+            kernel = null;
     }
 
     public void Process()
@@ -93,6 +95,11 @@ class CQTProcessor : ISignalProcessor
             for (int i = 0; i < mag.Length; i++)
                 mag[i] = 20 * Math.Log10(product[i].Magnitude) - maxDB;
         }
+        else if (Settings["SQUARE"][0] == "Yes")
+        {
+            for (int i = 0; i < mag.Length; i++)
+                mag[i] = Math.Pow(mag[i], 2) / 100;
+        }
 
         OutputBuffer = mag;
         Func<double, double> scale = i => double.Parse(Settings["MIN_FREQ"][0]) * Math.Pow(2, (double)i / int.Parse(Settings["BINS_PER_OCTAVE"][0]));
@@ -128,7 +135,7 @@ class CQTProcessor : ISignalProcessor
             for (int n = 0; n < N; n++)
             {
                 Complex temp = NAudio.Dsp.FastFourierTransform.HammingWindow(n, N) / (N * (1 + (double.Parse(Settings["N_WEIGHTING"][0]) * N)))
-                    * Complex.Exp(-2 * Math.PI * Complex.ImaginaryOne * n * (Q / N)) * (1000 * (1 + (double.Parse(Settings["N_WEIGHTING"][0]) * 1000)));
+                    * Complex.Exp(2 * Math.PI * Complex.ImaginaryOne * n * (Q / N)) * (1000 * (1 + (double.Parse(Settings["N_WEIGHTING"][0]) * 1000)));
 
                 tempKernel[n].X = (float)temp.Real;
                 tempKernel[n].Y = (float)temp.Imaginary;

@@ -76,6 +76,7 @@ namespace MusicAnalyser
             cwvViewer.WaveStream = audioGraph;
             cwvViewer.FitToScreen();
             cwvViewer.BackColor = SystemColors.Control;
+            cwvViewer.StartPosition = 0;
             segMode.SelectedIndex = 0;
             SetUIState();
             if (wasRecording)
@@ -184,9 +185,16 @@ namespace MusicAnalyser
                         else
                             segMode.Enabled = true;
                         if (Output.PlaybackState == PlaybackState.Paused || Output.PlaybackState == PlaybackState.Stopped && app.GetSpectrogramHandler().Spectrogram.Frames.Count > 0)
+                        {
+                            if(!app.SpectrogramOpened)
+                                clearSpecToolStripMenuItem.Enabled = true;
                             btnViewSpec.Enabled = true;
+                        }
                         else
+                        {
+                            clearSpecToolStripMenuItem.Enabled = false;
                             btnViewSpec.Enabled = false;
+                        }
                     }
                 }
                 else
@@ -221,14 +229,17 @@ namespace MusicAnalyser
                         playToolStripMenuItem.Enabled = false;
                     }
                 }
-                if(!app.AudioOpened && !app.SpectrogramOpened)
+                if (!app.AudioOpened && !app.SpectrogramOpened)
                 {
                     btnOpenClose.Text = "Open";
                     btnOpenClose.Enabled = true;
                     openToolStripMenuItem.Enabled = true;
                     closeToolStripMenuItem.Enabled = false;
+                    openSpecToolStripMenuItem.Enabled = true;
                     segMode.Enabled = true;
                 }
+                else
+                    openSpecToolStripMenuItem.Enabled = false;
             }
             else if(segMode.SelectedIndex == 1)
             {
@@ -251,6 +262,11 @@ namespace MusicAnalyser
                     btnPlay.Text = "Stop Recording";
                 else
                     btnPlay.Text = "Start Recording";
+            }
+            if (!Prefs.STORE_SPEC_DATA && !app.SpectrogramOpened)
+            {
+                btnViewSpec.Enabled = false;
+                btnSpecEnlarge.Enabled = false;
             }
         }
 
@@ -279,6 +295,7 @@ namespace MusicAnalyser
             saveSpecToolStripMenuItem.Enabled = false;
             openSpecToolStripMenuItem.Enabled = true;
             saveSpecImageToolStripMenuItem.Enabled = false;
+            clearSpecToolStripMenuItem.Enabled = false;
             btnViewSpec.Enabled = false;
             btnSpecEnlarge.Enabled = false;
             chbFilter.Checked = false;
@@ -950,6 +967,7 @@ namespace MusicAnalyser
             saveSpecToolStripMenuItem.Enabled = true;
             openSpecToolStripMenuItem.Enabled = false;
             saveSpecImageToolStripMenuItem.Enabled = true;
+            clearSpecToolStripMenuItem.Enabled = false;
             cwvViewer.Enabled = false;
             cwvViewer.Visible = false;
             specViewer.Enabled = true;
@@ -957,7 +975,8 @@ namespace MusicAnalyser
             specViewer.BringToFront();
             btnViewSpec.Text = "Hide Spectrogram";
             btnSpecEnlarge.Enabled = true;
-            chbAnnotations.Enabled = true;
+            chbNoteAnnotations.Enabled = true;
+            chbChordKeyAnnotations.Enabled = true;
             app.Dsp.Analyser.DisposeAnalyser();
             app.TriggerStop();
         }
@@ -973,10 +992,12 @@ namespace MusicAnalyser
             ResizeSpectrogramUI(false);
             btnViewSpec.Text = "View Spectrogram";
             btnSpecEnlarge.Enabled = false;
-            chbAnnotations.Enabled = false;
+            chbNoteAnnotations.Enabled = false;
+            chbChordKeyAnnotations.Enabled = false;
             saveSpecToolStripMenuItem.Enabled = false;
             openSpecToolStripMenuItem.Enabled = false;
             saveSpecImageToolStripMenuItem.Enabled = false;
+            clearSpecToolStripMenuItem.Enabled = true;
         }
 
         private void ResizeSpectrogramUI(bool show)
@@ -1030,9 +1051,15 @@ namespace MusicAnalyser
                 ResizeSpectrogramUI(true);
         }
 
-        private void chbAnnotations_CheckedChanged(object sender, EventArgs e)
+        private void chbNoteAnnotations_CheckedChanged(object sender, EventArgs e)
         {
-            specViewer.ShowAnnotations = chbAnnotations.Checked;
+            specViewer.ShowNoteAnnotations = chbNoteAnnotations.Checked;
+            specViewer.Refresh();
+        }
+
+        private void chbChordKeyAnnotations_CheckedChanged(object sender, EventArgs e)
+        {
+            specViewer.ShowChordKeyAnnotations = chbChordKeyAnnotations.Checked;
             specViewer.Refresh();
         }
 
@@ -1061,6 +1088,15 @@ namespace MusicAnalyser
 
             if (saveDialog.ShowDialog() == DialogResult.OK)
                 specViewer.SaveImage(saveDialog.FileName);
+        }
+
+        private void clearSpecToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (app.Dsp.SpectrogramHandler != null && !app.SpectrogramOpened)
+            {
+                app.Dsp.SpectrogramHandler.Clear();
+                btnViewSpec.Enabled = false;
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ using MusicAnalyser.App.DSP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 class SpectrumQuantiserProcessor : ISignalProcessor
 {
     public bool IsPrimary { get { return false; } }

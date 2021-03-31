@@ -68,6 +68,12 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.numMinNote = new System.Windows.Forms.NumericUpDown();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
             this.tabControlPrefs.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFollowSecs)).BeginInit();
@@ -82,6 +88,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numChordBlock)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numNoteDiff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpecUpdates)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMinNote)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSave
@@ -349,13 +356,19 @@
             this.tabSpectrogram.Controls.Add(this.numSpecMaxFreq);
             this.tabSpectrogram.Controls.Add(this.numKeyBlock);
             this.tabSpectrogram.Controls.Add(this.numChordBlock);
+            this.tabSpectrogram.Controls.Add(this.numMinNote);
             this.tabSpectrogram.Controls.Add(this.numNoteDiff);
             this.tabSpectrogram.Controls.Add(this.numSpecUpdates);
+            this.tabSpectrogram.Controls.Add(this.label23);
+            this.tabSpectrogram.Controls.Add(this.label22);
+            this.tabSpectrogram.Controls.Add(this.label21);
+            this.tabSpectrogram.Controls.Add(this.label20);
             this.tabSpectrogram.Controls.Add(this.label15);
             this.tabSpectrogram.Controls.Add(this.label13);
             this.tabSpectrogram.Controls.Add(this.label14);
             this.tabSpectrogram.Controls.Add(this.label18);
             this.tabSpectrogram.Controls.Add(this.label17);
+            this.tabSpectrogram.Controls.Add(this.label19);
             this.tabSpectrogram.Controls.Add(this.label16);
             this.tabSpectrogram.Controls.Add(this.label12);
             this.tabSpectrogram.Controls.Add(this.label11);
@@ -404,7 +417,7 @@
             // 
             // numKeyBlock
             // 
-            this.numKeyBlock.Location = new System.Drawing.Point(256, 162);
+            this.numKeyBlock.Location = new System.Drawing.Point(256, 189);
             this.numKeyBlock.Maximum = new decimal(new int[] {
             500,
             0,
@@ -426,7 +439,7 @@
             // 
             // numChordBlock
             // 
-            this.numChordBlock.Location = new System.Drawing.Point(256, 134);
+            this.numChordBlock.Location = new System.Drawing.Point(256, 161);
             this.numChordBlock.Maximum = new decimal(new int[] {
             500,
             0,
@@ -509,7 +522,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(26, 164);
+            this.label18.Location = new System.Drawing.Point(26, 191);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(105, 17);
             this.label18.TabIndex = 12;
@@ -518,7 +531,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(26, 136);
+            this.label17.Location = new System.Drawing.Point(26, 163);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(119, 17);
             this.label17.TabIndex = 12;
@@ -551,6 +564,68 @@
             this.label11.TabIndex = 13;
             this.label11.Text = "Store Spectrogram Data:";
             // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(26, 134);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(149, 17);
+            this.label19.TabIndex = 12;
+            this.label19.Text = "Minimum Note Length:";
+            // 
+            // numMinNote
+            // 
+            this.numMinNote.Location = new System.Drawing.Point(256, 132);
+            this.numMinNote.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numMinNote.Name = "numMinNote";
+            this.numMinNote.Size = new System.Drawing.Size(61, 22);
+            this.numMinNote.TabIndex = 15;
+            this.numMinNote.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(323, 107);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(55, 17);
+            this.label20.TabIndex = 9;
+            this.label20.Text = "Frames";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(323, 134);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(55, 17);
+            this.label21.TabIndex = 9;
+            this.label21.Text = "Frames";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(323, 163);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(55, 17);
+            this.label22.TabIndex = 9;
+            this.label22.Text = "Frames";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(323, 191);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(55, 17);
+            this.label23.TabIndex = 9;
+            this.label23.Text = "Frames";
+            // 
             // PreferencesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -579,6 +654,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numChordBlock)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numNoteDiff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpecUpdates)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMinNote)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -625,5 +701,11 @@
         private System.Windows.Forms.NumericUpDown numChordBlock;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.NumericUpDown numMinNote;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
     }
 }
