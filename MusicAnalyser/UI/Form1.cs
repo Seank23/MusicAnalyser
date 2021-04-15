@@ -1094,7 +1094,7 @@ namespace MusicAnalyser
         {
             if (app.Dsp.SpectrogramHandler != null && !app.SpectrogramOpened)
             {
-                app.Dsp.SpectrogramHandler.Clear();
+                app.Dsp.ClearSpectrogramData();
                 btnViewSpec.Enabled = false;
             }
         }

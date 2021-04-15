@@ -14,7 +14,6 @@ namespace MusicAnalyser.App.DSP
         public SpectrogramHandler SpectrogramHandler { get; set; }
         public double MaxGain { get; set; }
         public Dictionary<double, double> FreqPeaks { get; set; }
-        public double CurTimestamp { get; set; }
 
         private AppController app;
         private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
@@ -151,7 +150,6 @@ namespace MusicAnalyser.App.DSP
                     }
 
                     SpectrogramHandler.CreateFrame(curAudioPos, specData, Analyser.Notes.ToArray(), Analyser.Chords.ToArray(), Analyser.CurrentKey, quantScale);
-                    CurTimestamp = curAudioPos;
                     largestTimestamp = curAudioPos;
 
                     if (curAudioPos - lastGC >= 1000) // Garbage collection every second
@@ -160,11 +158,7 @@ namespace MusicAnalyser.App.DSP
                         lastGC = curAudioPos;
                     }
                 }
-                else
-                    CurTimestamp = 0;
             }
-            else
-                CurTimestamp = 0;
         }
 
         public void FrequencyAnalysisToSpectrum(object scale)
@@ -209,7 +203,9 @@ namespace MusicAnalyser.App.DSP
         public void ReadSpectrogramFrame()
         {
             double curAudioPos = app.AudioSource.AudioStream.CurrentTime.TotalMilliseconds;
-            SpectrogramFrame curFrame = SpectrogramHandler.Spectrogram.Frames.Aggregate((x, y) => Math.Abs(x.Timestamp - curAudioPos) < Math.Abs(y.Timestamp - curAudioPos) ? x : y); // Gets the frame with a timestamp closest to curAudioPos
+            // Gets the frame with a timestamp closest to curAudioPos
+            SpectrogramFrame curFrame = SpectrogramHandler.Spectrogram.Frames.Aggregate(
+                (x, y) => Math.Abs(x.Timestamp - curAudioPos) < Math.Abs(y.Timestamp - curAudioPos) ? x : y); 
             
             // Converts byte valued spectrogram data to double valued spectrum data 
             double[] doubleData = new double[curFrame.SpectrumData.Length];
@@ -344,12 +340,16 @@ namespace MusicAnalyser.App.DSP
             return null;
         }
 
+        public void ClearSpectrogramData()
+        {
+            SpectrogramHandler.Clear();
+            largestTimestamp = -1;
+        }
+
         public void Dispose()
         {
-            largestTimestamp = -1;
-            CurTimestamp = -1;
+            ClearSpectrogramData();
             lastGC = 0;
-            SpectrogramHandler.Clear();
             Analyser.DisposeAnalyser();
         }
     }
