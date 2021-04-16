@@ -460,6 +460,8 @@ namespace MusicAnalyser.UI
 
         public void InteractMove(MouseEventArgs e)
         {
+            if (GetForm().Output == null)
+                return;
             if (moveCount % 10 == 0 || GetForm().Output.PlaybackState != PlaybackState.Playing) // Minimize spectrum lag when playing
             {
                 if (e.Button == MouseButtons.Left)

@@ -273,7 +273,7 @@ namespace MusicAnalyser
         public bool SelectFile(out OpenFileDialog dialog)
         {
             dialog = new OpenFileDialog();
-            dialog.Filter = "Audio/Spectrogram Files (*.wav; *.mp3, *.spec)|*.wav; *.mp3; *.spec;";
+            dialog.Filter = "Audio/Spectrogram Files (*.wav, *.mp3, *.spec)|*.wav; *.mp3; *.spec;";
 
             if (dialog.ShowDialog() != DialogResult.OK)
                 return false;
@@ -968,6 +968,7 @@ namespace MusicAnalyser
             openSpecToolStripMenuItem.Enabled = false;
             saveSpecImageToolStripMenuItem.Enabled = true;
             clearSpecToolStripMenuItem.Enabled = false;
+            importSpecAudioToolStripMenuItem.Enabled = true;
             cwvViewer.Enabled = false;
             cwvViewer.Visible = false;
             specViewer.Enabled = true;
@@ -998,6 +999,7 @@ namespace MusicAnalyser
             openSpecToolStripMenuItem.Enabled = false;
             saveSpecImageToolStripMenuItem.Enabled = false;
             clearSpecToolStripMenuItem.Enabled = true;
+            importSpecAudioToolStripMenuItem.Enabled = false;
         }
 
         private void ResizeSpectrogramUI(bool show)
@@ -1096,6 +1098,20 @@ namespace MusicAnalyser
             {
                 app.Dsp.ClearSpectrogramData();
                 btnViewSpec.Enabled = false;
+            }
+        }
+
+        private async void importSpecAudioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Audio Files (*.wav, *.mp3)|*.wav; *.mp3;";
+
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                await Task.Run(() => app.LoadAudioSource(openDialog.FileName)); // Load audio async
+                Output = new DirectSoundOut();
+                app.AudioOpened = true;
+                CheckAppState();
             }
         }
     }

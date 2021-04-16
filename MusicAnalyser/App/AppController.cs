@@ -84,7 +84,7 @@ namespace MusicAnalyser.App
             }
         }
 
-        private bool LoadAudioSource(string filename)
+        public bool LoadAudioSource(string filename)
         {
             AudioSource source;
             if (filename.EndsWith(".wav"))
@@ -712,7 +712,7 @@ namespace MusicAnalyser.App
             var generateAnnotations = Task.Run(() => ui.specViewer.GenerateAnnotations());
             await Task.WhenAll(createSpectrogram, generateAnnotations); // Load spectrogram async
             Dsp.Analyser.DisposeAnalyser();
-            ui.cwvViewer.SelectSample = startSample;
+            ui.cwvViewer.SelectSample = startSample / ui.cwvViewer.BytesPerSample / ui.cwvViewer.WaveStream.WaveFormat.Channels;
             if(AudioSource != null)
                 TriggerStop();
             ui.SetTimerInterval((int)((1.0f / Prefs.SPEC_UPDATE_RATE) * 1000));
@@ -724,6 +724,7 @@ namespace MusicAnalyser.App
             SpectrogramOpened = false;
             Dsp.Analyser.DisposeAnalyser();
             startSample = ui.cwvViewer.SelectSample;
+            TriggerStop();
             ui.SetTimerInterval((int)((1.0f / Prefs.MIN_UPDATE_TIME) * 1000));
             ui.HideSpectrogramUI();
         }

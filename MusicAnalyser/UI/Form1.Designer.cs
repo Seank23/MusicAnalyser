@@ -60,6 +60,7 @@
             this.openSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSpecImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importSpecAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblSelectTime = new System.Windows.Forms.Label();
@@ -405,6 +406,7 @@
             this.saveSpecToolStripMenuItem,
             this.openSpecToolStripMenuItem,
             this.saveSpecImageToolStripMenuItem,
+            this.importSpecAudioToolStripMenuItem,
             this.clearSpecToolStripMenuItem});
             this.spectrogramToolStripMenuItem.Name = "spectrogramToolStripMenuItem";
             this.spectrogramToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
@@ -433,7 +435,15 @@
             this.saveSpecImageToolStripMenuItem.Text = "Save Spectrogram Image...";
             this.saveSpecImageToolStripMenuItem.Click += new System.EventHandler(this.saveSpecImageToolStripMenuItem_Click);
             // 
-            // saveSpecImageToolStripMenuItem
+            // importSpecAudioToolStripMenuItem
+            // 
+            this.importSpecAudioToolStripMenuItem.Enabled = false;
+            this.importSpecAudioToolStripMenuItem.Name = "importSpecAudioToolStripMenuItem";
+            this.importSpecAudioToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.importSpecAudioToolStripMenuItem.Text = "Import Spectrogram Audio...";
+            this.importSpecAudioToolStripMenuItem.Click += new System.EventHandler(this.importSpecAudioToolStripMenuItem_Click);
+            // 
+            // clearSpecToolStripMenuItem
             // 
             this.clearSpecToolStripMenuItem.Enabled = false;
             this.clearSpecToolStripMenuItem.Name = "clearSpecToolStripMenuItem";
@@ -1328,6 +1338,7 @@
         private System.Windows.Forms.ToolStripMenuItem openSpecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSpecImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearSpecToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importSpecAudioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem perferencesToolStripMenuItem;
         private System.Windows.Forms.Label lblSelectTime;
