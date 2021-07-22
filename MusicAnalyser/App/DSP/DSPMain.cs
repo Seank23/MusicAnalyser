@@ -250,12 +250,12 @@ namespace MusicAnalyser.App.DSP
             }
             else
             {
-                app.AudioSource.AudioAnalysis.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
+                app.AudioSource.AudioAnalysis.Position = (long)(app.AudioSource.AudioStream.Position / (posScaleFactor * app.AudioSource.AudioStream.WaveFormat.Channels)); // Syncs position of FFT WaveStream to current playback position
             }
             app.AudioSource.AudioAnalysis.Read(bytesBuffer, 0, Prefs.BUFFERSIZE * 2); // Reads PCM data at synced position to bytesBuffer
             app.AudioSource.AudioAnalysis.Position -= Prefs.BUFFERSIZE * 2;
             audioBuffer = new short[Prefs.BUFFERSIZE];
-            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, audioBuffer.Length); // Bytes to shorts
+            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
             return audioBuffer;
         }
 
