@@ -98,7 +98,6 @@ namespace MusicAnalyser.App.DSP
             var preset = ScriptManager.Presets[presetName];
             if (preset == null)
                 return;
-
         }
 
         public void RunFrequencyAnalysis()
@@ -238,7 +237,7 @@ namespace MusicAnalyser.App.DSP
             short[] audioBuffer;
 
             bytesBuffer = new byte[Prefs.BUFFERSIZE * 2];
-            double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate / (double)app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
+            double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate * ((app.AudioSource.AudioStream.WaveFormat.Channels + 1 - Prefs.RESAMP_CHANNELS)) / (double)app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
             if (app.Mode == 1)
             {
                 if(app.StepBack && app.AudioSource.AudioAnalysis.Position > 0)

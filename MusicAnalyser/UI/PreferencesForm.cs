@@ -57,6 +57,7 @@ namespace MusicAnalyser
             prefsToSave.Add("SPEC_MIN_NOTE=" + numMinNote.Value);
             prefsToSave.Add("SPEC_CHORD_BLOCK=" + numChordBlock.Value);
             prefsToSave.Add("SPEC_KEY_BLOCK=" + numKeyBlock.Value);
+            prefsToSave.Add("RESAMP_CHANNELS=" + Prefs.RESAMP_CHANNELS);
             FileHandler.WriteFile("prefs.ini", prefsToSave.ToArray()); 
         }
 
