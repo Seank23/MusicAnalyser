@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <link href="styles/styles.css" rel="stylesheet">
+        <meta charset="utf-8">
+        <title>Music Analyser Documentation</title>
+    </header>
+    <body>
+        <h1>Music Analyser Documentation</h1>
+        <h2>What is it?</h2>
+        <p>Music Analyser is an application designed to provide a technical analysis of the musical elements present in an audio track. Through the use of audio processing and DSP, key technical features of the music - the notes, chords and key signature - are extracted in real-time and displayed intuitively to the user. While the analysis produced is not guaranteed to be completely accurate, Music Analyser aims to serve as a tool to help musicians and music enthusiasts in their quest to transcribe or to better understand a piece of music.</p>
+        <h2>Getting Started</h2>
+        <h3>The User Interface</h3>
+        <p>The principle way to interact with Music Analyser is through its graphical user interface (GUI). An annotated overview of the GUI is displayed below.</p>
+        <img href="images/UI_annotated.jpeg" />
+        <ol>
+            <li><b>Playback controls</b> - Buttons to open/close the audio file (WAV and MP3 supported), start/stop playback, and reset playback to a set position.</li>
+            <li><b>Mode Selector</b> - Allows selection between Play, Step and Record modes. More details are given in section: <a href="">Analysis Modes</a></li>
+            <li><b>Volume & Tempo controls</b> - Sliders to adjust the volume and speed of the audio playback. The tempo slider also affects the speed of analysis to keep it in sync with the playback.</li>
+            <li><b>Playback Time Information</b> - Displays a reading of the current playback time, the selected start timestamp, and the duration of a looped section if selected.</li>
+            <li><b>Playback Roll/Waveform Viewer</b> - Displays the time domain waveform representation of the loaded audio track. More details are given in section: <a href="">The Playback Roll</a>.</li>
+            <li><b>Script Selector Panel</b> - Allows a chain of scripts to be configured that describe how to process and analyse the audio. More details are given in section: <a href="">The Script Chain</a></li>
+            <li><b>Execution Time</b> - The current execution time for a full update cycle is displayed in milliseconds, allows the computational performance of the analysis to be gauged.</li>
+            <li><b>Pitch Sync</b> - Applies an offset to the pitch detection algorithm to enable it to identify notes that are not tuned to standard pitch (A4 = 440 Hz). More details are given in section: <a href="">Pitch Sync</a>.</li>
+            <li><b>Spectrum & Spectrogram controls</b> - UI controls to configure spectrum and spectrogram functionality.</li>
+            <li><b>Frequency Spectrum</b> - Displays a high resolution output of the processed frequency spectrum obtained from the audio in real-time. More details are given in section: <a href="">The Frequency Spectrum</a></li>
+            <li><b>Musical Analysis Panel</b> - Displays the current musical analysis output. This includes the rolling note distributions and the predicted key signature and chords.</li>
+        </ol>
+        <h3>Analysis Modes</h3>
+        <h3>The Playback Roll</h3>
+        <h3>The Script Chain</h3>
+        <h3>Pitch Sync</h3>
+        <h3>The Frequency Spectrum</h3>
+    </body>
+</html>
