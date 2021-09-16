@@ -545,10 +545,20 @@ namespace MusicAnalyser
         public void SetTimeStamp(TimeSpan time) { txtPlayTime.Text = time.ToString(@"mm\:ss\:fff"); }
         public AppController GetApp() { return app; }
 
-        private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PreferencesForm prefs = new PreferencesForm(this);
             prefs.ShowDialog();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm about = new AboutForm();
+            about.ShowDialog();
+        }
+        private void docsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://musicanalyser-2893a.web.app/Index.html");
         }
 
         public void UpdateUI()

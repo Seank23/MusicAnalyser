@@ -63,6 +63,8 @@
             this.importSpecAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.docsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblSelectTime = new System.Windows.Forms.Label();
             this.txtSelectTime = new System.Windows.Forms.TextBox();
             this.lblLoopDuration = new System.Windows.Forms.Label();
@@ -453,7 +455,9 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.perferencesToolStripMenuItem});
+            this.perferencesToolStripMenuItem,
+            this.aboutToolStripMenuItem,
+            this.docsToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
             this.helpToolStripMenuItem.Text = "Help";
@@ -462,8 +466,22 @@
             // 
             this.perferencesToolStripMenuItem.Name = "perferencesToolStripMenuItem";
             this.perferencesToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
-            this.perferencesToolStripMenuItem.Text = "Perferences";
-            this.perferencesToolStripMenuItem.Click += new System.EventHandler(this.perferencesToolStripMenuItem_Click);
+            this.perferencesToolStripMenuItem.Text = "Perferences...";
+            this.perferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.aboutToolStripMenuItem.Text = "About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // docsToolStripMenuItem
+            // 
+            this.docsToolStripMenuItem.Name = "docsToolStripMenuItem";
+            this.docsToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.docsToolStripMenuItem.Text = "Open Documentation...";
+            this.docsToolStripMenuItem.Click += new System.EventHandler(this.docsToolStripMenuItem_Click);
             // 
             // lblSelectTime
             // 
@@ -1341,6 +1359,8 @@
         private System.Windows.Forms.ToolStripMenuItem importSpecAudioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem perferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem docsToolStripMenuItem;
         private System.Windows.Forms.Label lblSelectTime;
         private System.Windows.Forms.TextBox txtSelectTime;
         internal CustomWaveViewer cwvViewer;
