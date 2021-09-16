@@ -18,7 +18,7 @@ namespace MusicAnalyser
     {
         public static PrivateFontCollection fonts = new PrivateFontCollection();
         public DirectSoundOut Output { get; set; }
-        public int fftZoom = 1000;
+        public double spectrumStartX = 0;
         private AppController app;
 
         private int selectedScript;
@@ -328,7 +328,7 @@ namespace MusicAnalyser
             barVolume.Enabled = false;
             barPitch.Enabled = false;
             barVolume.Value = 10;
-            barTempo.Value = 10;
+            barTempo.Value = 16;
             barPitch.Value = 50;
             app.PitchChange(barPitch.Value);
             saveRecordingToolStripMenuItem.Enabled = false;
@@ -421,27 +421,11 @@ namespace MusicAnalyser
         {
             spFFT.plt.Clear();
             spFFT.plt.PlotSignal(dataFft, fftScale, markerSize: 0);
-            switch (barZoom.Value)
-            {
-                case 0:
-                    fftZoom = 500;
-                    break;
-                case 1:
-                    fftZoom = 1000;
-                    break;
-                case 2:
-                    fftZoom = 2000;
-                    break;
-                case 3:
-                    fftZoom = 4000;
-                    break;
-            }
-            if (dataFft.Length < fftZoom)
-                fftZoom = dataFft.Length;
+            spectrumStartX = (double)numZoomLow.Value;
             if(avgGain >= 0)
-                spFFT.plt.Axis(0, fftZoom, 0, maxGain + Math.Abs(maxGain * 0.1));
+                spFFT.plt.Axis(spectrumStartX, (double)numZoomHigh.Value, 0, maxGain + Math.Abs(maxGain * 0.1));
             else
-                spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
+                spFFT.plt.Axis(spectrumStartX, (double)numZoomHigh.Value, avgGain - 5, maxGain + 10);
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
         }
 

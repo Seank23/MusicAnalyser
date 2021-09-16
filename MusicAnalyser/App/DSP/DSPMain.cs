@@ -103,7 +103,7 @@ namespace MusicAnalyser.App.DSP
         public void RunFrequencyAnalysis()
         {
             scriptVals["SAMPLE_RATE"] = app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
-            scriptVals["TUNING_PERCENT"] = Analyser.GetMusic().GetTuningPercent();
+            scriptVals["TUNING"] = Analyser.GetMusic().GetTuningPercent();
             object audio = ReadAudioStream();
 
             foreach (int key in processors.Keys)

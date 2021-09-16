@@ -474,9 +474,9 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X + ui.spectrumStartX, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X + ui.spectrumStartX, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
@@ -484,7 +484,7 @@ namespace MusicAnalyser.App
                         else
                             ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Blue, false);
 
-                        X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
+                        X += (chords[i].Name.Length * 7 + 20);
                     }
                 }
             }
@@ -566,7 +566,7 @@ namespace MusicAnalyser.App
         public void TempoChange(int value)
         {
             if (AudioSource != null)
-                AudioSource.SpeedControl.PlaybackRate = 0.5f + value / 20f;
+                AudioSource.SpeedControl.PlaybackRate = 0.2f + value / 20f;
         }
 
         /*

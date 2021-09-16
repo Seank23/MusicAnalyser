@@ -15,6 +15,7 @@
  * - MAX_VALS: Maximum number of peaks to return - tyoe int (1 - 100)
  * - MAG_THRESHOLD: Threshold above which point is considered a peak, relative to max magnitude-average magnitude - type double (0 - 1)
  * - FREQ_TOLERANCE: Percentage tolerance from musical pitch, if within this a frequency bin is considered for analysis - type double (0 - 50)
+ * - TUNING_OFFSET: Pitch offset (in cents) applied to the detection algorithm, similar to Pitch Sync but applied within the script directly - type int (-100 - 100)
  */
 using MusicAnalyser.App.DSP;
 using System;
@@ -39,6 +40,7 @@ class PitchByMagnitudeDetector : ISignalDetector
             { "MAX_VALS", new string[] { "10", "int", "Maximum Frequency Points", "1", "100" } },
             { "MAG_THRESHOLD", new string[] { "0.1", "double", "Magnitude Threshold", "0", "1" } },
             { "FREQ_TOLERANCE", new string[] { "2.8", "double", "Frequency Tolerance (%)", "0", "50" } },
+            { "TUNING_OFFSET", new string[] { "0", "int", "Tuning Offset (cents)", "-100", "100" } },
         };
     }
 
@@ -61,6 +63,9 @@ class PitchByMagnitudeDetector : ISignalDetector
         }
         if (input == null || scale == 0)
             return;
+
+        // Apply script defined tuning offset
+        tuning -= 0.05778 * int.Parse(Settings["TUNING_OFFSET"][0]);
 
         Dictionary<double, double> output = new Dictionary<double, double>();
         double spectAvg = input.Average();

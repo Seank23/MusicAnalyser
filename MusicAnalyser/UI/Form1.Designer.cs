@@ -104,12 +104,12 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.barPitch = new System.Windows.Forms.TrackBar();
-            this.barZoom = new System.Windows.Forms.TrackBar();
+            this.numZoomLow = new System.Windows.Forms.NumericUpDown();
+            this.numZoomHigh = new System.Windows.Forms.NumericUpDown();
             this.label20 = new System.Windows.Forms.Label();
             this.lblExeTime = new System.Windows.Forms.Label();
             this.pnlScripts = new System.Windows.Forms.Panel();
@@ -132,7 +132,6 @@
             this.pnlMusic.SuspendLayout();
             this.pnlSpectrumControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barZoom)).BeginInit();
             this.pnlScripts.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -280,11 +279,11 @@
             this.barTempo.Enabled = false;
             this.barTempo.Location = new System.Drawing.Point(728, 31);
             this.barTempo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.barTempo.Maximum = 20;
+            this.barTempo.Maximum = 16;
             this.barTempo.Name = "barTempo";
             this.barTempo.Size = new System.Drawing.Size(199, 56);
             this.barTempo.TabIndex = 7;
-            this.barTempo.Value = 10;
+            this.barTempo.Value = 16;
             this.barTempo.Scroll += new System.EventHandler(this.barTempo_Scroll);
             // 
             // label7
@@ -305,27 +304,27 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(37, 19);
             this.label8.TabIndex = 8;
-            this.label8.Text = "50%";
+            this.label8.Text = "20%";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(808, 66);
+            this.label9.Location = new System.Drawing.Point(815, 66);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(45, 19);
             this.label9.TabIndex = 9;
-            this.label9.Text = "100%";
+            this.label9.Text = "60%";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(893, 65);
+            this.label10.Location = new System.Drawing.Point(893, 66);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(45, 19);
             this.label10.TabIndex = 10;
-            this.label10.Text = "150%";
+            this.label10.Text = "100%";
             // 
             // menuStrip1
             // 
@@ -858,12 +857,12 @@
             this.pnlSpectrumControls.Controls.Add(this.label14);
             this.pnlSpectrumControls.Controls.Add(this.label13);
             this.pnlSpectrumControls.Controls.Add(this.label12);
-            this.pnlSpectrumControls.Controls.Add(this.label17);
             this.pnlSpectrumControls.Controls.Add(this.label18);
             this.pnlSpectrumControls.Controls.Add(this.label16);
             this.pnlSpectrumControls.Controls.Add(this.label11);
             this.pnlSpectrumControls.Controls.Add(this.barPitch);
-            this.pnlSpectrumControls.Controls.Add(this.barZoom);
+            this.pnlSpectrumControls.Controls.Add(this.numZoomLow);
+            this.pnlSpectrumControls.Controls.Add(this.numZoomHigh);
             this.pnlSpectrumControls.Controls.Add(this.label20);
             this.pnlSpectrumControls.Controls.Add(this.lblExeTime);
             this.pnlSpectrumControls.Location = new System.Drawing.Point(32, 439);
@@ -948,21 +947,21 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(175, 12);
+            this.label19.Location = new System.Drawing.Point(164, 13);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(50, 19);
             this.label19.TabIndex = 60;
-            this.label19.Text = "Zoom:";
+            this.label19.Text = "Show:";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(371, 12);
+            this.label14.Location = new System.Drawing.Point(385, 12);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(85, 19);
             this.label14.TabIndex = 61;
-            this.label14.Text = "Pitch Sync: ";
+            this.label14.Text = "Pitch Sync:";
             // 
             // label13
             // 
@@ -984,35 +983,25 @@
             this.label12.TabIndex = 58;
             this.label12.Text = "0";
             // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(237, 51);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(33, 19);
-            this.label17.TabIndex = 54;
-            this.label17.Text = "500";
-            // 
             // label18
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(283, 51);
+            this.label18.Location = new System.Drawing.Point(265, 13);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(24, 19);
             this.label18.TabIndex = 55;
-            this.label18.Text = "1k";
+            this.label18.Text = "to";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(327, 51);
+            this.label16.Location = new System.Drawing.Point(340, 13);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(24, 19);
             this.label16.TabIndex = 56;
-            this.label16.Text = "2k";
+            this.label16.Text = "Hz";
             // 
             // label11
             // 
@@ -1036,15 +1025,27 @@
             this.barPitch.Value = 50;
             this.barPitch.Scroll += new System.EventHandler(this.barPitch_Scroll);
             // 
-            // barZoom
+            // numZoomLow
             // 
-            this.barZoom.Location = new System.Drawing.Point(241, 12);
-            this.barZoom.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.barZoom.Maximum = 2;
-            this.barZoom.Name = "barZoom";
-            this.barZoom.Size = new System.Drawing.Size(109, 56);
-            this.barZoom.TabIndex = 53;
-            this.barZoom.Value = 1;
+            this.numZoomLow.Location = new System.Drawing.Point(212, 12);
+            this.numZoomLow.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.numZoomLow.Name = "numZoomLow";
+            this.numZoomLow.Size = new System.Drawing.Size(50, 22);
+            this.numZoomLow.TabIndex = 53;
+            this.numZoomLow.Minimum = 0;
+            this.numZoomLow.Maximum = 4000;
+            this.numZoomLow.Value = 0;
+            // 
+            // numZoomHigh
+            // 
+            this.numZoomHigh.Location = new System.Drawing.Point(287, 12);
+            this.numZoomHigh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.numZoomHigh.Name = "numZoomHigh";
+            this.numZoomHigh.Size = new System.Drawing.Size(50, 22);
+            this.numZoomHigh.TabIndex = 53;
+            this.numZoomHigh.Minimum = 0;
+            this.numZoomHigh.Maximum = 4000;
+            this.numZoomHigh.Value = 1000;
             // 
             // label20
             // 
@@ -1300,7 +1301,6 @@
             this.pnlSpectrumControls.ResumeLayout(false);
             this.pnlSpectrumControls.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barZoom)).EndInit();
             this.pnlScripts.ResumeLayout(false);
             this.pnlScripts.PerformLayout();
             this.ResumeLayout(false);
@@ -1384,12 +1384,12 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TrackBar barPitch;
-        private System.Windows.Forms.TrackBar barZoom;
+        private System.Windows.Forms.NumericUpDown numZoomLow;
+        private System.Windows.Forms.NumericUpDown numZoomHigh;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label lblExeTime;
         private System.Windows.Forms.Panel pnlScripts;
