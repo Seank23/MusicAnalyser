@@ -1,7 +1,7 @@
 ﻿/*
  * Music Analyser - Primary Processor Script - CQT
  * Author: Sean King
- * Constant-Q Transform (CQT) implementation with optimised kernel calculation, set up for 12 tone equal temperment analysis.
+ * Constant-Q Transform (CQT) implementation with optimised kernel calculation, set up for 12 tone equal temperament analysis.
  * Based on the efficient CQT algorithm by Benjamin Blankertz:
  * http://doc.ml.tu-berlin.de/bbci/material/publications/Bla_constQ.pdf
  * Properties:
@@ -49,8 +49,8 @@ class CQTProcessor : ISignalProcessor
     }
 
     public void OnSettingsChange() 
-    {
-        if (InputBuffer != null || InputArgs != null)
+    { 
+        if(InputBuffer != null || InputArgs != null)
             kernel = null;
     }
 

@@ -39,7 +39,7 @@ class ByMagnitudeDetector : ISignalDetector
             { "THOLD_FROM_AVG", new string[] { "25", "int", "Gain Threshold (from Avg) (dB)", "-50", "50" } },
             { "PEAK_BUFFER", new string[] { "90", "int", "Spectrum Peak Buffer Size", "0", "500" } },
             { "MAX_GAIN_CHANGE", new string[] { "8", "double", "Max Gain Change (dB)", "0", "50" } },
-            { "MAX_FREQ_CHANGE", new string[] { "2.8", "double", "Max Frequency Change %", "0", "50" } },
+            { "MAX_FREQ_CHANGE", new string[] { "2.8", "double", "Max Frequency Change (%)", "0", "50" } },
         };
     }
 

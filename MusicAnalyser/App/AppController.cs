@@ -34,6 +34,7 @@ namespace MusicAnalyser.App
         public bool ScriptSelectionValid { get; set; }
         public int StepMilliseconds { get; set; }
         public bool StepBack { get; set; }
+        public int PitchSyncVal { get; set; }
 
         public AppController(Form1 form)
         {
@@ -371,6 +372,7 @@ namespace MusicAnalyser.App
                     Dsp.RunFrequencyAnalysis();
                     Dsp.FrequencyAnalysisToSpectrum(Dsp.GetScriptVal("SCALE"));
                     Dsp.RunPitchDetection();
+                    Dsp.RunScriptPostProcessing();
                     Dsp.Analyser.GetNotes(Dsp.FreqPeaks, (double[])Dsp.GetScriptVal("POSITIONS"), analysisUpdates);
                     Task asyncAnalysis = RunAnalysisAsync();
                     DisplayAnalysisUI();
@@ -574,8 +576,8 @@ namespace MusicAnalyser.App
          */
         public void PitchChange(int value)
         {
-            int centDifference = 50 - value;
-            Dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
+            PitchSyncVal = 50 - value;
+            Dsp.Analyser.GetMusic().SetTuningPercent(PitchSyncVal);
         }
 
         public void SetFilter(float lowPassFreq, float highPassFreq, float centreFreq, float centreQ, float gain)

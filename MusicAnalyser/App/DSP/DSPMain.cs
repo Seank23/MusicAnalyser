@@ -199,6 +199,15 @@ namespace MusicAnalyser.App.DSP
             FreqPeaks = (Dictionary<double, double>)data;
         }
 
+        public void RunScriptPostProcessing()
+        {
+            foreach(string valName in scriptVals.Keys)
+            {
+                if (valName == "TUNING_OUT")
+                    Analyser.GetMusic().SetTuningPercent(app.PitchSyncVal + (int)scriptVals[valName]);
+            }
+        }
+
         public void ReadSpectrogramFrame()
         {
             double curAudioPos = app.AudioSource.AudioStream.CurrentTime.TotalMilliseconds;
