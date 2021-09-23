@@ -951,7 +951,7 @@ namespace MusicAnalyser
             lblSpectrogram.SendToBack();
         }
 
-        public void ShowSpectrogramUI()
+        public void ShowSpectrogramUI(bool fromFile)
         {
             HideLoadingIndicator();
             SetUIState();
@@ -974,6 +974,8 @@ namespace MusicAnalyser
             chbChordKeyAnnotations.Enabled = true;
             app.Dsp.Analyser.DisposeAnalyser();
             app.TriggerStop();
+            if (fromFile)
+                btnViewSpec.Enabled = false;
         }
 
         public void HideSpectrogramUI()

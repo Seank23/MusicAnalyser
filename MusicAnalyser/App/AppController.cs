@@ -714,11 +714,12 @@ namespace MusicAnalyser.App
             var generateAnnotations = Task.Run(() => ui.specViewer.GenerateAnnotations());
             await Task.WhenAll(createSpectrogram, generateAnnotations); // Load spectrogram async
             Dsp.Analyser.DisposeAnalyser();
-            ui.cwvViewer.SelectSample = startSample / ui.cwvViewer.BytesPerSample / ui.cwvViewer.WaveStream.WaveFormat.Channels;
+            if (!fromFile)
+                ui.cwvViewer.SelectSample = startSample / ui.cwvViewer.BytesPerSample / ui.cwvViewer.WaveStream.WaveFormat.Channels;
             if(AudioSource != null)
                 TriggerStop();
             ui.SetTimerInterval((int)((1.0f / Prefs.SPEC_UPDATE_RATE) * 1000));
-            ui.ShowSpectrogramUI();
+            ui.ShowSpectrogramUI(fromFile);
         }
 
         public void CloseSpectrogram()
