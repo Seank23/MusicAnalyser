@@ -14,7 +14,6 @@ namespace MusicAnalyser.App.DSP
         public SpectrogramHandler SpectrogramHandler { get; set; }
         public double MaxGain { get; set; }
         public Dictionary<double, double> FreqPeaks { get; set; }
-        public double CurTimestamp { get; set; }
 
         private AppController app;
         private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
@@ -99,13 +98,12 @@ namespace MusicAnalyser.App.DSP
             var preset = ScriptManager.Presets[presetName];
             if (preset == null)
                 return;
-
         }
 
         public void RunFrequencyAnalysis()
         {
             scriptVals["SAMPLE_RATE"] = app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
-            scriptVals["TUNING_PERCENT"] = Analyser.GetMusic().GetTuningPercent();
+            scriptVals["TUNING"] = Analyser.GetMusic().GetTuningPercent();
             object audio = ReadAudioStream();
 
             foreach (int key in processors.Keys)
@@ -151,7 +149,6 @@ namespace MusicAnalyser.App.DSP
                     }
 
                     SpectrogramHandler.CreateFrame(curAudioPos, specData, Analyser.Notes.ToArray(), Analyser.Chords.ToArray(), Analyser.CurrentKey, quantScale);
-                    CurTimestamp = curAudioPos;
                     largestTimestamp = curAudioPos;
 
                     if (curAudioPos - lastGC >= 1000) // Garbage collection every second
@@ -160,11 +157,7 @@ namespace MusicAnalyser.App.DSP
                         lastGC = curAudioPos;
                     }
                 }
-                else
-                    CurTimestamp = 0;
             }
-            else
-                CurTimestamp = 0;
         }
 
         public void FrequencyAnalysisToSpectrum(object scale)
@@ -206,10 +199,21 @@ namespace MusicAnalyser.App.DSP
             FreqPeaks = (Dictionary<double, double>)data;
         }
 
+        public void RunScriptPostProcessing()
+        {
+            foreach(string valName in scriptVals.Keys)
+            {
+                if (valName == "TUNING_OUT")
+                    Analyser.GetMusic().SetTuningPercent(app.PitchSyncVal + (int)scriptVals[valName]);
+            }
+        }
+
         public void ReadSpectrogramFrame()
         {
             double curAudioPos = app.AudioSource.AudioStream.CurrentTime.TotalMilliseconds;
-            SpectrogramFrame curFrame = SpectrogramHandler.Spectrogram.Frames.Aggregate((x, y) => Math.Abs(x.Timestamp - curAudioPos) < Math.Abs(y.Timestamp - curAudioPos) ? x : y); // Gets the frame with a timestamp closest to curAudioPos
+            // Gets the frame with a timestamp closest to curAudioPos
+            SpectrogramFrame curFrame = SpectrogramHandler.Spectrogram.Frames.Aggregate(
+                (x, y) => Math.Abs(x.Timestamp - curAudioPos) < Math.Abs(y.Timestamp - curAudioPos) ? x : y); 
             
             // Converts byte valued spectrogram data to double valued spectrum data 
             double[] doubleData = new double[curFrame.SpectrumData.Length];
@@ -242,7 +246,7 @@ namespace MusicAnalyser.App.DSP
             short[] audioBuffer;
 
             bytesBuffer = new byte[Prefs.BUFFERSIZE * 2];
-            double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate / (double)app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
+            double posScaleFactor = (double)app.AudioSource.Audio.WaveFormat.SampleRate * ((app.AudioSource.AudioStream.WaveFormat.Channels + 1 - Prefs.RESAMP_CHANNELS)) / (double)app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
             if (app.Mode == 1)
             {
                 if(app.StepBack && app.AudioSource.AudioAnalysis.Position > 0)
@@ -254,12 +258,12 @@ namespace MusicAnalyser.App.DSP
             }
             else
             {
-                app.AudioSource.AudioAnalysis.Position = (long)(app.AudioSource.AudioStream.Position / posScaleFactor / app.AudioSource.AudioStream.WaveFormat.Channels); // Syncs position of FFT WaveStream to current playback position
+                app.AudioSource.AudioAnalysis.Position = (long)(app.AudioSource.AudioStream.Position / (posScaleFactor * app.AudioSource.AudioStream.WaveFormat.Channels)); // Syncs position of FFT WaveStream to current playback position
             }
             app.AudioSource.AudioAnalysis.Read(bytesBuffer, 0, Prefs.BUFFERSIZE * 2); // Reads PCM data at synced position to bytesBuffer
             app.AudioSource.AudioAnalysis.Position -= Prefs.BUFFERSIZE * 2;
             audioBuffer = new short[Prefs.BUFFERSIZE];
-            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, audioBuffer.Length); // Bytes to shorts
+            Buffer.BlockCopy(bytesBuffer, 0, audioBuffer, 0, bytesBuffer.Length); // Bytes to shorts
             return audioBuffer;
         }
 
@@ -344,12 +348,16 @@ namespace MusicAnalyser.App.DSP
             return null;
         }
 
+        public void ClearSpectrogramData()
+        {
+            SpectrogramHandler.Clear();
+            largestTimestamp = -1;
+        }
+
         public void Dispose()
         {
-            largestTimestamp = -1;
-            CurTimestamp = -1;
+            ClearSpectrogramData();
             lastGC = 0;
-            SpectrogramHandler.Clear();
             Analyser.DisposeAnalyser();
         }
     }

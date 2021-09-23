@@ -8,13 +8,14 @@
  * Output: type Dictionary<double, double>
  * InputArgs: SCALE - Ratio between number of input values and sample rate - type double
  *            TUNING - Percentage difference from standard tuning - type double
- * OutputArgs: None
+ * OutputArgs: TUNING_OUT - Sends the script defined pitch offset value (see Settings: TUNING_OFFSET) back to the app - type int
  * Settings:
  * - MIN_FREQ: Starting frequency (Hz), for analysis in standard tuning use appropriate note frequency (eg. C1 = 32.7 Hz) - type double (1 - 1000)
  * - OCTAVES: Number of octaves to analyse  - type int (1 - 10)
- * - MAX_VALS: Maximum number of peaks to return - tyoe int (1 - 100)
+ * - MAX_VALS: Maximum number of peaks to return - type int (1 - 100)
  * - MAG_THRESHOLD: Threshold above which point is considered a peak, relative to max magnitude-average magnitude - type double (0 - 1)
  * - FREQ_TOLERANCE: Percentage tolerance from musical pitch, if within this a frequency bin is considered for analysis - type double (0 - 50)
+ * - TUNING_OFFSET: Pitch offset (in cents) applied to the detection algorithm, similar to Pitch Sync but applied within the script directly - type int (-50 - 50)
  */
 using MusicAnalyser.App.DSP;
 using System;
@@ -39,6 +40,7 @@ class PitchByMagnitudeDetector : ISignalDetector
             { "MAX_VALS", new string[] { "10", "int", "Maximum Frequency Points", "1", "100" } },
             { "MAG_THRESHOLD", new string[] { "0.1", "double", "Magnitude Threshold", "0", "1" } },
             { "FREQ_TOLERANCE", new string[] { "2.8", "double", "Frequency Tolerance (%)", "0", "50" } },
+            { "TUNING_OFFSET", new string[] { "0", "int", "Tuning Offset (cents)", "-50", "50" } },
         };
     }
 
@@ -117,6 +119,7 @@ class PitchByMagnitudeDetector : ISignalDetector
         }
         output = output.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
         Output = output.Take(int.Parse(Settings["MAX_VALS"][0])).ToDictionary(pair => pair.Key, pair => pair.Value);
+        OutputArgs.Add("TUNING_OUT", -int.Parse(Settings["TUNING_OFFSET"][0])); // Pass tuning offset back to the app to get applied
     }
 
     public void OnSettingsChange() { }

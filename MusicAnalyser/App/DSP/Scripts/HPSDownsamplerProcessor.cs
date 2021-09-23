@@ -1,8 +1,8 @@
 ﻿/*
  * Music Analyser - Secondary Processor Script - HPSDownsampler
  * Author: Sean King
- * Implementation of the Harmonic Product Spectrum (HPS) algorithm, to be used in conjunction with a FFT processor script.
- * Based on HPS method described here:
+ * Implementation of the Harmonic Product Spectrum (HPS) algorithm, to be used in conjunction with a FFT primary processor script.
+ * Based on the HPS method described here:
  * https://cnx.org/contents/aY7_vV4-@5.8:i5AAkZCP@2/Pitch-Detection-Algorithms
  * Properties:
  * InputBuffer: type double[] (Output of FFT)
@@ -10,7 +10,7 @@
  * InputArgs: None
  * OutputArgs: None
  * Settings:
- * - HARMONICS: Specifies the number of harmonics to merge via downsampling - type int (values: 0 - 5)
+ * - HARMONICS: Specifies the number of harmonics to consolidate via downsampling - type int (values: 0 - 5)
  * - INTERP: Specifies an interpolation factor to upsample output spectrum - type int (values: 1 - 5)
  * - MAG_SCALE: Specifies a value to scale down the output magnitude exponentially - type double (1 - 5)
  * - SQUARE: Specifies whether output magnitudes should be squared - type enum (values: Yes, No)

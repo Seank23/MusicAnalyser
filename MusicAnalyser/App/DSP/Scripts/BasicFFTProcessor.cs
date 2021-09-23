@@ -2,7 +2,7 @@
  * Music Analyser - Primary Processor Script - BasicFFT
  * Author: Sean King
  * Simple Fast Fourier Transform (FFT) implementation using NAudio.
- * Based on FFT implementation by Scott Harden:
+ * Based on the FFT implementation by Scott Harden:
  * https://github.com/swharden/Csharp-Data-Visualization/tree/master/projects/17-07-16_microphone
  * Properties:
  * InputBuffer: type short[]

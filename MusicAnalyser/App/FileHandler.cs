@@ -36,7 +36,7 @@ namespace MusicAnalyser.App
             string outFile;
             using (reader)
             {
-                var outFormat = new WaveFormat(sampleRate, reader.WaveFormat.Channels);
+                var outFormat = new WaveFormat(sampleRate, Prefs.RESAMP_CHANNELS);
 
                 using (var resampler = new MediaFoundationResampler(reader, outFormat))
                 {

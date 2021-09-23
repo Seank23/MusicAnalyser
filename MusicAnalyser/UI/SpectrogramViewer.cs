@@ -397,10 +397,10 @@ namespace MusicAnalyser.UI
                 {
                     foreach (SpectrogramHandler.ChordAnnotation chord in chordAnnotations)
                     {
-                        Pen p = new Pen(Color.FromArgb(200, Analyser.GetNoteColor(30, 60, (int)chord.confidence)), 5);
+                        Pen p = new Pen(Color.FromArgb(200, Analyser.GetNoteColor(30, 60, (int)chord.confidence)), 6);
                         e.Graphics.DrawLine(p, new Point(chord.shape.X + 2, chord.shape.Y), new Point(chord.shape.X + chord.shape.Width - 2, chord.shape.Y));
                         int textX = Math.Max(chord.shape.X, PADDING_LEFT) + Math.Min(chord.shape.Width, this.Width - PADDING_LEFT) / 2 - 4 * chord.name.Length;
-                        e.Graphics.DrawString(chord.name, new Font(Form1.fonts.Families[0], 8), new SolidBrush(Color.White), new Point(textX, chord.shape.Y + 6));
+                        e.Graphics.DrawString(chord.name, new Font(Form1.fonts.Families[0], 9), new SolidBrush(Color.White), new Point(textX, chord.shape.Y + 6));
                     }
                 }
 
@@ -413,7 +413,7 @@ namespace MusicAnalyser.UI
                         {
                             e.Graphics.DrawLine(p, new Point(key.shape.X + 2, key.shape.Y), new Point(key.shape.X + key.shape.Width - 2, key.shape.Y));
                             int textX = Math.Max(key.shape.X, PADDING_LEFT) + Math.Min(key.shape.Width, this.Width - PADDING_LEFT) / 2 - 4 * key.name.Length;
-                            e.Graphics.DrawString(key.name, new Font(Form1.fonts.Families[0], 8), new SolidBrush(Color.White), new Point(textX, key.shape.Y - 10));
+                            e.Graphics.DrawString(key.name, new Font(Form1.fonts.Families[0], 9), new SolidBrush(Color.White), new Point(textX, key.shape.Y - 10));
                         }
                     }
                 }
@@ -460,6 +460,8 @@ namespace MusicAnalyser.UI
 
         public void InteractMove(MouseEventArgs e)
         {
+            if (GetForm().Output == null)
+                return;
             if (moveCount % 10 == 0 || GetForm().Output.PlaybackState != PlaybackState.Playing) // Minimize spectrum lag when playing
             {
                 if (e.Button == MouseButtons.Left)

@@ -18,7 +18,7 @@ namespace MusicAnalyser
     {
         public static PrivateFontCollection fonts = new PrivateFontCollection();
         public DirectSoundOut Output { get; set; }
-        public int fftZoom = 1000;
+        public double spectrumStartX = 0;
         private AppController app;
 
         private int selectedScript;
@@ -273,7 +273,7 @@ namespace MusicAnalyser
         public bool SelectFile(out OpenFileDialog dialog)
         {
             dialog = new OpenFileDialog();
-            dialog.Filter = "Audio/Spectrogram Files (*.wav; *.mp3, *.spec)|*.wav; *.mp3; *.spec;";
+            dialog.Filter = "Audio/Spectrogram Files (*.wav, *.mp3, *.spec)|*.wav; *.mp3; *.spec;";
 
             if (dialog.ShowDialog() != DialogResult.OK)
                 return false;
@@ -328,7 +328,7 @@ namespace MusicAnalyser
             barVolume.Enabled = false;
             barPitch.Enabled = false;
             barVolume.Value = 10;
-            barTempo.Value = 10;
+            barTempo.Value = 16;
             barPitch.Value = 50;
             app.PitchChange(barPitch.Value);
             saveRecordingToolStripMenuItem.Enabled = false;
@@ -421,27 +421,11 @@ namespace MusicAnalyser
         {
             spFFT.plt.Clear();
             spFFT.plt.PlotSignal(dataFft, fftScale, markerSize: 0);
-            switch (barZoom.Value)
-            {
-                case 0:
-                    fftZoom = 500;
-                    break;
-                case 1:
-                    fftZoom = 1000;
-                    break;
-                case 2:
-                    fftZoom = 2000;
-                    break;
-                case 3:
-                    fftZoom = 4000;
-                    break;
-            }
-            if (dataFft.Length < fftZoom)
-                fftZoom = dataFft.Length;
+            spectrumStartX = (double)numZoomLow.Value;
             if(avgGain >= 0)
-                spFFT.plt.Axis(0, fftZoom, 0, maxGain + Math.Abs(maxGain * 0.1));
+                spFFT.plt.Axis(spectrumStartX, (double)numZoomHigh.Value, 0, maxGain + Math.Abs(maxGain * 0.1));
             else
-                spFFT.plt.Axis(0, fftZoom, avgGain - 5, maxGain + 10);
+                spFFT.plt.Axis(spectrumStartX, (double)numZoomHigh.Value, avgGain - 5, maxGain + 10);
             spFFT.plt.Ticks(useMultiplierNotation: false, useExponentialNotation: false);
         }
 
@@ -561,10 +545,20 @@ namespace MusicAnalyser
         public void SetTimeStamp(TimeSpan time) { txtPlayTime.Text = time.ToString(@"mm\:ss\:fff"); }
         public AppController GetApp() { return app; }
 
-        private void perferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PreferencesForm prefs = new PreferencesForm(this);
             prefs.ShowDialog();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm about = new AboutForm();
+            about.ShowDialog();
+        }
+        private void docsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://musicanalyser-2893a.web.app/Index.html");
         }
 
         public void UpdateUI()
@@ -968,6 +962,7 @@ namespace MusicAnalyser
             openSpecToolStripMenuItem.Enabled = false;
             saveSpecImageToolStripMenuItem.Enabled = true;
             clearSpecToolStripMenuItem.Enabled = false;
+            importSpecAudioToolStripMenuItem.Enabled = true;
             cwvViewer.Enabled = false;
             cwvViewer.Visible = false;
             specViewer.Enabled = true;
@@ -998,6 +993,7 @@ namespace MusicAnalyser
             openSpecToolStripMenuItem.Enabled = false;
             saveSpecImageToolStripMenuItem.Enabled = false;
             clearSpecToolStripMenuItem.Enabled = true;
+            importSpecAudioToolStripMenuItem.Enabled = false;
         }
 
         private void ResizeSpectrogramUI(bool show)
@@ -1094,8 +1090,22 @@ namespace MusicAnalyser
         {
             if (app.Dsp.SpectrogramHandler != null && !app.SpectrogramOpened)
             {
-                app.Dsp.SpectrogramHandler.Clear();
+                app.Dsp.ClearSpectrogramData();
                 btnViewSpec.Enabled = false;
+            }
+        }
+
+        private async void importSpecAudioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Audio Files (*.wav, *.mp3)|*.wav; *.mp3;";
+
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                await Task.Run(() => app.LoadAudioSource(openDialog.FileName)); // Load audio async
+                Output = new DirectSoundOut();
+                app.AudioOpened = true;
+                CheckAppState();
             }
         }
     }
