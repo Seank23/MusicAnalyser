@@ -8,11 +8,16 @@
 }
 
 body{
-    font-family: "Poppins";
-    color: var(--secondary);
-    display: block;
-    align-items: center;
-    justify-content: center;
-    max-width: var(--width);
-    margin: 0 auto;
-  }
+  font-family: "Poppins";
+  color: var(--secondary);
+  display: block;
+  align-items: center;
+  justify-content: center;
+  max-width: var(--width);
+  margin: 0 auto;
+}
+
+img {
+  max-width: 1000px;
+}
+
