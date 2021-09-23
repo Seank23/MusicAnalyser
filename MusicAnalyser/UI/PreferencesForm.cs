@@ -34,6 +34,7 @@ namespace MusicAnalyser
             numSpecUpdates.Value = Prefs.SPEC_UPDATE_RATE;
             numSpecMaxFreq.Value = Prefs.SPEC_MAX_FREQ;
             numNoteDiff.Value = Prefs.SPEC_NOTE_DIFF;
+            numMinNote.Value = Prefs.SPEC_MIN_NOTE;
             numChordBlock.Value = Prefs.SPEC_CHORD_BLOCK;
             numKeyBlock.Value = Prefs.SPEC_KEY_BLOCK;
         }
@@ -53,8 +54,10 @@ namespace MusicAnalyser
             prefsToSave.Add("SPEC_UPDATE_RATE=" + numSpecUpdates.Value);
             prefsToSave.Add("SPEC_MAX_FREQ=" + numSpecMaxFreq.Value);
             prefsToSave.Add("SPEC_NOTE_DIFF=" + numNoteDiff.Value);
+            prefsToSave.Add("SPEC_MIN_NOTE=" + numMinNote.Value);
             prefsToSave.Add("SPEC_CHORD_BLOCK=" + numChordBlock.Value);
             prefsToSave.Add("SPEC_KEY_BLOCK=" + numKeyBlock.Value);
+            prefsToSave.Add("RESAMP_CHANNELS=" + Prefs.RESAMP_CHANNELS);
             FileHandler.WriteFile("prefs.ini", prefsToSave.ToArray()); 
         }
 

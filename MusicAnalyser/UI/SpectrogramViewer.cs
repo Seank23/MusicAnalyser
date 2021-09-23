@@ -14,7 +14,8 @@ namespace MusicAnalyser.UI
         public static readonly int PADDING_LEFT = 50;
         public SpectrogramHandler MySpectrogramHandler { get; set; }
         public SpectrogramOverlay Overlay { get; }
-        public bool ShowAnnotations { get; set; }
+        public bool ShowNoteAnnotations { get; set; }
+        public bool ShowChordKeyAnnotations { get; set; }
         public double SelectTimestamp { get; set; }
         public double LoopEndTimestamp { get; set; }
         private double curTimestamp;
@@ -43,7 +44,8 @@ namespace MusicAnalyser.UI
             Overlay.Dock = DockStyle.Fill;
             Overlay.BackColor = Color.Transparent;
             Overlay.BringToFront();
-            ShowAnnotations = true;
+            ShowNoteAnnotations = true;
+            ShowChordKeyAnnotations = true;
         }
 
         public void SetNewParent(Form newParent)
@@ -107,7 +109,7 @@ namespace MusicAnalyser.UI
                 return new double[] { scale(binEnds[0]), scale(binEnds[1]) };
             }
             else
-                return new double[] { (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[0] * 0.95, (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[1] * 0.95 };
+                return new double[] { (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[0], (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binEnds[1] };
         }
 
         public double[] GetTimeEndsInView()
@@ -156,7 +158,7 @@ namespace MusicAnalyser.UI
                 return scale(binPos);
             }
             else
-                return (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binPos * 0.95;
+                return (double)MySpectrogramHandler.Spectrogram.FrequencyScale * binPos;
         }
 
         public double GetTimePointSeconds(float relativePos)
@@ -369,7 +371,7 @@ namespace MusicAnalyser.UI
             e.Graphics.DrawImage(spectrogramImage, new Rectangle(PADDING_LEFT, 0, this.Width - PADDING_LEFT, this.Height - PADDING_BOTTOM), projectionRect, GraphicsUnit.Pixel);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
-            if (ShowAnnotations)
+            if (ShowNoteAnnotations)
             {
                 SpectrogramHandler.NoteAnnotation[] noteAnnotations = DrawNoteAnnotations();
                 if (noteAnnotations != null)
@@ -387,21 +389,23 @@ namespace MusicAnalyser.UI
                         }
                     }
                 }
-
+            }
+            if (ShowChordKeyAnnotations)
+            {
                 SpectrogramHandler.ChordAnnotation[] chordAnnotations = DrawChordAnnotations();
-                if(chordAnnotations != null)
+                if (chordAnnotations != null)
                 {
                     foreach (SpectrogramHandler.ChordAnnotation chord in chordAnnotations)
                     {
-                        Pen p = new Pen(Color.FromArgb(200, Analyser.GetNoteColor(30, 60, (int)chord.confidence)), 5);
+                        Pen p = new Pen(Color.FromArgb(200, Analyser.GetNoteColor(30, 60, (int)chord.confidence)), 6);
                         e.Graphics.DrawLine(p, new Point(chord.shape.X + 2, chord.shape.Y), new Point(chord.shape.X + chord.shape.Width - 2, chord.shape.Y));
                         int textX = Math.Max(chord.shape.X, PADDING_LEFT) + Math.Min(chord.shape.Width, this.Width - PADDING_LEFT) / 2 - 4 * chord.name.Length;
-                        e.Graphics.DrawString(chord.name, new Font(Form1.fonts.Families[0], 8), new SolidBrush(Color.White), new Point(textX, chord.shape.Y + 6));
+                        e.Graphics.DrawString(chord.name, new Font(Form1.fonts.Families[0], 9), new SolidBrush(Color.White), new Point(textX, chord.shape.Y + 6));
                     }
                 }
 
                 SpectrogramHandler.KeyAnnotation[] keyAnnotations = DrawKeyAnnotations();
-                if(keyAnnotations != null)
+                if (keyAnnotations != null)
                 {
                     using (Pen p = new Pen(Color.FromArgb(200, Color.Green), 10))
                     {
@@ -409,12 +413,11 @@ namespace MusicAnalyser.UI
                         {
                             e.Graphics.DrawLine(p, new Point(key.shape.X + 2, key.shape.Y), new Point(key.shape.X + key.shape.Width - 2, key.shape.Y));
                             int textX = Math.Max(key.shape.X, PADDING_LEFT) + Math.Min(key.shape.Width, this.Width - PADDING_LEFT) / 2 - 4 * key.name.Length;
-                            e.Graphics.DrawString(key.name, new Font(Form1.fonts.Families[0], 8), new SolidBrush(Color.White), new Point(textX, key.shape.Y - 10));
+                            e.Graphics.DrawString(key.name, new Font(Form1.fonts.Families[0], 9), new SolidBrush(Color.White), new Point(textX, key.shape.Y - 10));
                         }
                     }
                 }
             }
-
             if (projectionRect != prevProjectionRect)
             {
                 Overlay.DrawTimeAxis();
@@ -457,6 +460,8 @@ namespace MusicAnalyser.UI
 
         public void InteractMove(MouseEventArgs e)
         {
+            if (GetForm().Output == null)
+                return;
             if (moveCount % 10 == 0 || GetForm().Output.PlaybackState != PlaybackState.Playing) // Minimize spectrum lag when playing
             {
                 if (e.Button == MouseButtons.Left)

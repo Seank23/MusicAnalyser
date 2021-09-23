@@ -35,7 +35,7 @@ class SpectrumFilterProcessor : ISignalProcessor
             { "ENABLED", new string[] { "Yes", "enum", "Enabled", "Yes|No", "" } },
             { "LOW_CUT", new string[] { "200", "double", "Low Cutoff (Hz)", "0", "2000" } },
             { "HIGH_CUT", new string[] { "2000", "double", "High Cutoff (Hz)", "0", "2000" } },
-            { "ATT_FACTOR", new string[] { "1", "double", "Attentuation Factor", "0", "1" } },
+            { "ATT_FACTOR", new string[] { "1", "double", "Attenuation Factor", "0", "1" } },
         };
     }
 

@@ -175,7 +175,7 @@ namespace MusicAnalyser.App.Spectrogram
             int index = 0;
             while (index < annotations.Count)
             {
-                if (annotations[index].length < 10)
+                if (annotations[index].length < Prefs.SPEC_MIN_NOTE)
                     annotations.RemoveAt(index);
                 else
                     index++;

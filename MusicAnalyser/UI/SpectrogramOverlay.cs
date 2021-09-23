@@ -220,13 +220,6 @@ namespace MusicAnalyser.UI
             }
         }
 
-        public float[] GetMousePosRelative(int x, int y)
-        {
-            float relX = (float)(x - SpectrogramViewer.PADDING_LEFT) / (this.Width - SpectrogramViewer.PADDING_LEFT);
-            float relY = (float)(this.Height - SpectrogramViewer.PADDING_BOTTOM - y) / (this.Height - SpectrogramViewer.PADDING_BOTTOM);
-            return new float[] { relX, relY };
-        }
-
         public void MovePosIndicator(double timePoint)
         {
             float relX = parent.GetPosFromTimePoint(timePoint);
@@ -267,6 +260,13 @@ namespace MusicAnalyser.UI
             selectMarker.X = SpectrogramViewer.PADDING_LEFT;
             loopEndMarker.X = -100;
             moveCount = 0;
+        }
+
+        public float[] GetMousePosRelative(int x, int y)
+        {
+            float relX = (float)(x - SpectrogramViewer.PADDING_LEFT) / (this.Width - SpectrogramViewer.PADDING_LEFT);
+            float relY = (float)(this.Height - SpectrogramViewer.PADDING_BOTTOM - y) / (this.Height - SpectrogramViewer.PADDING_BOTTOM);
+            return new float[] { relX, relY };
         }
 
         private void GetTimeFrequencyMousePosition(int x, int y)

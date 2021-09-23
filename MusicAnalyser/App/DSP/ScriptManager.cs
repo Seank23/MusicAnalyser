@@ -102,7 +102,7 @@ namespace MusicAnalyser.App.DSP
         {
             Dictionary<string, string[]> settingsDict = GetScriptSettings(scriptId);
 
-            if (settingsDict == null || settings.Length == 0)
+            if (settingsDict == null || settings == null)
                 return;
 
             for (int i = 0; i < settingsDict.Count; i++)

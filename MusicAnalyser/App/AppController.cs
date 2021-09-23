@@ -34,6 +34,7 @@ namespace MusicAnalyser.App
         public bool ScriptSelectionValid { get; set; }
         public int StepMilliseconds { get; set; }
         public bool StepBack { get; set; }
+        public int PitchSyncVal { get; set; }
 
         public AppController(Form1 form)
         {
@@ -84,7 +85,7 @@ namespace MusicAnalyser.App
             }
         }
 
-        private bool LoadAudioSource(string filename)
+        public bool LoadAudioSource(string filename)
         {
             AudioSource source;
             if (filename.EndsWith(".wav"))
@@ -371,6 +372,7 @@ namespace MusicAnalyser.App
                     Dsp.RunFrequencyAnalysis();
                     Dsp.FrequencyAnalysisToSpectrum(Dsp.GetScriptVal("SCALE"));
                     Dsp.RunPitchDetection();
+                    Dsp.RunScriptPostProcessing();
                     Dsp.Analyser.GetNotes(Dsp.FreqPeaks, (double[])Dsp.GetScriptVal("POSITIONS"), analysisUpdates);
                     Task asyncAnalysis = RunAnalysisAsync();
                     DisplayAnalysisUI();
@@ -474,17 +476,17 @@ namespace MusicAnalyser.App
                         if(!ui.IsShowAllChordsChecked())
                         {
                             if (chords[i].Name.Contains('('))
-                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Black, false);
+                                ui.PlotNote(chords[0].Name, X + ui.spectrumStartX, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Black, false);
                             else
-                                ui.PlotNote(chords[0].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Blue, false);
+                                ui.PlotNote(chords[0].Name, X + ui.spectrumStartX, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Blue, false);
                             break;
                         }
                         if (chords[i].Name.Contains('('))
-                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Black, false);
+                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Black, false);
                         else
-                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.07), Color.Blue, false);
+                            ui.PlotNote(chords[i].Name, X, Dsp.MaxGain + Math.Abs(Dsp.MaxGain * 0.06), Color.Blue, false);
 
-                        X += (chords[i].Name.Length * 7 + 20) * (ui.fftZoom / 1000f);
+                        X += (chords[i].Name.Length * 7 + 20);
                     }
                 }
             }
@@ -566,7 +568,7 @@ namespace MusicAnalyser.App
         public void TempoChange(int value)
         {
             if (AudioSource != null)
-                AudioSource.SpeedControl.PlaybackRate = 0.5f + value / 20f;
+                AudioSource.SpeedControl.PlaybackRate = 0.2f + value / 20f;
         }
 
         /*
@@ -574,9 +576,8 @@ namespace MusicAnalyser.App
          */
         public void PitchChange(int value)
         {
-            int centDifference = 50 - value;
-            Dsp.Analyser.GetMusic().SetTuningPercent(centDifference);
-            Dsp.Analyser.GetMusic().ResetNoteCount();
+            PitchSyncVal = 50 - value;
+            Dsp.Analyser.GetMusic().SetTuningPercent(PitchSyncVal);
         }
 
         public void SetFilter(float lowPassFreq, float highPassFreq, float centreFreq, float centreQ, float gain)
@@ -598,7 +599,7 @@ namespace MusicAnalyser.App
             double centreFreq = x;
             if(Dsp.GetScriptVal("SCALE").GetType().Name == "Func`2")
             {
-                Func<int, double> scale = (Func<int, double>)Dsp.GetScriptVal("SCALE");
+                Func<double, double> scale = (Func<double, double>)Dsp.GetScriptVal("SCALE");
                 centreFreq = scale((int)x);
             }
             if (y > 0.7)
@@ -713,7 +714,7 @@ namespace MusicAnalyser.App
             var generateAnnotations = Task.Run(() => ui.specViewer.GenerateAnnotations());
             await Task.WhenAll(createSpectrogram, generateAnnotations); // Load spectrogram async
             Dsp.Analyser.DisposeAnalyser();
-            ui.cwvViewer.SelectSample = startSample;
+            ui.cwvViewer.SelectSample = startSample / ui.cwvViewer.BytesPerSample / ui.cwvViewer.WaveStream.WaveFormat.Channels;
             if(AudioSource != null)
                 TriggerStop();
             ui.SetTimerInterval((int)((1.0f / Prefs.SPEC_UPDATE_RATE) * 1000));
@@ -725,6 +726,7 @@ namespace MusicAnalyser.App
             SpectrogramOpened = false;
             Dsp.Analyser.DisposeAnalyser();
             startSample = ui.cwvViewer.SelectSample;
+            TriggerStop();
             ui.SetTimerInterval((int)((1.0f / Prefs.MIN_UPDATE_TIME) * 1000));
             ui.HideSpectrogramUI();
         }
