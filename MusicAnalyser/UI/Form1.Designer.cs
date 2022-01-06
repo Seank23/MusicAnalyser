@@ -892,7 +892,7 @@
             // 
             this.btnSpecEnlarge.Enabled = false;
             this.btnSpecEnlarge.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSpecEnlarge.Location = new System.Drawing.Point(1021, 42);
+            this.btnSpecEnlarge.Location = new System.Drawing.Point(1061, 42);
             this.btnSpecEnlarge.Name = "btnSpecEnlarge";
             this.btnSpecEnlarge.Size = new System.Drawing.Size(148, 29);
             this.btnSpecEnlarge.TabIndex = 65;
@@ -904,7 +904,7 @@
             // 
             this.btnViewSpec.Enabled = false;
             this.btnViewSpec.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnViewSpec.Location = new System.Drawing.Point(1021, 8);
+            this.btnViewSpec.Location = new System.Drawing.Point(1061, 8);
             this.btnViewSpec.Name = "btnViewSpec";
             this.btnViewSpec.Size = new System.Drawing.Size(148, 29);
             this.btnViewSpec.TabIndex = 64;
@@ -917,7 +917,7 @@
             this.chbNoteAnnotations.Enabled = false;
             this.chbNoteAnnotations.Checked = true;
             this.chbNoteAnnotations.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chbNoteAnnotations.Location = new System.Drawing.Point(1180, 15);
+            this.chbNoteAnnotations.Location = new System.Drawing.Point(1220, 15);
             this.chbNoteAnnotations.Name = "chbAnnotations";
             this.chbNoteAnnotations.Size = new System.Drawing.Size(180, 23);
             this.chbNoteAnnotations.TabIndex = 64;
@@ -930,7 +930,7 @@
             this.chbChordKeyAnnotations.Enabled = false;
             this.chbChordKeyAnnotations.Checked = true;
             this.chbChordKeyAnnotations.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chbChordKeyAnnotations.Location = new System.Drawing.Point(1180, 43);
+            this.chbChordKeyAnnotations.Location = new System.Drawing.Point(1220, 43);
             this.chbChordKeyAnnotations.Name = "chbAnnotations";
             this.chbChordKeyAnnotations.Size = new System.Drawing.Size(250, 23);
             this.chbChordKeyAnnotations.TabIndex = 64;
@@ -942,7 +942,7 @@
             // 
             this.chbFilter.AutoSize = true;
             this.chbFilter.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chbFilter.Location = new System.Drawing.Point(827, 12);
+            this.chbFilter.Location = new System.Drawing.Point(867, 12);
             this.chbFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chbFilter.Name = "chbFilter";
             this.chbFilter.Size = new System.Drawing.Size(166, 23);
@@ -955,7 +955,7 @@
             // 
             this.lblError.AutoSize = true;
             this.lblError.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblError.Location = new System.Drawing.Point(714, 12);
+            this.lblError.Location = new System.Drawing.Point(754, 12);
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(70, 19);
             this.lblError.TabIndex = 62;
@@ -965,7 +965,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(164, 13);
+            this.label19.Location = new System.Drawing.Point(176, 12);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(50, 19);
             this.label19.TabIndex = 60;
@@ -975,7 +975,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(385, 12);
+            this.label14.Location = new System.Drawing.Point(425, 12);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(85, 19);
             this.label14.TabIndex = 61;
@@ -985,7 +985,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(626, 47);
+            this.label13.Location = new System.Drawing.Point(666, 47);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(33, 19);
             this.label13.TabIndex = 59;
@@ -995,7 +995,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(551, 47);
+            this.label12.Location = new System.Drawing.Point(591, 47);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(17, 19);
             this.label12.TabIndex = 58;
@@ -1005,7 +1005,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(265, 13);
+            this.label18.Location = new System.Drawing.Point(296, 12);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(24, 19);
             this.label18.TabIndex = 55;
@@ -1015,7 +1015,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(340, 13);
+            this.label16.Location = new System.Drawing.Point(388, 12);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(24, 19);
             this.label16.TabIndex = 56;
@@ -1025,7 +1025,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(457, 47);
+            this.label11.Location = new System.Drawing.Point(497, 47);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(30, 19);
             this.label11.TabIndex = 57;
@@ -1034,7 +1034,7 @@
             // barPitch
             // 
             this.barPitch.Enabled = false;
-            this.barPitch.Location = new System.Drawing.Point(459, 12);
+            this.barPitch.Location = new System.Drawing.Point(499, 12);
             this.barPitch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.barPitch.Maximum = 100;
             this.barPitch.Name = "barPitch";
@@ -1045,10 +1045,10 @@
             // 
             // numZoomLow
             // 
-            this.numZoomLow.Location = new System.Drawing.Point(212, 12);
+            this.numZoomLow.Location = new System.Drawing.Point(232, 11);
             this.numZoomLow.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numZoomLow.Name = "numZoomLow";
-            this.numZoomLow.Size = new System.Drawing.Size(50, 22);
+            this.numZoomLow.Size = new System.Drawing.Size(60, 22);
             this.numZoomLow.TabIndex = 53;
             this.numZoomLow.Minimum = 0;
             this.numZoomLow.Maximum = 4000;
@@ -1056,10 +1056,10 @@
             // 
             // numZoomHigh
             // 
-            this.numZoomHigh.Location = new System.Drawing.Point(287, 12);
+            this.numZoomHigh.Location = new System.Drawing.Point(324, 11);
             this.numZoomHigh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numZoomHigh.Name = "numZoomHigh";
-            this.numZoomHigh.Size = new System.Drawing.Size(50, 22);
+            this.numZoomHigh.Size = new System.Drawing.Size(60, 22);
             this.numZoomHigh.TabIndex = 53;
             this.numZoomHigh.Minimum = 0;
             this.numZoomHigh.Maximum = 4000;
@@ -1069,7 +1069,7 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(665, 12);
+            this.label20.Location = new System.Drawing.Point(705, 12);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(47, 19);
             this.label20.TabIndex = 51;
