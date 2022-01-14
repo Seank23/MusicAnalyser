@@ -104,6 +104,7 @@ namespace MusicAnalyser
                 barVolume.Enabled = true;
                 barTempo.Enabled = true;
                 barPitch.Enabled = true;
+                numPitch.Enabled = true;
                 lblPlayTime.Text = "Playback Time:";
                 lblSelectTime.Text = "Select Time:";
                 lblLoopDuration.Visible = true;
@@ -125,6 +126,7 @@ namespace MusicAnalyser
                 lblStep.Visible = true;
                 barVolume.Enabled = false;
                 barTempo.Enabled = false;
+                numPitch.Enabled = false;
             }
             else if(segMode.SelectedIndex == 2)
             {
@@ -137,6 +139,7 @@ namespace MusicAnalyser
                 btnStop.Enabled = false;
                 barVolume.Enabled = false;
                 barTempo.Enabled = false;
+                numPitch.Enabled = false;
                 chbFollow.Enabled = false;
                 btnPlay.Enabled = true;
                 btnPlay.Text = "Start Recording";
@@ -327,10 +330,12 @@ namespace MusicAnalyser
             barTempo.Enabled = false;
             barVolume.Enabled = false;
             barPitch.Enabled = false;
+            numPitch.Enabled = false;
             barVolume.Value = 10;
             barTempo.Value = 16;
             barPitch.Value = 50;
-            app.PitchChange(barPitch.Value);
+            numPitch.Value = 0;
+            app.PitchSyncChange(barPitch.Value);
             saveRecordingToolStripMenuItem.Enabled = false;
             segMode.SelectedIndex = 0;
         }
@@ -509,9 +514,14 @@ namespace MusicAnalyser
             app.TempoChange(barTempo.Value);
         }
 
+        private void numPitch_ValueChanged(object sender, EventArgs e)
+        {
+            app.PitchChange((float)numPitch.Value);
+        }
+
         private void barPitch_Scroll(object sender, EventArgs e)
         {
-            app.PitchChange(barPitch.Value);
+            app.PitchSyncChange(barPitch.Value);
         }
 
         public void DrawPauseUI()
@@ -544,6 +554,7 @@ namespace MusicAnalyser
         public bool IsShowAllChordsChecked() { return chbAllChords.Checked; }
         public void SetTimeStamp(TimeSpan time) { txtPlayTime.Text = time.ToString(@"mm\:ss\:fff"); }
         public AppController GetApp() { return app; }
+        public float GetPitchValue() { return (float)numPitch.Value; }
 
         private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {

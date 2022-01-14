@@ -571,10 +571,25 @@ namespace MusicAnalyser.App
                 AudioSource.SpeedControl.PlaybackRate = 0.2f + value / 20f;
         }
 
+        public void PitchChange(float value)
+        {
+            if (AudioSource != null)
+            {
+                float pitchFactor;
+                if(value < 0)
+                    pitchFactor = 1 / (float)Math.Pow(2, Math.Abs(value) / 12);
+                else
+                    pitchFactor = (float)Math.Pow(2, value / 12);
+
+                AudioSource.PitchControl.PitchFactor = pitchFactor;
+                Dsp.PitchFactor = pitchFactor;
+            }
+        }
+
         /*
-         * Pitch change handler
+         * Pitch Sync change handler
          */
-        public void PitchChange(int value)
+        public void PitchSyncChange(int value)
         {
             PitchSyncVal = 50 - value;
             Dsp.Analyser.GetMusic().SetTuningPercent(PitchSyncVal);
