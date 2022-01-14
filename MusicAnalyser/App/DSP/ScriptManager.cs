@@ -241,8 +241,10 @@ namespace MusicAnalyser.App.DSP
                     "System.dll",
                     "System.Core.dll",
                     "NAudio.dll",
+                    "NAudio.Core.dll",
                     "MathNet.Numerics.dll",
-                    "System.Numerics.dll"
+                    "System.Numerics.dll",
+                    "netstandard.dll"
                 }
             };
 
