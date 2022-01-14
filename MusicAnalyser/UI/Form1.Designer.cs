@@ -127,6 +127,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.btnAddScript = new System.Windows.Forms.Button();
             this.lblSpectrogram = new System.Windows.Forms.Label();
+            this.numPitch = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -135,6 +138,7 @@
             this.pnlSpectrumControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
             this.pnlScripts.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPitch)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOpenClose
@@ -249,7 +253,7 @@
             this.chbFollow.Checked = true;
             this.chbFollow.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbFollow.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chbFollow.Location = new System.Drawing.Point(1604, 34);
+            this.chbFollow.Location = new System.Drawing.Point(1604, 37);
             this.chbFollow.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chbFollow.Name = "chbFollow";
             this.chbFollow.Size = new System.Drawing.Size(135, 23);
@@ -259,7 +263,7 @@
             // 
             // txtPlayTime
             // 
-            this.txtPlayTime.Location = new System.Drawing.Point(1091, 33);
+            this.txtPlayTime.Location = new System.Drawing.Point(1263, 37);
             this.txtPlayTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtPlayTime.Name = "txtPlayTime";
             this.txtPlayTime.Size = new System.Drawing.Size(89, 22);
@@ -270,7 +274,7 @@
             // 
             this.lblPlayTime.AutoSize = true;
             this.lblPlayTime.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPlayTime.Location = new System.Drawing.Point(971, 34);
+            this.lblPlayTime.Location = new System.Drawing.Point(1150, 38);
             this.lblPlayTime.Name = "lblPlayTime";
             this.lblPlayTime.Size = new System.Drawing.Size(108, 19);
             this.lblPlayTime.TabIndex = 17;
@@ -487,7 +491,7 @@
             // 
             this.lblSelectTime.AutoSize = true;
             this.lblSelectTime.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSelectTime.Location = new System.Drawing.Point(1187, 34);
+            this.lblSelectTime.Location = new System.Drawing.Point(1150, 66);
             this.lblSelectTime.Name = "lblSelectTime";
             this.lblSelectTime.Size = new System.Drawing.Size(90, 19);
             this.lblSelectTime.TabIndex = 24;
@@ -495,7 +499,7 @@
             // 
             // txtSelectTime
             // 
-            this.txtSelectTime.Location = new System.Drawing.Point(1283, 33);
+            this.txtSelectTime.Location = new System.Drawing.Point(1263, 65);
             this.txtSelectTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSelectTime.Name = "txtSelectTime";
             this.txtSelectTime.Size = new System.Drawing.Size(89, 22);
@@ -506,7 +510,7 @@
             // 
             this.lblLoopDuration.AutoSize = true;
             this.lblLoopDuration.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoopDuration.Location = new System.Drawing.Point(1379, 34);
+            this.lblLoopDuration.Location = new System.Drawing.Point(1379, 38);
             this.lblLoopDuration.Name = "lblLoopDuration";
             this.lblLoopDuration.Size = new System.Drawing.Size(108, 19);
             this.lblLoopDuration.TabIndex = 26;
@@ -514,7 +518,7 @@
             // 
             // txtLoopTime
             // 
-            this.txtLoopTime.Location = new System.Drawing.Point(1493, 33);
+            this.txtLoopTime.Location = new System.Drawing.Point(1493, 37);
             this.txtLoopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtLoopTime.Name = "txtLoopTime";
             this.txtLoopTime.Size = new System.Drawing.Size(89, 22);
@@ -523,7 +527,7 @@
             // 
             // prbLevelMeter
             // 
-            this.prbLevelMeter.Location = new System.Drawing.Point(1308, 32);
+            this.prbLevelMeter.Location = new System.Drawing.Point(1263, 64);
             this.prbLevelMeter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.prbLevelMeter.Name = "prbLevelMeter";
             this.prbLevelMeter.Size = new System.Drawing.Size(268, 23);
@@ -1260,6 +1264,40 @@
             this.btnAddScript.UseVisualStyleBackColor = true;
             this.btnAddScript.Click += new System.EventHandler(this.btnAddScript_Click);
             // 
+            // numPitch
+            // 
+            this.numPitch.DecimalPlaces = 2;
+            this.numPitch.Enabled = false;
+            this.numPitch.Location = new System.Drawing.Point(1009, 37);
+            this.numPitch.Maximum = new decimal(new int[] { 12, 0, 0, 0 });
+            this.numPitch.Minimum = new decimal(new int[] { 12, 0, 0, -2147483648 });
+            this.numPitch.Name = "numPitch";
+            this.numPitch.Size = new System.Drawing.Size(61, 22);
+            this.numPitch.TabIndex = 53;
+            this.numPitch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numPitch.ValueChanged += new System.EventHandler(this.numPitch_ValueChanged);
+            this.numPitch.Click += new System.EventHandler(this.numPitch_ValueChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(956, 38);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(47, 16);
+            this.label17.TabIndex = 55;
+            this.label17.Text = "Pitch: ";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(1076, 38);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(42, 16);
+            this.label15.TabIndex = 56;
+            this.label15.Text = "cents";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1301,6 +1339,9 @@
             this.Controls.Add(this.specViewer);
             this.Controls.Add(this.pnlScripts);
             this.Controls.Add(this.lblSpectrogram);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.label17);
+            this.Controls.Add(this.numPitch);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1426,6 +1467,9 @@
         private System.Windows.Forms.Label lblSpectrogram;
         private System.Windows.Forms.Button btnAddScript;
         private System.Windows.Forms.Button btnSpecEnlarge;
+        private System.Windows.Forms.NumericUpDown numPitch;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label15;
     }
 }
 

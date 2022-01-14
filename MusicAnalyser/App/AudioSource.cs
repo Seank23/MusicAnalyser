@@ -15,6 +15,7 @@ namespace MusicAnalyser.App
         private WaveChannel32 audioStream;
         public VarispeedSampleProvider SpeedControl { set; get; }
         public FilterWaveProvider FilteredSource { get; set; }
+        public SmbPitchShiftingSampleProvider PitchControl { get; set; }
 
         public WaveStream Audio
         {
@@ -24,7 +25,8 @@ namespace MusicAnalyser.App
                 audio = value;
                 audioStream = new WaveChannel32(value);
                 SpeedControl = new VarispeedSampleProvider(new WaveToSampleProvider(audioStream), 10, new SoundTouchProfile(true, false));
-                FilteredSource = new FilterWaveProvider(SpeedControl);
+                PitchControl = new SmbPitchShiftingSampleProvider(SpeedControl);
+                FilteredSource = new FilterWaveProvider(PitchControl);
             }
         }
 
