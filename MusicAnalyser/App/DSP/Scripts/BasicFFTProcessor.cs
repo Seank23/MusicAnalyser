@@ -55,12 +55,6 @@ class BasicFFTProcessor : ISignalProcessor
             if(InputArgs["SAMPLE_RATE"].GetType().Name == "Int32")
                 sampleRate = (int)InputArgs["SAMPLE_RATE"];
         }
-        float pitchFactor = 1;
-        if (InputArgs.ContainsKey("PITCH_FACTOR"))
-        {
-            if (InputArgs["PITCH_FACTOR"].GetType().Name == "Single")
-                pitchFactor = (float)InputArgs["PITCH_FACTOR"];
-        }
 
         int fftPoints = 2;
         while (fftPoints * 2 <= input.Length) // Sets fftPoints to largest multiple of 2 in BUFFERSIZE
@@ -99,7 +93,7 @@ class BasicFFTProcessor : ISignalProcessor
                 output[i] = Math.Pow(output[i], 2) / 100; 
         }
         OutputBuffer = output;
-        double scale = fftPoints / sampleRate / pitchFactor;
+        double scale = (double)fftPoints / sampleRate;
         OutputArgs.Add("SCALE", scale);
     }
 }

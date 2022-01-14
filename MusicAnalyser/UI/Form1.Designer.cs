@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace MusicAnalyser
+﻿namespace MusicAnalyser
 {
     partial class Form1
     {
@@ -61,8 +59,8 @@ namespace MusicAnalyser
             this.saveSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSpecImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importSpecAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importSpecAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -129,9 +127,6 @@ namespace MusicAnalyser
             this.label6 = new System.Windows.Forms.Label();
             this.btnAddScript = new System.Windows.Forms.Button();
             this.lblSpectrogram = new System.Windows.Forms.Label();
-            this.numPitch = new System.Windows.Forms.NumericUpDown();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.barVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barTempo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -139,16 +134,13 @@ namespace MusicAnalyser
             this.pnlMusic.SuspendLayout();
             this.pnlSpectrumControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numZoomLow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numZoomHigh)).BeginInit();
             this.pnlScripts.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPitch)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOpenClose
             // 
             this.btnOpenClose.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOpenClose.Location = new System.Drawing.Point(14, 42);
+            this.btnOpenClose.Location = new System.Drawing.Point(13, 31);
             this.btnOpenClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnOpenClose.Name = "btnOpenClose";
             this.btnOpenClose.Size = new System.Drawing.Size(75, 27);
@@ -161,7 +153,7 @@ namespace MusicAnalyser
             // 
             this.btnPlay.Enabled = false;
             this.btnPlay.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPlay.Location = new System.Drawing.Point(14, 75);
+            this.btnPlay.Location = new System.Drawing.Point(13, 64);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(156, 27);
@@ -174,7 +166,7 @@ namespace MusicAnalyser
             // 
             this.btnStop.Enabled = false;
             this.btnStop.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStop.Location = new System.Drawing.Point(94, 42);
+            this.btnStop.Location = new System.Drawing.Point(93, 31);
             this.btnStop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 27);
@@ -188,7 +180,7 @@ namespace MusicAnalyser
             this.spFFT.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.spFFT.BackColor = System.Drawing.SystemColors.Control;
-            this.spFFT.Location = new System.Drawing.Point(8, 519);
+            this.spFFT.Location = new System.Drawing.Point(12, 510);
             this.spFFT.Margin = new System.Windows.Forms.Padding(5);
             this.spFFT.Name = "spFFT";
             this.spFFT.Size = new System.Drawing.Size(1433, 369);
@@ -202,7 +194,7 @@ namespace MusicAnalyser
             // barVolume
             // 
             this.barVolume.Enabled = false;
-            this.barVolume.Location = new System.Drawing.Point(441, 45);
+            this.barVolume.Location = new System.Drawing.Point(440, 34);
             this.barVolume.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.barVolume.Maximum = 20;
             this.barVolume.Name = "barVolume";
@@ -215,9 +207,9 @@ namespace MusicAnalyser
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(449, 80);
+            this.label2.Location = new System.Drawing.Point(448, 69);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 16);
+            this.label2.Size = new System.Drawing.Size(29, 19);
             this.label2.TabIndex = 8;
             this.label2.Text = "0%";
             // 
@@ -225,9 +217,9 @@ namespace MusicAnalyser
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(526, 80);
+            this.label3.Location = new System.Drawing.Point(525, 69);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(36, 16);
+            this.label3.Size = new System.Drawing.Size(37, 19);
             this.label3.TabIndex = 9;
             this.label3.Text = "50%";
             // 
@@ -235,9 +227,9 @@ namespace MusicAnalyser
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(606, 80);
+            this.label4.Location = new System.Drawing.Point(605, 69);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 16);
+            this.label4.Size = new System.Drawing.Size(45, 19);
             this.label4.TabIndex = 10;
             this.label4.Text = "100%";
             // 
@@ -245,30 +237,29 @@ namespace MusicAnalyser
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(372, 50);
+            this.label5.Location = new System.Drawing.Point(371, 39);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(62, 16);
+            this.label5.Size = new System.Drawing.Size(67, 19);
             this.label5.TabIndex = 11;
             this.label5.Text = "Volume: ";
             // 
             // chbFollow
             // 
-            this.chbFollow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chbFollow.AutoSize = true;
             this.chbFollow.Checked = true;
             this.chbFollow.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbFollow.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chbFollow.Location = new System.Drawing.Point(1685, 40);
+            this.chbFollow.Location = new System.Drawing.Point(1604, 34);
             this.chbFollow.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chbFollow.Name = "chbFollow";
-            this.chbFollow.Size = new System.Drawing.Size(131, 20);
+            this.chbFollow.Size = new System.Drawing.Size(135, 23);
             this.chbFollow.TabIndex = 13;
             this.chbFollow.Text = "Follow Playback";
             this.chbFollow.UseVisualStyleBackColor = true;
             // 
             // txtPlayTime
             // 
-            this.txtPlayTime.Location = new System.Drawing.Point(1263, 38);
+            this.txtPlayTime.Location = new System.Drawing.Point(1091, 33);
             this.txtPlayTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtPlayTime.Name = "txtPlayTime";
             this.txtPlayTime.Size = new System.Drawing.Size(89, 22);
@@ -279,16 +270,16 @@ namespace MusicAnalyser
             // 
             this.lblPlayTime.AutoSize = true;
             this.lblPlayTime.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPlayTime.Location = new System.Drawing.Point(1143, 41);
+            this.lblPlayTime.Location = new System.Drawing.Point(971, 34);
             this.lblPlayTime.Name = "lblPlayTime";
-            this.lblPlayTime.Size = new System.Drawing.Size(103, 16);
+            this.lblPlayTime.Size = new System.Drawing.Size(108, 19);
             this.lblPlayTime.TabIndex = 17;
             this.lblPlayTime.Text = "Playback Time:";
             // 
             // barTempo
             // 
             this.barTempo.Enabled = false;
-            this.barTempo.Location = new System.Drawing.Point(729, 42);
+            this.barTempo.Location = new System.Drawing.Point(728, 31);
             this.barTempo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.barTempo.Maximum = 16;
             this.barTempo.Name = "barTempo";
@@ -301,9 +292,9 @@ namespace MusicAnalyser
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(661, 49);
+            this.label7.Location = new System.Drawing.Point(660, 38);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(58, 16);
+            this.label7.Size = new System.Drawing.Size(63, 19);
             this.label7.TabIndex = 11;
             this.label7.Text = "Tempo: ";
             // 
@@ -311,9 +302,9 @@ namespace MusicAnalyser
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(732, 77);
+            this.label8.Location = new System.Drawing.Point(731, 66);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(36, 16);
+            this.label8.Size = new System.Drawing.Size(37, 19);
             this.label8.TabIndex = 8;
             this.label8.Text = "20%";
             // 
@@ -321,9 +312,9 @@ namespace MusicAnalyser
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(816, 77);
+            this.label9.Location = new System.Drawing.Point(815, 66);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(36, 16);
+            this.label9.Size = new System.Drawing.Size(45, 19);
             this.label9.TabIndex = 9;
             this.label9.Text = "60%";
             // 
@@ -331,9 +322,9 @@ namespace MusicAnalyser
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(894, 77);
+            this.label10.Location = new System.Drawing.Point(893, 66);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(44, 16);
+            this.label10.Size = new System.Drawing.Size(45, 19);
             this.label10.TabIndex = 10;
             this.label10.Text = "100%";
             // 
@@ -348,7 +339,7 @@ namespace MusicAnalyser
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1832, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1832, 30);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -359,7 +350,7 @@ namespace MusicAnalyser
             this.closeToolStripMenuItem,
             this.saveRecordingToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
@@ -391,7 +382,7 @@ namespace MusicAnalyser
             this.playToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+            this.playbackToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
             this.playbackToolStripMenuItem.Text = "Playback";
             // 
             // playToolStripMenuItem
@@ -419,21 +410,21 @@ namespace MusicAnalyser
             this.importSpecAudioToolStripMenuItem,
             this.clearSpecToolStripMenuItem});
             this.spectrogramToolStripMenuItem.Name = "spectrogramToolStripMenuItem";
-            this.spectrogramToolStripMenuItem.Size = new System.Drawing.Size(109, 24);
+            this.spectrogramToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.spectrogramToolStripMenuItem.Text = "Spectrogram";
             // 
             // saveSpecToolStripMenuItem
             // 
             this.saveSpecToolStripMenuItem.Enabled = false;
             this.saveSpecToolStripMenuItem.Name = "saveSpecToolStripMenuItem";
-            this.saveSpecToolStripMenuItem.Size = new System.Drawing.Size(280, 26);
+            this.saveSpecToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.saveSpecToolStripMenuItem.Text = "Save Spectrogram...";
             this.saveSpecToolStripMenuItem.Click += new System.EventHandler(this.saveSpecToolStripMenuItem_Click);
             // 
             // openSpecToolStripMenuItem
             // 
-            this.openSpecToolStripMenuItem.Name = "openSpecToolStripMenuItem";
-            this.openSpecToolStripMenuItem.Size = new System.Drawing.Size(280, 26);
+            this.openSpecToolStripMenuItem.Name = "saveSpecToolStripMenuItem";
+            this.openSpecToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.openSpecToolStripMenuItem.Text = "Open Spectrogram...";
             this.openSpecToolStripMenuItem.Click += new System.EventHandler(this.openSpecToolStripMenuItem_Click);
             // 
@@ -441,7 +432,7 @@ namespace MusicAnalyser
             // 
             this.saveSpecImageToolStripMenuItem.Enabled = false;
             this.saveSpecImageToolStripMenuItem.Name = "saveSpecImageToolStripMenuItem";
-            this.saveSpecImageToolStripMenuItem.Size = new System.Drawing.Size(280, 26);
+            this.saveSpecImageToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.saveSpecImageToolStripMenuItem.Text = "Save Spectrogram Image...";
             this.saveSpecImageToolStripMenuItem.Click += new System.EventHandler(this.saveSpecImageToolStripMenuItem_Click);
             // 
@@ -449,7 +440,7 @@ namespace MusicAnalyser
             // 
             this.importSpecAudioToolStripMenuItem.Enabled = false;
             this.importSpecAudioToolStripMenuItem.Name = "importSpecAudioToolStripMenuItem";
-            this.importSpecAudioToolStripMenuItem.Size = new System.Drawing.Size(280, 26);
+            this.importSpecAudioToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.importSpecAudioToolStripMenuItem.Text = "Import Spectrogram Audio...";
             this.importSpecAudioToolStripMenuItem.Click += new System.EventHandler(this.importSpecAudioToolStripMenuItem_Click);
             // 
@@ -457,7 +448,7 @@ namespace MusicAnalyser
             // 
             this.clearSpecToolStripMenuItem.Enabled = false;
             this.clearSpecToolStripMenuItem.Name = "clearSpecToolStripMenuItem";
-            this.clearSpecToolStripMenuItem.Size = new System.Drawing.Size(280, 26);
+            this.clearSpecToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.clearSpecToolStripMenuItem.Text = "Clear Spectrogram Data";
             this.clearSpecToolStripMenuItem.Click += new System.EventHandler(this.clearSpecToolStripMenuItem_Click);
             // 
@@ -468,27 +459,27 @@ namespace MusicAnalyser
             this.aboutToolStripMenuItem,
             this.docsToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // perferencesToolStripMenuItem
             // 
             this.perferencesToolStripMenuItem.Name = "perferencesToolStripMenuItem";
-            this.perferencesToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
+            this.perferencesToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.perferencesToolStripMenuItem.Text = "Perferences...";
             this.perferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // docsToolStripMenuItem
             // 
             this.docsToolStripMenuItem.Name = "docsToolStripMenuItem";
-            this.docsToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
+            this.docsToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.docsToolStripMenuItem.Text = "Open Documentation...";
             this.docsToolStripMenuItem.Click += new System.EventHandler(this.docsToolStripMenuItem_Click);
             // 
@@ -496,15 +487,15 @@ namespace MusicAnalyser
             // 
             this.lblSelectTime.AutoSize = true;
             this.lblSelectTime.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSelectTime.Location = new System.Drawing.Point(1143, 67);
+            this.lblSelectTime.Location = new System.Drawing.Point(1187, 34);
             this.lblSelectTime.Name = "lblSelectTime";
-            this.lblSelectTime.Size = new System.Drawing.Size(85, 16);
+            this.lblSelectTime.Size = new System.Drawing.Size(90, 19);
             this.lblSelectTime.TabIndex = 24;
             this.lblSelectTime.Text = "Select Time:";
             // 
             // txtSelectTime
             // 
-            this.txtSelectTime.Location = new System.Drawing.Point(1263, 64);
+            this.txtSelectTime.Location = new System.Drawing.Point(1283, 33);
             this.txtSelectTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSelectTime.Name = "txtSelectTime";
             this.txtSelectTime.Size = new System.Drawing.Size(89, 22);
@@ -515,15 +506,15 @@ namespace MusicAnalyser
             // 
             this.lblLoopDuration.AutoSize = true;
             this.lblLoopDuration.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoopDuration.Location = new System.Drawing.Point(1143, 93);
+            this.lblLoopDuration.Location = new System.Drawing.Point(1379, 34);
             this.lblLoopDuration.Name = "lblLoopDuration";
-            this.lblLoopDuration.Size = new System.Drawing.Size(102, 16);
+            this.lblLoopDuration.Size = new System.Drawing.Size(108, 19);
             this.lblLoopDuration.TabIndex = 26;
             this.lblLoopDuration.Text = "Loop Duration:";
             // 
             // txtLoopTime
             // 
-            this.txtLoopTime.Location = new System.Drawing.Point(1263, 90);
+            this.txtLoopTime.Location = new System.Drawing.Point(1493, 33);
             this.txtLoopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtLoopTime.Name = "txtLoopTime";
             this.txtLoopTime.Size = new System.Drawing.Size(89, 22);
@@ -532,7 +523,7 @@ namespace MusicAnalyser
             // 
             // prbLevelMeter
             // 
-            this.prbLevelMeter.Location = new System.Drawing.Point(1263, 64);
+            this.prbLevelMeter.Location = new System.Drawing.Point(1308, 32);
             this.prbLevelMeter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.prbLevelMeter.Name = "prbLevelMeter";
             this.prbLevelMeter.Size = new System.Drawing.Size(268, 23);
@@ -544,7 +535,7 @@ namespace MusicAnalyser
             this.segMode.Cursor = System.Windows.Forms.Cursors.Hand;
             this.segMode.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.segMode.Items = "Play Mode, Step Mode, Record Mode";
-            this.segMode.Location = new System.Drawing.Point(176, 44);
+            this.segMode.Location = new System.Drawing.Point(175, 33);
             this.segMode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.segMode.Name = "segMode";
             this.segMode.SegmentActiveTextColor = System.Drawing.Color.White;
@@ -560,7 +551,7 @@ namespace MusicAnalyser
             // numStepVal
             // 
             this.numStepVal.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numStepVal.Location = new System.Drawing.Point(93, 77);
+            this.numStepVal.Location = new System.Drawing.Point(92, 66);
             this.numStepVal.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numStepVal.Maximum = new decimal(new int[] {
             1000,
@@ -573,7 +564,7 @@ namespace MusicAnalyser
             0,
             0});
             this.numStepVal.Name = "numStepVal";
-            this.numStepVal.Size = new System.Drawing.Size(75, 22);
+            this.numStepVal.Size = new System.Drawing.Size(75, 25);
             this.numStepVal.TabIndex = 42;
             this.numStepVal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numStepVal.Value = new decimal(new int[] {
@@ -588,9 +579,9 @@ namespace MusicAnalyser
             // 
             this.lblStep.AutoSize = true;
             this.lblStep.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStep.Location = new System.Drawing.Point(14, 79);
+            this.lblStep.Location = new System.Drawing.Point(13, 68);
             this.lblStep.Name = "lblStep";
-            this.lblStep.Size = new System.Drawing.Size(73, 16);
+            this.lblStep.Size = new System.Drawing.Size(75, 19);
             this.lblStep.TabIndex = 43;
             this.lblStep.Text = "Step (ms):";
             this.lblStep.Visible = false;
@@ -600,9 +591,9 @@ namespace MusicAnalyser
             this.lblFilterFreq.AutoSize = true;
             this.lblFilterFreq.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFilterFreq.ForeColor = System.Drawing.Color.Gray;
-            this.lblFilterFreq.Location = new System.Drawing.Point(760, 663);
+            this.lblFilterFreq.Location = new System.Drawing.Point(764, 654);
             this.lblFilterFreq.Name = "lblFilterFreq";
-            this.lblFilterFreq.Size = new System.Drawing.Size(51, 16);
+            this.lblFilterFreq.Size = new System.Drawing.Size(54, 19);
             this.lblFilterFreq.TabIndex = 46;
             this.lblFilterFreq.Text = "440 Hz";
             this.lblFilterFreq.Visible = false;
@@ -612,7 +603,7 @@ namespace MusicAnalyser
             this.btnFilterDrag.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnFilterDrag.Enabled = false;
             this.btnFilterDrag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFilterDrag.Location = new System.Drawing.Point(724, 656);
+            this.btnFilterDrag.Location = new System.Drawing.Point(728, 647);
             this.btnFilterDrag.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnFilterDrag.Name = "btnFilterDrag";
             this.btnFilterDrag.Size = new System.Drawing.Size(29, 30);
@@ -630,7 +621,7 @@ namespace MusicAnalyser
             this.cwvViewer.BytesPerSample = 0;
             this.cwvViewer.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cwvViewer.LeftSample = ((long)(0));
-            this.cwvViewer.Location = new System.Drawing.Point(28, 123);
+            this.cwvViewer.Location = new System.Drawing.Point(32, 114);
             this.cwvViewer.LoopEndSample = ((long)(0));
             this.cwvViewer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cwvViewer.Name = "cwvViewer";
@@ -646,7 +637,7 @@ namespace MusicAnalyser
             // 
             // specViewer
             // 
-            this.specViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.specViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.specViewer.Enabled = false;
             this.specViewer.Location = new System.Drawing.Point(32, 114);
@@ -677,7 +668,7 @@ namespace MusicAnalyser
             this.pnlMusic.Controls.Add(this.chbAllChords);
             this.pnlMusic.Controls.Add(this.label1);
             this.pnlMusic.Controls.Add(this.lstChords);
-            this.pnlMusic.Location = new System.Drawing.Point(1465, 578);
+            this.pnlMusic.Location = new System.Drawing.Point(1469, 569);
             this.pnlMusic.Name = "pnlMusic";
             this.pnlMusic.Size = new System.Drawing.Size(322, 279);
             this.pnlMusic.TabIndex = 50;
@@ -689,7 +680,7 @@ namespace MusicAnalyser
             this.lblMode.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMode.Location = new System.Drawing.Point(115, 253);
             this.lblMode.Name = "lblMode";
-            this.lblMode.Size = new System.Drawing.Size(48, 16);
+            this.lblMode.Size = new System.Drawing.Size(48, 19);
             this.lblMode.TabIndex = 38;
             this.lblMode.Text = "Mode";
             // 
@@ -700,7 +691,7 @@ namespace MusicAnalyser
             this.lblKey.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblKey.Location = new System.Drawing.Point(23, 224);
             this.lblKey.Name = "lblKey";
-            this.lblKey.Size = new System.Drawing.Size(114, 16);
+            this.lblKey.Size = new System.Drawing.Size(112, 19);
             this.lblKey.TabIndex = 37;
             this.lblKey.Text = "Predicted Key: ";
             // 
@@ -711,7 +702,7 @@ namespace MusicAnalyser
             this.lblB.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblB.Location = new System.Drawing.Point(20, 189);
             this.lblB.Name = "lblB";
-            this.lblB.Size = new System.Drawing.Size(34, 16);
+            this.lblB.Size = new System.Drawing.Size(34, 19);
             this.lblB.TabIndex = 35;
             this.lblB.Text = "B: 0";
             // 
@@ -722,7 +713,7 @@ namespace MusicAnalyser
             this.lblBb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBb.Location = new System.Drawing.Point(20, 172);
             this.lblBb.Name = "lblBb";
-            this.lblBb.Size = new System.Drawing.Size(43, 16);
+            this.lblBb.Size = new System.Drawing.Size(43, 19);
             this.lblBb.TabIndex = 34;
             this.lblBb.Text = "Bb: 0";
             // 
@@ -733,7 +724,7 @@ namespace MusicAnalyser
             this.lblA.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblA.Location = new System.Drawing.Point(20, 156);
             this.lblA.Name = "lblA";
-            this.lblA.Size = new System.Drawing.Size(33, 16);
+            this.lblA.Size = new System.Drawing.Size(34, 19);
             this.lblA.TabIndex = 33;
             this.lblA.Text = "A: 0";
             // 
@@ -744,7 +735,7 @@ namespace MusicAnalyser
             this.lblAb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAb.Location = new System.Drawing.Point(20, 138);
             this.lblAb.Name = "lblAb";
-            this.lblAb.Size = new System.Drawing.Size(42, 16);
+            this.lblAb.Size = new System.Drawing.Size(43, 19);
             this.lblAb.TabIndex = 32;
             this.lblAb.Text = "Ab: 0";
             // 
@@ -755,7 +746,7 @@ namespace MusicAnalyser
             this.lblG.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblG.Location = new System.Drawing.Point(20, 121);
             this.lblG.Name = "lblG";
-            this.lblG.Size = new System.Drawing.Size(35, 16);
+            this.lblG.Size = new System.Drawing.Size(35, 19);
             this.lblG.TabIndex = 31;
             this.lblG.Text = "G: 0";
             // 
@@ -766,7 +757,7 @@ namespace MusicAnalyser
             this.lblGb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGb.Location = new System.Drawing.Point(20, 104);
             this.lblGb.Name = "lblGb";
-            this.lblGb.Size = new System.Drawing.Size(44, 16);
+            this.lblGb.Size = new System.Drawing.Size(44, 19);
             this.lblGb.TabIndex = 36;
             this.lblGb.Text = "Gb: 0";
             // 
@@ -777,7 +768,7 @@ namespace MusicAnalyser
             this.lblF.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblF.Location = new System.Drawing.Point(20, 87);
             this.lblF.Name = "lblF";
-            this.lblF.Size = new System.Drawing.Size(33, 16);
+            this.lblF.Size = new System.Drawing.Size(32, 19);
             this.lblF.TabIndex = 30;
             this.lblF.Text = "F: 0";
             // 
@@ -788,7 +779,7 @@ namespace MusicAnalyser
             this.lblE.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblE.Location = new System.Drawing.Point(20, 71);
             this.lblE.Name = "lblE";
-            this.lblE.Size = new System.Drawing.Size(33, 16);
+            this.lblE.Size = new System.Drawing.Size(33, 19);
             this.lblE.TabIndex = 29;
             this.lblE.Text = "E: 0";
             // 
@@ -799,7 +790,7 @@ namespace MusicAnalyser
             this.lblEb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEb.Location = new System.Drawing.Point(20, 53);
             this.lblEb.Name = "lblEb";
-            this.lblEb.Size = new System.Drawing.Size(42, 16);
+            this.lblEb.Size = new System.Drawing.Size(42, 19);
             this.lblEb.TabIndex = 28;
             this.lblEb.Text = "Eb: 0";
             // 
@@ -810,7 +801,7 @@ namespace MusicAnalyser
             this.lblD.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblD.Location = new System.Drawing.Point(20, 36);
             this.lblD.Name = "lblD";
-            this.lblD.Size = new System.Drawing.Size(34, 16);
+            this.lblD.Size = new System.Drawing.Size(35, 19);
             this.lblD.TabIndex = 27;
             this.lblD.Text = "D: 0";
             // 
@@ -821,7 +812,7 @@ namespace MusicAnalyser
             this.lblDb.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDb.Location = new System.Drawing.Point(20, 19);
             this.lblDb.Name = "lblDb";
-            this.lblDb.Size = new System.Drawing.Size(43, 16);
+            this.lblDb.Size = new System.Drawing.Size(44, 19);
             this.lblDb.TabIndex = 26;
             this.lblDb.Text = "Db: 0";
             // 
@@ -832,7 +823,7 @@ namespace MusicAnalyser
             this.lblC.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblC.Location = new System.Drawing.Point(20, 2);
             this.lblC.Name = "lblC";
-            this.lblC.Size = new System.Drawing.Size(34, 16);
+            this.lblC.Size = new System.Drawing.Size(34, 19);
             this.lblC.TabIndex = 25;
             this.lblC.Text = "C: 0";
             // 
@@ -841,10 +832,10 @@ namespace MusicAnalyser
             this.chbAllChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chbAllChords.AutoSize = true;
             this.chbAllChords.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chbAllChords.Location = new System.Drawing.Point(180, 152);
+            this.chbAllChords.Location = new System.Drawing.Point(174, 152);
             this.chbAllChords.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chbAllChords.Name = "chbAllChords";
-            this.chbAllChords.Size = new System.Drawing.Size(82, 20);
+            this.chbAllChords.Size = new System.Drawing.Size(88, 23);
             this.chbAllChords.TabIndex = 24;
             this.chbAllChords.Text = "Show All";
             this.chbAllChords.UseVisualStyleBackColor = true;
@@ -856,7 +847,7 @@ namespace MusicAnalyser
             this.label1.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(169, -1);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(103, 16);
+            this.label1.Size = new System.Drawing.Size(107, 19);
             this.label1.TabIndex = 23;
             this.label1.Text = "Chords Found:";
             // 
@@ -865,11 +856,11 @@ namespace MusicAnalyser
             this.lstChords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lstChords.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstChords.FormattingEnabled = true;
-            this.lstChords.ItemHeight = 16;
+            this.lstChords.ItemHeight = 18;
             this.lstChords.Location = new System.Drawing.Point(173, 29);
             this.lstChords.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstChords.Name = "lstChords";
-            this.lstChords.Size = new System.Drawing.Size(120, 84);
+            this.lstChords.Size = new System.Drawing.Size(120, 94);
             this.lstChords.TabIndex = 22;
             // 
             // pnlSpectrumControls
@@ -892,7 +883,7 @@ namespace MusicAnalyser
             this.pnlSpectrumControls.Controls.Add(this.numZoomHigh);
             this.pnlSpectrumControls.Controls.Add(this.label20);
             this.pnlSpectrumControls.Controls.Add(this.lblExeTime);
-            this.pnlSpectrumControls.Location = new System.Drawing.Point(28, 448);
+            this.pnlSpectrumControls.Location = new System.Drawing.Point(32, 439);
             this.pnlSpectrumControls.Name = "pnlSpectrumControls";
             this.pnlSpectrumControls.Size = new System.Drawing.Size(1500, 77);
             this.pnlSpectrumControls.TabIndex = 51;
@@ -921,28 +912,26 @@ namespace MusicAnalyser
             this.btnViewSpec.UseVisualStyleBackColor = true;
             this.btnViewSpec.Click += new System.EventHandler(this.btnViewSpec_Click);
             // 
-            // chbNoteAnnotations
+            // chbAnnotations
             // 
-            this.chbNoteAnnotations.Checked = true;
-            this.chbNoteAnnotations.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbNoteAnnotations.Enabled = false;
+            this.chbNoteAnnotations.Checked = true;
             this.chbNoteAnnotations.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chbNoteAnnotations.Location = new System.Drawing.Point(1220, 15);
-            this.chbNoteAnnotations.Name = "chbNoteAnnotations";
+            this.chbNoteAnnotations.Name = "chbAnnotations";
             this.chbNoteAnnotations.Size = new System.Drawing.Size(180, 23);
             this.chbNoteAnnotations.TabIndex = 64;
             this.chbNoteAnnotations.Text = "Show Note Annotations";
             this.chbNoteAnnotations.UseVisualStyleBackColor = true;
             this.chbNoteAnnotations.CheckedChanged += new System.EventHandler(this.chbNoteAnnotations_CheckedChanged);
             // 
-            // chbChordKeyAnnotations
+            // chbAnnotations
             // 
-            this.chbChordKeyAnnotations.Checked = true;
-            this.chbChordKeyAnnotations.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbChordKeyAnnotations.Enabled = false;
+            this.chbChordKeyAnnotations.Checked = true;
             this.chbChordKeyAnnotations.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chbChordKeyAnnotations.Location = new System.Drawing.Point(1220, 43);
-            this.chbChordKeyAnnotations.Name = "chbChordKeyAnnotations";
+            this.chbChordKeyAnnotations.Name = "chbAnnotations";
             this.chbChordKeyAnnotations.Size = new System.Drawing.Size(250, 23);
             this.chbChordKeyAnnotations.TabIndex = 64;
             this.chbChordKeyAnnotations.Text = "Show Chord/Key Annotations";
@@ -956,7 +945,7 @@ namespace MusicAnalyser
             this.chbFilter.Location = new System.Drawing.Point(867, 12);
             this.chbFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chbFilter.Name = "chbFilter";
-            this.chbFilter.Size = new System.Drawing.Size(153, 20);
+            this.chbFilter.Size = new System.Drawing.Size(166, 23);
             this.chbFilter.TabIndex = 63;
             this.chbFilter.Text = "Note Highlight Filter";
             this.chbFilter.UseVisualStyleBackColor = true;
@@ -968,7 +957,7 @@ namespace MusicAnalyser
             this.lblError.Font = new System.Drawing.Font(Form1.fonts.Families[1], 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblError.Location = new System.Drawing.Point(754, 12);
             this.lblError.Name = "lblError";
-            this.lblError.Size = new System.Drawing.Size(71, 16);
+            this.lblError.Size = new System.Drawing.Size(70, 19);
             this.lblError.TabIndex = 62;
             this.lblError.Text = "+ 0 cents";
             // 
@@ -978,7 +967,7 @@ namespace MusicAnalyser
             this.label19.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label19.Location = new System.Drawing.Point(176, 12);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(46, 16);
+            this.label19.Size = new System.Drawing.Size(50, 19);
             this.label19.TabIndex = 60;
             this.label19.Text = "Show:";
             // 
@@ -988,7 +977,7 @@ namespace MusicAnalyser
             this.label14.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(425, 12);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(78, 16);
+            this.label14.Size = new System.Drawing.Size(85, 19);
             this.label14.TabIndex = 61;
             this.label14.Text = "Pitch Sync:";
             // 
@@ -998,7 +987,7 @@ namespace MusicAnalyser
             this.label13.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.Location = new System.Drawing.Point(666, 47);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(32, 16);
+            this.label13.Size = new System.Drawing.Size(33, 19);
             this.label13.TabIndex = 59;
             this.label13.Text = "+50";
             // 
@@ -1008,7 +997,7 @@ namespace MusicAnalyser
             this.label12.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.Location = new System.Drawing.Point(591, 47);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(16, 16);
+            this.label12.Size = new System.Drawing.Size(17, 19);
             this.label12.TabIndex = 58;
             this.label12.Text = "0";
             // 
@@ -1018,7 +1007,7 @@ namespace MusicAnalyser
             this.label18.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label18.Location = new System.Drawing.Point(296, 12);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(20, 16);
+            this.label18.Size = new System.Drawing.Size(24, 19);
             this.label18.TabIndex = 55;
             this.label18.Text = "to";
             // 
@@ -1028,7 +1017,7 @@ namespace MusicAnalyser
             this.label16.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label16.Location = new System.Drawing.Point(388, 12);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(23, 16);
+            this.label16.Size = new System.Drawing.Size(24, 19);
             this.label16.TabIndex = 56;
             this.label16.Text = "Hz";
             // 
@@ -1038,7 +1027,7 @@ namespace MusicAnalyser
             this.label11.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.Location = new System.Drawing.Point(497, 47);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(29, 16);
+            this.label11.Size = new System.Drawing.Size(30, 19);
             this.label11.TabIndex = 57;
             this.label11.Text = "-50";
             // 
@@ -1058,32 +1047,23 @@ namespace MusicAnalyser
             // 
             this.numZoomLow.Location = new System.Drawing.Point(232, 11);
             this.numZoomLow.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.numZoomLow.Maximum = new decimal(new int[] {
-            4000,
-            0,
-            0,
-            0});
             this.numZoomLow.Name = "numZoomLow";
             this.numZoomLow.Size = new System.Drawing.Size(60, 22);
             this.numZoomLow.TabIndex = 53;
+            this.numZoomLow.Minimum = 0;
+            this.numZoomLow.Maximum = 4000;
+            this.numZoomLow.Value = 0;
             // 
             // numZoomHigh
             // 
             this.numZoomHigh.Location = new System.Drawing.Point(324, 11);
             this.numZoomHigh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.numZoomHigh.Maximum = new decimal(new int[] {
-            4000,
-            0,
-            0,
-            0});
             this.numZoomHigh.Name = "numZoomHigh";
             this.numZoomHigh.Size = new System.Drawing.Size(60, 22);
             this.numZoomHigh.TabIndex = 53;
-            this.numZoomHigh.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+            this.numZoomHigh.Minimum = 0;
+            this.numZoomHigh.Maximum = 4000;
+            this.numZoomHigh.Value = 1000;
             // 
             // label20
             // 
@@ -1091,7 +1071,7 @@ namespace MusicAnalyser
             this.label20.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label20.Location = new System.Drawing.Point(705, 12);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(44, 16);
+            this.label20.Size = new System.Drawing.Size(47, 19);
             this.label20.TabIndex = 51;
             this.label20.Text = "Error:";
             // 
@@ -1103,7 +1083,7 @@ namespace MusicAnalyser
             this.lblExeTime.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExeTime.Location = new System.Drawing.Point(13, 12);
             this.lblExeTime.Name = "lblExeTime";
-            this.lblExeTime.Size = new System.Drawing.Size(141, 16);
+            this.lblExeTime.Size = new System.Drawing.Size(151, 19);
             this.lblExeTime.TabIndex = 50;
             this.lblExeTime.Text = "Execution Time: 0 ms";
             // 
@@ -1121,7 +1101,7 @@ namespace MusicAnalyser
             this.pnlScripts.Controls.Add(this.lblSelMessage);
             this.pnlScripts.Controls.Add(this.label6);
             this.pnlScripts.Controls.Add(this.btnAddScript);
-            this.pnlScripts.Location = new System.Drawing.Point(1447, 93);
+            this.pnlScripts.Location = new System.Drawing.Point(1451, 84);
             this.pnlScripts.Name = "pnlScripts";
             this.pnlScripts.Size = new System.Drawing.Size(369, 365);
             this.pnlScripts.TabIndex = 52;
@@ -1162,7 +1142,7 @@ namespace MusicAnalyser
             this.label21.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label21.Location = new System.Drawing.Point(23, 58);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(49, 16);
+            this.label21.Size = new System.Drawing.Size(51, 19);
             this.label21.TabIndex = 56;
             this.label21.Text = "Preset";
             // 
@@ -1174,7 +1154,7 @@ namespace MusicAnalyser
             this.cbPresets.Location = new System.Drawing.Point(78, 56);
             this.cbPresets.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbPresets.Name = "cbPresets";
-            this.cbPresets.Size = new System.Drawing.Size(187, 24);
+            this.cbPresets.Size = new System.Drawing.Size(187, 26);
             this.cbPresets.TabIndex = 55;
             this.cbPresets.SelectedIndexChanged += new System.EventHandler(this.cbPresets_SelectedIndexChanged);
             // 
@@ -1251,9 +1231,21 @@ namespace MusicAnalyser
             this.label6.Font = new System.Drawing.Font(Form1.fonts.Families[1], 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(118, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(147, 19);
+            this.label6.Size = new System.Drawing.Size(148, 23);
             this.label6.TabIndex = 49;
             this.label6.Text = "Processing Chain";
+            // 
+            // lblSpectrogram
+            // 
+            this.lblSpectrogram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSpectrogram.AutoSize = true;
+            this.lblSpectrogram.Visible = false;
+            this.lblSpectrogram.Font = new System.Drawing.Font(Form1.fonts.Families[0], 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpectrogram.Location = new System.Drawing.Point(118, 0);
+            this.lblSpectrogram.Name = "lblSpectrogram";
+            this.lblSpectrogram.Size = new System.Drawing.Size(148, 23);
+            this.lblSpectrogram.TabIndex = 49;
+            this.lblSpectrogram.Text = "";
             // 
             // btnAddScript
             // 
@@ -1268,62 +1260,13 @@ namespace MusicAnalyser
             this.btnAddScript.UseVisualStyleBackColor = true;
             this.btnAddScript.Click += new System.EventHandler(this.btnAddScript_Click);
             // 
-            // lblSpectrogram
-            // 
-            this.lblSpectrogram.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSpectrogram.AutoSize = true;
-            this.lblSpectrogram.Font = new System.Drawing.Font(Form1.fonts.Families[0], 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSpectrogram.Location = new System.Drawing.Point(118, 0);
-            this.lblSpectrogram.Name = "lblSpectrogram";
-            this.lblSpectrogram.Size = new System.Drawing.Size(0, 19);
-            this.lblSpectrogram.TabIndex = 49;
-            this.lblSpectrogram.Visible = false;
-            // 
-            // numPitch
-            // 
-            this.numPitch.DecimalPlaces = 2;
-            this.numPitch.Enabled = false;
-            this.numPitch.Location = new System.Drawing.Point(1009, 48);
-            this.numPitch.Maximum = new decimal(new int[] {12, 0, 0, 0});
-            this.numPitch.Minimum = new decimal(new int[] {12, 0, 0, -2147483648});
-            this.numPitch.Name = "numPitch";
-            this.numPitch.Size = new System.Drawing.Size(61, 22);
-            this.numPitch.TabIndex = 53;
-            this.numPitch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numPitch.ValueChanged += new System.EventHandler(this.numPitch_ValueChanged);
-            this.numPitch.Click += new System.EventHandler(this.numPitch_ValueChanged);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(956, 50);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(47, 16);
-            this.label17.TabIndex = 55;
-            this.label17.Text = "Pitch: ";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font(Form1.fonts.Families[0], 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(1076, 50);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(42, 16);
-            this.label15.TabIndex = 56;
-            this.label15.Text = "cents";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1832, 910);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.label17);
-            this.Controls.Add(this.numPitch);
+            this.ClientSize = new System.Drawing.Size(1832, 903);
             this.Controls.Add(this.pnlSpectrumControls);
             this.Controls.Add(this.pnlMusic);
             this.Controls.Add(this.lblFilterFreq);
@@ -1355,8 +1298,8 @@ namespace MusicAnalyser
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnOpenClose);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.pnlScripts);
             this.Controls.Add(this.specViewer);
+            this.Controls.Add(this.pnlScripts);
             this.Controls.Add(this.lblSpectrogram);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
@@ -1376,11 +1319,8 @@ namespace MusicAnalyser
             this.pnlSpectrumControls.ResumeLayout(false);
             this.pnlSpectrumControls.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numZoomLow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numZoomHigh)).EndInit();
             this.pnlScripts.ResumeLayout(false);
             this.pnlScripts.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPitch)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1486,9 +1426,6 @@ namespace MusicAnalyser
         private System.Windows.Forms.Label lblSpectrogram;
         private System.Windows.Forms.Button btnAddScript;
         private System.Windows.Forms.Button btnSpecEnlarge;
-        private System.Windows.Forms.NumericUpDown numPitch;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label15;
     }
 }
 

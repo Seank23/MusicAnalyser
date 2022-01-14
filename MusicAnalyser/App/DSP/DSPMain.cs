@@ -14,7 +14,6 @@ namespace MusicAnalyser.App.DSP
         public SpectrogramHandler SpectrogramHandler { get; set; }
         public double MaxGain { get; set; }
         public Dictionary<double, double> FreqPeaks { get; set; }
-        public float PitchFactor { get; set; } = 1f;
 
         private AppController app;
         private Dictionary<int, ISignalProcessor> processors = new Dictionary<int, ISignalProcessor>();
@@ -105,7 +104,6 @@ namespace MusicAnalyser.App.DSP
         {
             scriptVals["SAMPLE_RATE"] = app.AudioSource.AudioAnalysis.WaveFormat.SampleRate;
             scriptVals["TUNING"] = Analyser.GetMusic().GetTuningPercent();
-            scriptVals["PITCH_FACTOR"] = PitchFactor;
             object audio = ReadAudioStream();
 
             foreach (int key in processors.Keys)
