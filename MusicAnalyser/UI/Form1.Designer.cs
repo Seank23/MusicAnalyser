@@ -138,7 +138,6 @@
             this.pnlSpectrumControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barPitch)).BeginInit();
             this.pnlScripts.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPitch)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOpenClose
@@ -1271,10 +1270,11 @@
             this.numPitch.Location = new System.Drawing.Point(1009, 37);
             this.numPitch.Maximum = new decimal(new int[] { 12, 0, 0, 0 });
             this.numPitch.Minimum = new decimal(new int[] { 12, 0, 0, -2147483648 });
-            this.numPitch.Name = "numPitch";
+            this.numPitch.Name = "numPitch2";
             this.numPitch.Size = new System.Drawing.Size(61, 22);
             this.numPitch.TabIndex = 53;
             this.numPitch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numPitch.Increment = 0.05M;
             this.numPitch.ValueChanged += new System.EventHandler(this.numPitch_ValueChanged);
             this.numPitch.Click += new System.EventHandler(this.numPitch_ValueChanged);
             // 

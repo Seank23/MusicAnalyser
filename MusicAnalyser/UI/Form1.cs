@@ -554,7 +554,6 @@ namespace MusicAnalyser
         public bool IsShowAllChordsChecked() { return chbAllChords.Checked; }
         public void SetTimeStamp(TimeSpan time) { txtPlayTime.Text = time.ToString(@"mm\:ss\:fff"); }
         public AppController GetApp() { return app; }
-        public float GetPitchValue() { return (float)numPitch.Value; }
 
         private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
