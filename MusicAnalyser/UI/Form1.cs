@@ -338,6 +338,7 @@ namespace MusicAnalyser
             app.PitchSyncChange(barPitch.Value);
             saveRecordingToolStripMenuItem.Enabled = false;
             segMode.SelectedIndex = 0;
+            app.Dsp.PitchFactor = 1;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
