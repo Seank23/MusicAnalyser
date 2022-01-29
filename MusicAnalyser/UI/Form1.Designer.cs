@@ -1296,7 +1296,7 @@
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(42, 16);
             this.label15.TabIndex = 56;
-            this.label15.Text = "semitones";
+            this.label15.Text = "st";
             // 
             // Form1
             // 
